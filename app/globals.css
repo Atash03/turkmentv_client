@@ -1,0 +1,209 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+    --radius: 0.5rem;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+  }
+}
+
+/* @layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+} */
+
+/* <<<<<<< HEAD * {
+  scroll-behavior: smooth;
+}
+
+=======>>>>>>>2c1eddb85d62e4709470605eb8df7458c2d6c37e body, */
+
+* {
+  scroll-behavior: smooth;
+}
+
+html {
+  overflow-x: hidden;
+  /* min-height: 50vh; */
+}
+
+.container {
+  max-width: 1316px;
+  padding: 0 30px;
+  width: 100%;
+  margin: 0 auto;
+  /* overflow-x: hidden; */
+}
+
+.text-stroke {
+  text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;
+}
+
+.big-swiper .swiper-pagination-bullet {
+  width: 14px;
+  height: 14px;
+  background: white;
+  border: none;
+  transition: 0.3 all ease;
+}
+
+.small-swiper .swiper-pagination-bullet {
+  width: 6px;
+  height: 6px;
+  background: white;
+  opacity: 0.7;
+  transition: 0.3 all ease;
+}
+
+.big-swiper .swiper-pagination-bullet-active,
+.small-swiper .swiper-pagination-bullet-active {
+  opacity: 1;
+  background: #010431;
+  transition: 0.3 all ease;
+}
+
+.small-swiper .swiper-button-next:after {
+  color: white;
+  content: url('/arrow-right-small.svg');
+}
+.small-swiper .swiper-button-prev:after {
+  color: white;
+  content: url('/arrow-left-small.svg');
+}
+
+.big-swiper .swiper-button-next:after {
+  color: white;
+  content: url('/arrow-right-big.svg');
+}
+.big-swiper .swiper-button-prev:after {
+  color: white;
+  content: url('/arrow-left-big.svg');
+}
+
+video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+main,
+nav,
+footer {
+  z-index: 10;
+  position: relative;
+}
+
+button:disabled {
+  transition: all 0.3s ease;
+  opacity: 0.7;
+}
+
+.MuiInputBase-root.MuiOutlinedInput-root {
+  font-family: var(--font-roboto);
+  border-radius: 0;
+  border: 2px solid rgba(139, 218, 255, 0.24);
+  font-size: 18px;
+}
+
+p a {
+  display: inline;
+  overflow-wrap: break-word;
+}
+
+big {
+  font-size: inherit !important;
+}
+
+.clamped {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@layer utilities {
+  .input-style {
+    @apply bg-[#E6E6FA] rounded-xl py-3 px-4 placeholder:text-[#BCBCD6] outline-none;
+  }
+
+  .calendar [aria-label='Go to next month'] {
+    @apply shadow-sm transition-all;
+  }
+
+  .calendar [aria-label='Go to previous month'] {
+    @apply shadow-sm transition-all;
+  }
+
+  .day-styles [name='day'] {
+    @apply p-4 text-textDarkt leading-[140%] bg-purple-600 rounded-full;
+  }
+
+  .btn2 {
+    @apply text-textBlack leading-[140%] py-1 px-3 rounded-[8px] bg-white border border-[#E6E6FA] font-semibold shadow-sm;
+  }
+
+  .pagination-item {
+    @apply px-3 py-1 rounded-md border border-textBlack/20 text-textBlack/80 text-[12px] cursor-pointer hover:bg-textBlack transition-all hover:text-white;
+  }
+
+  .pagination-current {
+    @apply px-3 py-1 rounded-md border bg-fillButtonAccentDefault text-white text-[12px];
+  }
+}
