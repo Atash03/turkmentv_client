@@ -16,6 +16,8 @@ const QuizWinnerTable = ({ quizId, quizFinished }: IProps) => {
   const [winnersData, setWinnersData] = useState<IQuizQuestionsWinners>();
   const { questionsData } = useContext(QuizContext).quizQuestionsContext;
 
+  console.log('first');
+
   useEffect(() => {
     if (quizFinished) {
       // Queries.getQuizQuestions().then((res) => {
