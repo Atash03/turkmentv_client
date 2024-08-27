@@ -35,7 +35,7 @@ const QuizWinnerTable = ({ quizId, quizFinished }: IProps) => {
   // if (isFetching) return <Loader />;
   // if (error) return <h1>{JSON.stringify(error)}</h1>;
 
-  return winnersData?.data.length != 0 ? (
+  return winnersData?.data.length !== 0 ? (
     <div className="flex flex-col justify-center items-center gap-[60px]">
       <div className="flex flex-col gap-5 justify-center items-center w-full">
         <h2 className="text-textBlack text-[28px] text-center md:text-left md:text-[32px] font-semibold">
@@ -55,7 +55,7 @@ const QuizWinnerTable = ({ quizId, quizFinished }: IProps) => {
               </div>
             ) : null}
 
-            {winnersData?.data[0].client.answers.length != 0 ? (
+            {winnersData?.data[0].client.answers.length !== 0 ? (
               <div className="text-center flex justify-center items-center text-base text-textBlack leading-[125%] font-semibold w-[100%] px-3 py-5">
                 <span>Soraglara näçinji jogap berdi</span>
               </div>
@@ -88,7 +88,7 @@ const QuizWinnerTable = ({ quizId, quizFinished }: IProps) => {
                     <span>+{winner.client.phone}</span>
                   </div>
                 ) : null}
-                {winnersData.data[0].client.answers.length != 0 ? (
+                {winnersData.data[0].client.answers.length !== 0 ? (
                   <div className="flex justify-center items-center gap-6 text-base text-textGray leading-[125%] w-[100%] px-3 py-5">
                     {questionsData
                       ? questionsData.map((question) => {
@@ -99,17 +99,16 @@ const QuizWinnerTable = ({ quizId, quizFinished }: IProps) => {
                             <span
                               key={v4()}
                               className={`text-sm font-semibold leading-[125%] ${
-                                matchingAnswer && matchingAnswer.serial_number_for_correct != null
+                                matchingAnswer && matchingAnswer.serial_number_for_correct !== 0
                                   ? 'text-fillGreen'
                                   : matchingAnswer &&
-                                    matchingAnswer.serial_number_for_correct === null
+                                    matchingAnswer?.serial_number_for_correct === 0
                                   ? 'text-fillRed'
                                   : 'text-textLight'
                               }`}>
-                              {matchingAnswer && matchingAnswer.serial_number_for_correct != null
+                              {matchingAnswer && matchingAnswer.serial_number_for_correct !== 0
                                 ? matchingAnswer.serial_number_for_correct
-                                : matchingAnswer &&
-                                  matchingAnswer.serial_number_for_correct === null
+                                : matchingAnswer && matchingAnswer?.serial_number_for_correct === 0
                                 ? 'X'
                                 : '0'}
                             </span>
@@ -199,12 +198,12 @@ const QuizWinnerTable = ({ quizId, quizFinished }: IProps) => {
                     ) : null}
                   </div>
                   <div className="flex gap-[8px] items-center">
-                    {winnersData?.data[0].client.answers.length != 0 ? (
+                    {winnersData?.data[0].client.answers.length !== 0 ? (
                       <div className="flex justify-center items-center text-xs text-textLight leading-[125%] font-semibold w-fit">
                         <span>Soraglara näçinji jogap berdi :</span>
                       </div>
                     ) : null}
-                    {winnersData.data[0].client.answers.length != 0 ? (
+                    {winnersData.data[0].client.answers.length !== 0 ? (
                       <div className="flex justify-center items-center gap-[4px] text-xs text-textGray leading-[125%] w-fit">
                         {questionsData
                           ? questionsData.map((question) => {
@@ -215,19 +214,17 @@ const QuizWinnerTable = ({ quizId, quizFinished }: IProps) => {
                                 <span
                                   key={v4()}
                                   className={`text-sm font-semibold leading-[125%] ${
-                                    matchingAnswer &&
-                                    matchingAnswer.serial_number_for_correct != null
+                                    matchingAnswer && matchingAnswer.serial_number_for_correct !== 0
                                       ? 'text-fillGreen'
                                       : matchingAnswer &&
-                                        matchingAnswer.serial_number_for_correct === null
+                                        matchingAnswer.serial_number_for_correct === 0
                                       ? 'text-fillRed'
                                       : 'text-textLight'
                                   }`}>
-                                  {matchingAnswer &&
-                                  matchingAnswer.serial_number_for_correct != null
+                                  {matchingAnswer && matchingAnswer.serial_number_for_correct !== 0
                                     ? matchingAnswer.serial_number_for_correct
                                     : matchingAnswer &&
-                                      matchingAnswer.serial_number_for_correct === null
+                                      matchingAnswer.serial_number_for_correct === 0
                                     ? 'X'
                                     : '0'}
                                 </span>
