@@ -1,13 +1,14 @@
-import { useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { differenceInSeconds, parseISO, addHours } from 'date-fns';
 import GradientTitle from './GradientTitle';
 
 interface CountdownProps {
   startsAt: string;
   endsAt: string;
+  setVoteStatus: Dispatch<SetStateAction<string | undefined>>;
 }
 
-const Countdown: React.FC<CountdownProps> = ({ startsAt, endsAt }) => {
+const Countdown: React.FC<CountdownProps> = ({ startsAt, endsAt, setVoteStatus }) => {
   const [timeLeft, setTimeLeft] = useState<string>('');
   const [eventStatus, setEventStatus] = useState<string>('Finished');
 
@@ -30,6 +31,7 @@ const Countdown: React.FC<CountdownProps> = ({ startsAt, endsAt }) => {
         difference = differenceInSeconds(endsAtDate, nowUTC5);
       } else {
         setEventStatus('Finished');
+        setVoteStatus('closed');
         return;
       }
 

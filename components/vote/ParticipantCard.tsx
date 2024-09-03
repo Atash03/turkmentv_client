@@ -29,12 +29,14 @@ const ParticipantCard = ({
   const substractedProgress = progress > 99 ? progress - 2 : progress;
 
   return winner && votes !== 0 ? (
-    <div className="flex flex-col overflow-hidden bg-fillNavyBlue  max-w-[940px] w-full">
+    ////////////////////////////////////////////// Winner card
+    <div className="flex  flex-col overflow-hidden bg-fillNavyBlue  max-w-[940px] w-full">
       <div className="flex items-center gap-[5px] sm:gap-[20px] p-[5px] pt-[10px] w-full">
         <h3 className="text-[26px] sm:text-[80px] leading-[100%] font-bold text-fillNavyBlue text-stroke">
           {number}
         </h3>
         {photo && name ? (
+          // If there an image, show image
           <div className="relative min-w-[60px] h-[60px] sm:min-w-[140px] sm:h-[140px]">
             <Image
               fill
@@ -46,7 +48,8 @@ const ParticipantCard = ({
             />
           </div>
         ) : (
-          <div className="relative min-w-[60px] h-[60px] sm:min-w-[140px] sm:h-[140px]">
+          // If there is no image, show placeholder
+          <div className="relative hover:group min-w-[60px] h-[60px] sm:min-w-[140px] sm:h-[140px]">
             <Image
               fill
               src={placeholder}
@@ -61,34 +64,47 @@ const ParticipantCard = ({
           <div className="flex justify-between items-center w-full">
             <div className="flex justify-between items-center sm:items-start w-full sm:w-fit sm:justify-start sm:flex-col gap-[14px]">
               {name ? (
-                <h2 className="text-[18px] sm:text-[24px] leading-[100%] font-bold text-white">
+                <h2 className="text-[18px] group:scale-110 transition-all sm:text-[24px] leading-[100%] font-bold text-white">
                   {name}
                 </h2>
               ) : null}
-              <h4 className="text-[12px] sm:text-[16px] text-white leading-[100%] font-bold">
-                {votes ? votes : 0} ses
+
+              {/* If we have voteCode and voting not closed, then show badge with code. Else dont show */}
+              {voteCode && voteStatus !== 'closed' ? (
+                // Desktop version
+                <p className="hidden sm:block py-[10px] px-[8px] bg-[#1E1E7B] text-fillLightGray text-[14px] leading-[125%] max-w-[232px] rounded-[10px]">
+                  Ses bermek üçin{' '}
+                  <span className="inline-block w-fit px-1 py-[4px] mx-[4px] font-bold text-white text-[16px] border  rounded-md">
+                    {voteCode}
+                  </span>
+                  ugrat
+                </p>
+              ) : null}
+            </div>
+            <div className="flex flex-col items-end gap-[8px]">
+              <h4 className="text-[12px] sm:text-[48px] text-white leading-[100%] font-bold">
+                {votes ? votes : 0}
+              </h4>
+              <h4 className="text-[12px] sm:text-[24px] text-white leading-[100%] font-bold">
+                ses
               </h4>
             </div>
-            {voteCode && voteStatus !== 'closed' ? (
-              <p className="hidden sm:block py-[10px] px-[8px] bg-[#1E1E7B] text-fillLightGray text-[14px] leading-[125%] max-w-[232px] rounded-[10px]">
-                Ses bermek üçin{' '}
-                <span className="inline-block w-fit px-1 py-[4px] mx-[4px] font-bold text-white text-[16px] border  rounded-md">
-                  {voteCode}
-                </span>
-                ugrat
-              </p>
-            ) : null}
           </div>
-          <div className="ProgressBar w-full bg-[#3636A3] rounded-[8px] ">
+
+          {/* Progress bar */}
+          {/* <div className="ProgressBar w-full bg-[#3636A3] rounded-[8px]">
             <div
               style={{
                 width: `${substractedProgress.toString()}%`,
               }}
               className={`rounded-[8px] bg-[#6868B8] w-[${substractedProgress.toString()}%] h-[7px] sm:h-[28px]`}></div>
-          </div>
+          </div> */}
         </div>
       </div>
+
+      {/* If we have voteCode and voting not closed, then show badge with code. Else dont show */}
       {voteCode && voteStatus !== 'closed' ? (
+        // Mobile version
         <p className="block sm:hidden py-[10px] px-[4px] font-medium bg-[#1E1E7B] rounded-md text-fillLightGray text-[10px] leading-[125%] ">
           Ses bermek üçin{' '}
           <span className="inline-block w-fit px-1 py-[4px] mx-[4px] font-bold text-white text-[16px] border  rounded-md">
@@ -99,6 +115,7 @@ const ParticipantCard = ({
       ) : null}
     </div>
   ) : (
+    ////////////////////////////////////////////// Simple card
     <div className="flex flex-col max-w-[940px] items-center w-full gap-[5px] sm:gap-[20px]">
       <div className="flex items-center gap-[5px] sm:gap-[20px] max-w-[900px] w-full px-[5px] sm:p-0">
         <h3 className="w-[24px] text-[16px] sm:text-[20px] leading-[100%] font-bold">{number}</h3>
@@ -127,36 +144,39 @@ const ParticipantCard = ({
         )}
         <div className="flex flex-col gap-[10px] sm:gap-[12px] w-full">
           <div className="flex justify-between items-center w-full">
-            <div className="flex justify-between sm:justify-start  sm:flex-col gap-[6px]">
+            <div className="flex justify-between sm:justify-start  sm:flex-col gap-[8px]">
               {name ? (
                 <h2 className="text-textBlack text-[16px] sm:text-[18px] leading-[100%] font-bold">
                   {name}
                 </h2>
               ) : null}
-              <h4 className="text-[12px] sm:text-[16px] text-dark font-bold leading-[100%] ">
-                {votes ? votes : 0} ses
+              {/* If we have voteCode and voting not closed, then show badge with code. Else dont show */}
+              {voteCode && voteStatus !== 'closed' ? (
+                // Desktop version
+                <p className="hidden sm:block py-[5px] px-[8px] bg-[#EAEAFF] text-[#9393DA] text-[14px] leading-[125%] rounded-[10px] w-fit">
+                  Ses bermek üçin
+                  <span className="inline-block w-fit px-1 py-[2px] mx-[4px] font-bold leading-[100%] text-fillNavyBlue text-[16px] border border-fillNavyBlue rounded-md">
+                    {voteCode}
+                  </span>
+                  ugrat
+                </p>
+              ) : null}
+            </div>
+            <div className="flex flex-col gap-[4px] items-end">
+              <h4 className="text-[12px] sm:text-[32px] text-[#808080] font-bold leading-[100%] ">
+                {votes ? votes : 0}
+              </h4>
+              <h4 className="text-[12px] sm:text-[16px] text-[#808080] font-bold leading-[100%] ">
+                ses
               </h4>
             </div>
-            {voteCode && voteStatus !== 'closed' ? (
-              <p className="hidden sm:block py-[5px] px-[8px] bg-[#EAEAFF] text-[#9393DA] text-[14px] leading-[125%] rounded-[10px] w-fit">
-                Ses bermek üçin
-                <span className="inline-block w-fit px-1 py-[2px] mx-[4px] font-bold leading-[100%] text-fillNavyBlue text-[16px] border border-fillNavyBlue rounded-md">
-                  {voteCode}
-                </span>
-                ugrat
-              </p>
-            ) : null}
-          </div>
-          <div className="ProgressBar w-full bg-[#E0E0E0] rounded-[4px] ">
-            <div
-              style={{
-                width: `${substractedProgress.toString()}%`,
-              }}
-              className={`rounded-[4px] bg-[#6868B8] h-[5px] sm:h-[14px]`}></div>
           </div>
         </div>
       </div>
+
+      {/* If we have voteCode and voting not closed, then show badge with code. Else dont show */}
       {voteCode && voteStatus !== 'closed' ? (
+        // Mobile version
         <p className="block sm:hidden text-[#9393DA] text-[10px] leading-[125%] w-full">
           Ses bermek üçin{' '}
           <span className="inline-block w-fit px-1 py-[4px] leading-[100%] mx-[4px] font-bold text-fillNavyBlue text-[16px] border border-fillNavyBlue  rounded-md">
