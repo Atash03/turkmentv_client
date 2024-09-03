@@ -22,4 +22,5 @@ export interface VotingItem {
   title: null | string;
   photo: null | string;
   votes_percents: number;
+  url?: string;
 }
