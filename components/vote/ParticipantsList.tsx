@@ -31,6 +31,8 @@ const ParticipantsList = ({ vote_id }: IParams) => {
   const [voteStatus, setVoteStatus] = useState<string>();
   const [winnersCount, setWinnersCount] = useState<number>(0);
 
+  console.log(participantsData);
+
   // States realted to web socket
   const [smsNumber, setSmsNumber] = useState<string | null>(null);
   const [socket, setSocket] = useState<WebSocket | null>(null);
@@ -91,7 +93,7 @@ const ParticipantsList = ({ vote_id }: IParams) => {
 
         socket.onmessage = (event) => {
           try {
-            // console.log('Message received from WebSocket:', event.data);
+            console.log('Message received from WebSocket:', event.data);
             const message = JSON.parse(event.data);
             handleWebSocketMessage(message);
           } catch (error) {
@@ -146,9 +148,7 @@ const ParticipantsList = ({ vote_id }: IParams) => {
 
       // Update the corresponding voting item
       const updatedItems = prevVotingItems.map((item, index) =>
-        item.id === message.voting_item_id
-          ? { ...item, votes_count: item.votes_count + 10000 }
-          : item,
+        item.id === message.voting_item_id ? { ...item, votes_count: item.votes_count + 1 } : item,
       );
 
       // Sort the updated items array by votes_count in descending order
@@ -235,27 +235,14 @@ const ParticipantsList = ({ vote_id }: IParams) => {
             {participantsData && participantsData[0].votes_count > 0 ? (
               <div className="flex flex-col items-center overflow-hidden bg-fillNavyBlue rounded-[10px] sm:rounded-[30px] max-w-[940px] w-full px-[5px] py-[20px] sm:p-[20px] sm:gap-[20px] gap-[10px]">
                 {participantsData.map((participant, id) =>
-                  participant.votes_count === participantsData[0].votes_count && voteStatus ? (
-                    participant.url ? (
-                      <Link href={participant.url} target="_blank" className="w-full">
-                        <ParticipantCard
-                          key={v4()}
-                          voteStatus={voteStatus}
-                          isFirst={id === 0 ? true : false}
-                          name={participant.title}
-                          progress={participant.votes_percents}
-                          votes={participant.votes_count}
-                          voteCode={participant.vote_code}
-                          number={id + 1}
-                          photo={participant.photo}
-                          smsNumber={data.data.sms_number}
-                          winner={true}
-                        />
-                      </Link>
-                    ) : (
+                  participant.votes_count === participantsData[0].votes_count ? (
+                    <Link
+                      href={participant.url ? participant.url : ''}
+                      target="_blank"
+                      className="w-full">
                       <ParticipantCard
                         key={v4()}
-                        voteStatus={voteStatus}
+                        voteStatus={voteStatus ? voteStatus : ''}
                         isFirst={id === 0 ? true : false}
                         name={participant.title}
                         progress={participant.votes_percents}
@@ -266,7 +253,7 @@ const ParticipantsList = ({ vote_id }: IParams) => {
                         smsNumber={data.data.sms_number}
                         winner={true}
                       />
-                    )
+                    </Link>
                   ) : null,
                 )}
               </div>
