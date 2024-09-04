@@ -236,10 +236,26 @@ const ParticipantsList = ({ vote_id }: IParams) => {
               <div className="flex flex-col items-center overflow-hidden bg-fillNavyBlue rounded-[10px] sm:rounded-[30px] max-w-[940px] w-full px-[5px] py-[20px] sm:p-[20px] sm:gap-[20px] gap-[10px]">
                 {participantsData.map((participant, id) =>
                   participant.votes_count === participantsData[0].votes_count ? (
-                    <Link
-                      href={participant.url ? participant.url : ''}
-                      target="_blank"
-                      className="w-full">
+                    participant.url ? (
+                      <Link
+                        href={participant.url ? participant.url : ''}
+                        target="_blank"
+                        className="w-full">
+                        <ParticipantCard
+                          key={v4()}
+                          voteStatus={voteStatus ? voteStatus : ''}
+                          isFirst={id === 0 ? true : false}
+                          name={participant.title}
+                          progress={participant.votes_percents}
+                          votes={participant.votes_count}
+                          voteCode={participant.vote_code}
+                          number={id + 1}
+                          photo={participant.photo}
+                          smsNumber={data.data.sms_number}
+                          winner={true}
+                        />
+                      </Link>
+                    ) : (
                       <ParticipantCard
                         key={v4()}
                         voteStatus={voteStatus ? voteStatus : ''}
@@ -253,7 +269,7 @@ const ParticipantsList = ({ vote_id }: IParams) => {
                         smsNumber={data.data.sms_number}
                         winner={true}
                       />
-                    </Link>
+                    )
                   ) : null,
                 )}
               </div>
@@ -261,25 +277,48 @@ const ParticipantsList = ({ vote_id }: IParams) => {
 
             {winnersCount > 1 ? <div className="w-full h-[1px] bg-[#3636A3]"></div> : null}
           </div>
-          {participantsData
-            ? participantsData.map((participant, id) =>
-                participant.id !== participantsData[0].id && voteStatus ? (
-                  <ParticipantCard
-                    key={v4()}
-                    voteStatus={voteStatus}
-                    isFirst={id === 0 ? true : false}
-                    name={participant.title}
-                    progress={participant.votes_percents}
-                    votes={participant.votes_count}
-                    voteCode={participant.vote_code}
-                    number={id + 1}
-                    photo={participant.photo}
-                    smsNumber={data.data.sms_number}
-                    winner={false}
-                  />
-                ) : null,
-              )
-            : null}
+          <div className="flex flex-col items-center max-w-[940px] w-full gap-5 justify-center mx-auto">
+            {participantsData
+              ? participantsData.map((participant, id) =>
+                  participant.id !== participantsData[0].id && voteStatus ? (
+                    participant.url ? (
+                      <Link
+                        href={participant.url ? participant.url : ''}
+                        target="_blank"
+                        className="w-full mx-auto">
+                        <ParticipantCard
+                          key={v4()}
+                          voteStatus={voteStatus}
+                          isFirst={id === 0 ? true : false}
+                          name={participant.title}
+                          progress={participant.votes_percents}
+                          votes={participant.votes_count}
+                          voteCode={participant.vote_code}
+                          number={id + 1}
+                          photo={participant.photo}
+                          smsNumber={data.data.sms_number}
+                          winner={false}
+                        />
+                      </Link>
+                    ) : (
+                      <ParticipantCard
+                        key={v4()}
+                        voteStatus={voteStatus}
+                        isFirst={id === 0 ? true : false}
+                        name={participant.title}
+                        progress={participant.votes_percents}
+                        votes={participant.votes_count}
+                        voteCode={participant.vote_code}
+                        number={id + 1}
+                        photo={participant.photo}
+                        smsNumber={data.data.sms_number}
+                        winner={false}
+                      />
+                    )
+                  ) : null,
+                )
+              : null}
+          </div>
         </div>
       </div>
     );
