@@ -1,6 +1,8 @@
 'use client';
+
 import Image from 'next/image';
 import placeholder from '@/public/person placeholder.svg';
+import clsx from 'clsx';
 
 interface IProps {
   number: number;
@@ -13,6 +15,7 @@ interface IProps {
   isFirst: boolean;
   voteStatus: string;
   winner: boolean;
+  hasUrl: boolean;
 }
 
 const ParticipantCard = ({
@@ -22,6 +25,7 @@ const ParticipantCard = ({
   votes,
   progress,
   voteCode,
+  hasUrl,
   isFirst,
   voteStatus,
   winner,
@@ -30,31 +34,35 @@ const ParticipantCard = ({
 
   return winner && votes !== 0 ? (
     ////////////////////////////////////////////// Winner card
-    <div className="flex  flex-col overflow-hidden bg-fillNavyBlue  max-w-[940px] w-full">
+    <div className="flex flex-col overflow-hidden bg-fillNavyBlue  max-w-[940px] w-full group">
       <div className="flex items-center gap-[5px] sm:gap-[20px] p-[5px] pt-[10px] w-full">
         <h3 className="text-[26px] sm:text-[80px] leading-[100%] font-bold text-fillNavyBlue text-stroke">
           {number}
         </h3>
         {photo && name ? (
           // If there an image, show image
-          <div className="relative min-w-[60px] h-[60px] sm:min-w-[140px] sm:h-[140px]">
+          <div className="relative min-w-[60px] rounded-[10px] h-[60px] sm:min-w-[140px] sm:h-[140px] overflow-hidden">
             <Image
               fill
               src={photo}
               alt={name}
-              className="rounded-[10px] object-cover"
+              className={clsx(' object-cover', {
+                'group-hover:scale-110 transition-all duration-300 ease-out': hasUrl,
+              })}
               unoptimized
               unselectable="off"
             />
           </div>
         ) : (
           // If there is no image, show placeholder
-          <div className="relative hover:group min-w-[60px] h-[60px] sm:min-w-[140px] sm:h-[140px]">
+          <div className="relative overflow-hidden rounded-[10px] min-w-[60px] h-[60px] sm:min-w-[140px] sm:h-[140px]">
             <Image
               fill
               src={placeholder}
               alt={'placeholder'}
-              className="rounded-[10px] object-cover"
+              className={clsx(' object-cover', {
+                'group-hover:scale-110 transition-all duration-300 ease-out': hasUrl,
+              })}
               unoptimized
               unselectable="off"
             />
@@ -64,7 +72,13 @@ const ParticipantCard = ({
           <div className="flex justify-between items-center w-full">
             <div className="flex justify-between items-center sm:items-start w-full sm:w-fit sm:justify-start sm:flex-col gap-[14px]">
               {name ? (
-                <h2 className="text-[18px] group:scale-110 transition-all sm:text-[24px] leading-[100%] font-bold text-white">
+                <h2
+                  className={clsx(
+                    'text-[18px] transition-all sm:text-[24px] leading-[100%] font-bold text-white',
+                    {
+                      // 'group-hover:text-[28px] transition-all duration-300 ease-out': hasUrl,
+                    },
+                  )}>
                   {name}
                 </h2>
               ) : null}
@@ -73,7 +87,7 @@ const ParticipantCard = ({
               {voteCode && voteStatus !== 'closed' ? (
                 // Desktop version
                 <p className="hidden sm:block py-[10px] px-[8px] bg-[#1E1E7B] text-fillLightGray text-[14px] leading-[125%] max-w-[232px] rounded-[10px]">
-                  Ses bermek üçin{' '}
+                  Ses bermek üçin
                   <span className="inline-block w-fit px-1 py-[4px] mx-[4px] font-bold text-white text-[16px] border  rounded-md">
                     {voteCode}
                   </span>
@@ -116,27 +130,31 @@ const ParticipantCard = ({
     </div>
   ) : (
     ////////////////////////////////////////////// Simple card
-    <div className="flex flex-col max-w-[940px] items-center w-full gap-[5px] sm:gap-[20px]">
+    <div className="flex flex-col max-w-[940px] items-center w-full gap-[5px] sm:gap-[20px] group">
       <div className="flex items-center gap-[5px] sm:gap-[20px] max-w-[900px] w-full px-[5px] sm:p-0">
         <h3 className="w-[24px] text-[16px] sm:text-[20px] leading-[100%] font-bold">{number}</h3>
         {photo && name ? (
-          <div className="relative min-w-[50px] sm:min-w-[80px] h-[50px] sm:h-[80px]">
+          <div className="relative min-w-[50px] rounded-[10px] overflow-hidden sm:min-w-[80px] h-[50px] sm:h-[80px]">
             <Image
               fill
               src={photo}
               alt={name}
-              className="rounded-[10px] object-cover"
+              className={clsx(' object-cover', {
+                'group-hover:scale-110 transition-all duration-300 ease-out': hasUrl,
+              })}
               unoptimized
               unselectable="off"
             />
           </div>
         ) : (
-          <div className="relative min-w-[50px] sm:min-w-[80px] h-[50px] sm:h-[80px]">
+          <div className="relative min-w-[50px] sm:min-w-[80px] h-[50px] sm:h-[80px] rounded-[10px] overflow-hidden">
             <Image
               fill
               src={placeholder}
               alt={'placeholder'}
-              className="rounded-[10px] object-cover"
+              className={clsx(' object-cover', {
+                'group-hover:scale-110 transition-all duration-300 ease-out': hasUrl,
+              })}
               unoptimized
               unselectable="off"
             />
@@ -146,7 +164,10 @@ const ParticipantCard = ({
           <div className="flex justify-between items-center w-full">
             <div className="flex justify-between sm:justify-start  sm:flex-col gap-[8px]">
               {name ? (
-                <h2 className="text-textBlack text-[16px] sm:text-[18px] leading-[100%] font-bold">
+                <h2
+                  className={clsx(
+                    'text-textBlack text-[16px] sm:text-[18px] leading-[100%] font-bold',
+                  )}>
                   {name}
                 </h2>
               ) : null}

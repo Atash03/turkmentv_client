@@ -243,6 +243,7 @@ const ParticipantsList = ({ vote_id }: IParams) => {
                         className="w-full">
                         <ParticipantCard
                           key={v4()}
+                          hasUrl={true}
                           voteStatus={voteStatus ? voteStatus : ''}
                           isFirst={id === 0 ? true : false}
                           name={participant.title}
@@ -258,6 +259,7 @@ const ParticipantsList = ({ vote_id }: IParams) => {
                     ) : (
                       <ParticipantCard
                         key={v4()}
+                        hasUrl={false}
                         voteStatus={voteStatus ? voteStatus : ''}
                         isFirst={id === 0 ? true : false}
                         name={participant.title}
@@ -287,6 +289,7 @@ const ParticipantsList = ({ vote_id }: IParams) => {
                         target="_blank"
                         className="w-full mx-auto">
                         <ParticipantCard
+                          hasUrl={true}
                           key={v4()}
                           voteStatus={voteStatus}
                           isFirst={id === 0 ? true : false}
@@ -302,6 +305,7 @@ const ParticipantsList = ({ vote_id }: IParams) => {
                       </Link>
                     ) : (
                       <ParticipantCard
+                        hasUrl={false}
                         key={v4()}
                         voteStatus={voteStatus}
                         isFirst={id === 0 ? true : false}
