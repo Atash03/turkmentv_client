@@ -17,14 +17,6 @@ const page = () => {
   const [quizFinished, setQuizFinished] = useState<boolean>(false);
   const [data, setData] = useState<IQuizQuestions>();
 
-  // const { data, error, isFetching } = useQuery(
-  //   ['quiz_questions'],
-  //   () => Queries.getQuizQuestions(),
-  //   {
-  //     keepPreviousData: true,
-  //   },
-  // );
-
   useEffect(() => {
     Queries.getQuizQuestions().then((res) => {
       setData(res);

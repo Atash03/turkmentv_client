@@ -96,11 +96,13 @@ const QuizQuestionList = ({
     }
   }, [quizFinished]);
 
+  console.log(data);
+
   return (
     <div className="flex flex-col gap-[40px] md:gap-[160px]">
       {data && !quizSearchData ? (
         data.data.questions.map((question, id) =>
-          question.status != 'new' ? (
+          question.status !== 'new' ? (
             <QuizQuestion
               score={question.score}
               questionId={question.id}
@@ -119,7 +121,7 @@ const QuizQuestionList = ({
         </h2>
       ) : data ? (
         data.data.questions.map((question, id) =>
-          question.status != 'new' ? (
+          question.status !== 'new' ? (
             <QuizQuestion
               score={question.score}
               questionId={question.id}

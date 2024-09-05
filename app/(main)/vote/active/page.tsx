@@ -1,4 +1,3 @@
-import PageBage from '@/components/vote/PageBage';
 import ParticipantsList from '@/components/vote/ParticipantsList';
 import VoteProvider from '@/providers/VoteProvider';
 
