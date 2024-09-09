@@ -433,7 +433,7 @@ const QuizWinnerTable = ({ quizId, quizFinished, smsNumber }: IProps) => {
                 <span className=" text-sm leading-[125%] text-white">100</span>
               </div>
               <span className="text-base leading-[120%] text-textLight w-full">
-                Bäsşeikde gazanylan utuklaryň jemi
+                Bäsleşikde gazanylan utuklaryň jemi
               </span>
             </div>
             <div className="flex gap-[10px] items-center ">
