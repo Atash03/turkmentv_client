@@ -3,7 +3,7 @@ import { Queries } from '@/api/queries';
 
 import { v4 } from 'uuid';
 import { useState, useEffect, useContext, Dispatch, SetStateAction } from 'react';
-import { IQuizQuestionsWinners } from '@/models/quizQuestionsWinners.model';
+import { Answer, IQuizQuestionsWinners } from '@/models/quizQuestionsWinners.model';
 import QuizContext from '@/context/QuizContext';
 import { IQuizQuestions } from '@/models/quizQuestions.model';
 
@@ -45,8 +45,6 @@ const QuizWinnerTable = ({ quizId, quizFinished, smsNumber }: IProps) => {
   // const [questionsData, setQuestionsData] = useState<IQuizQuestions>();
   const [winnersData, setWinnersData] = useState<IQuizQuestionsWinners>();
   const { questionsData } = useContext(QuizContext).quizQuestionsContext;
-
-  console.log('Questions:', questionsData);
 
   const [socket, setSocket] = useState<WebSocket | null>(null);
   const [isConnected, setIsConnected] = useState(false);
@@ -250,9 +248,29 @@ const QuizWinnerTable = ({ quizId, quizFinished, smsNumber }: IProps) => {
                   <div className="flex justify-center items-center gap-6 text-base text-textGray leading-[125%] w-[100%] px-3 py-5">
                     {questionsData
                       ? questionsData.map((question) => {
-                          const matchingAnswer = winner.client.answers.find(
-                            (answer) => answer.question_id === question.id && answer.score !== 0,
-                          );
+                          // const matchingAnswer = winner.client.answers.find(
+                          //   (answer) => answer.question_id === question.id,
+                          // );
+
+                          const matchingAnswer =
+                            winner.client.answers.find(
+                              (answer) => answer.question_id === question.id && answer.score > 0,
+                            ) ||
+                            winner.client.answers.find(
+                              (answer) => answer.question_id === question.id,
+                            );
+
+                          // const matchingAnswer = () => {
+                          //   const duplicateAnswers: Answer[] = [];
+
+                          //   winner.client.answers.map((answer) =>
+                          //     answer.question_id === question.id
+                          //       ? duplicateAnswers.push(answer)
+                          //       : null,
+                          //   );
+
+                          //   console.log(duplicateAnswers);
+                          // };
 
                           return (
                             <span
