@@ -133,9 +133,13 @@ const page = ({ params }: IParams) => {
                   />
                 ) : null}
 
-                {data?.data.id && quizFinished ? (
-                  <QuizWinnerTable quizId={data?.data.id} quizFinished={quizFinished} />
-                ) : null}
+                {data?.data.id && (
+                  <QuizWinnerTable
+                    smsNumber={data.data.sms_number}
+                    quizId={data?.data.id}
+                    quizFinished={quizFinished}
+                  />
+                )}
               </div>
             </QuizProvider>
           </div>

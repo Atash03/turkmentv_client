@@ -8,6 +8,7 @@ export interface Data {
   title: string;
   date: string;
   banner: string;
+  sms_number: string;
   banner_mobile: string;
   description: string;
   rules: Note[];

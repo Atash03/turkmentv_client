@@ -25,6 +25,10 @@ const QuizQuestionList = ({
   const { quizSearchData } = useContext(QuizContext).quizSearchContext;
   const { setQuestionsData } = useContext(QuizContext).quizQuestionsContext;
 
+  const [smsNumber, setSmsNumber] = useState<string>();
+  const [socket, setSocket] = useState<WebSocket | null>(null);
+  const [isConnected, setIsConnected] = useState(false);
+
   // useEffect(() => {
   //   Queries.getQuizQuestions().then((res) => setData(res));
   //   data?.data.questions.map((question) =>
@@ -56,47 +60,68 @@ const QuizQuestionList = ({
     // );
 
     if (!dynamic && quizFinished === false) {
-      const interval = setInterval(() => {
-        Queries.getQuizQuestions().then((res) => {
-          setData(res);
-          setQuestionsData(res.data.questions);
+      // const interval = setInterval(() => {
+      //   Queries.getQuizQuestions().then((res) => {
+      //     setData(res);
+      //     setQuestionsData(res.data.questions);
 
-          res.data.questions.map((question) =>
-            question.status === 'active' || question.status === 'new'
-              ? setQuizFinished(false)
-              : setQuizFinished(true),
-          );
-        });
+      //     res.data.questions.map((question) =>
+      //       question.status === 'active' || question.status === 'new'
+      //         ? setQuizFinished(false)
+      //         : setQuizFinished(true),
+      //     );
+      //   });
 
-        // const isActive = data?.data.questions.some(
-        //   (question) => question.status === 'active' || question.status === 'new',
-        // );
+      //   // const isActive = data?.data.questions.some(
+      //   //   (question) => question.status === 'active' || question.status === 'new',
+      //   // );
 
-        // data.data.questions.map((question) =>
-        //   question.status === 'active' || question.status === 'new'
-        //     ? setQuizFinished(false)
-        //     : setQuizFinished(true),
-        // );
-      }, 60000);
-      return () => clearInterval(interval);
+      //   // data.data.questions.map((question) =>
+      //   //   question.status === 'active' || question.status === 'new'
+      //   //     ? setQuizFinished(false)
+      //   //     : setQuizFinished(true),
+      //   // );
+      // }, 60000);
+      // return () => clearInterval(interval);
+      Queries.getQuizQuestions().then((res) => {
+        setData(res);
+        setQuestionsData(res.data.questions);
+        setSmsNumber(res.data.sms_number);
+
+        res.data.questions.map((question) =>
+          question.status === 'active' || question.status === 'new'
+            ? setQuizFinished(false)
+            : setQuizFinished(true),
+        );
+      });
     } else {
-      const interval = setInterval(() => {
-        Queries.getQuiz(id).then((res) => {
-          setData(res);
-          setQuestionsData(res.data.questions);
+      // const interval = setInterval(() => {
+      //   Queries.getQuiz(id).then((res) => {
+      //     setData(res);
+      //     setQuestionsData(res.data.questions);
 
-          res.data.questions.map((question) =>
-            question.status === 'active' || question.status === 'new'
-              ? setQuizFinished(false)
-              : setQuizFinished(true),
-          );
-        });
-      }, 60000);
-      return () => clearInterval(interval);
+      //     res.data.questions.map((question) =>
+      //       question.status === 'active' || question.status === 'new'
+      //         ? setQuizFinished(false)
+      //         : setQuizFinished(true),
+      //     );
+      //   });
+      // }, 60000);
+      // return () => clearInterval(interval);
+
+      Queries.getQuiz(id).then((res) => {
+        setData(res);
+        setQuestionsData(res.data.questions);
+        setSmsNumber(res.data.sms_number);
+
+        res.data.questions.map((question) =>
+          question.status === 'active' || question.status === 'new'
+            ? setQuizFinished(false)
+            : setQuizFinished(true),
+        );
+      });
     }
   }, [quizFinished]);
-
-  console.log(data);
 
   return (
     <div className="flex flex-col gap-[40px] md:gap-[160px]">
