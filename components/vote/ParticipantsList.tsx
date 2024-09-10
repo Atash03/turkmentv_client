@@ -12,6 +12,7 @@ import Image from 'next/image';
 import { useMediaQuery } from 'usehooks-ts';
 import Countdown from './Countdown';
 import Link from 'next/link';
+import { AnimatePresence } from 'framer-motion';
 
 interface IParams {
   vote_id?: string;
@@ -30,8 +31,6 @@ const ParticipantsList = ({ vote_id }: IParams) => {
   const [participantsData, setParticipantsData] = useState<VotingItem[]>([]);
   const [voteStatus, setVoteStatus] = useState<string>();
   const [winnersCount, setWinnersCount] = useState<number>(0);
-
-  console.log(participantsData);
 
   // States realted to web socket
   const [smsNumber, setSmsNumber] = useState<string | null>(null);
@@ -79,11 +78,13 @@ const ParticipantsList = ({ vote_id }: IParams) => {
         socket.onopen = () => {
           console.log('WebSocket is connected');
           setIsConnected(true);
+          // addVotes();
 
           pingInterval = setInterval(() => {
             if (socket?.readyState === WebSocket.OPEN) {
               try {
                 socket.send(JSON.stringify({ type: 'ping' }));
+                // addVotes();
               } catch (error) {
                 console.error('Error sending ping:', error);
               }
@@ -162,9 +163,11 @@ const ParticipantsList = ({ vote_id }: IParams) => {
 
       // Update the corresponding voting item
       const updatedItems = prevVotingItems.map((item, index) =>
-        index === 5 ? { ...item, votes_count: item.votes_count + 10000 } : item,
+        index === 1 ? { ...item, votes_count: item.votes_count + 1 } : item,
       );
 
+      console.log('votes updated');
+      console.log(updatedItems.sort((a, b) => b.votes_count - a.votes_count));
       // Sort the updated items array by votes_count in descending order
       return updatedItems.sort((a, b) => b.votes_count - a.votes_count);
     });
@@ -234,7 +237,7 @@ const ParticipantsList = ({ vote_id }: IParams) => {
 
             {participantsData && participantsData[0].votes_count > 0 ? (
               <div className="flex flex-col items-center overflow-hidden bg-fillNavyBlue rounded-[10px] sm:rounded-[30px] max-w-[940px] w-full px-[5px] py-[20px] sm:p-[20px] sm:gap-[20px] gap-[10px]">
-                {participantsData.map((participant, id) =>
+                {participantsData.map((participant, index) =>
                   participant.votes_count === participantsData[0].votes_count ? (
                     participant.url ? (
                       <Link
@@ -243,14 +246,15 @@ const ParticipantsList = ({ vote_id }: IParams) => {
                         className="w-full">
                         <ParticipantCard
                           key={v4()}
+                          index={index}
                           hasUrl={true}
                           voteStatus={voteStatus ? voteStatus : ''}
-                          isFirst={id === 0 ? true : false}
+                          isFirst={index === 0 ? true : false}
                           name={participant.title}
                           progress={participant.votes_percents}
                           votes={participant.votes_count}
                           voteCode={participant.vote_code}
-                          number={id + 1}
+                          number={index + 1}
                           photo={participant.photo}
                           smsNumber={data.data.sms_number}
                           winner={true}
@@ -259,14 +263,15 @@ const ParticipantsList = ({ vote_id }: IParams) => {
                     ) : (
                       <ParticipantCard
                         key={v4()}
+                        index={index}
                         hasUrl={false}
                         voteStatus={voteStatus ? voteStatus : ''}
-                        isFirst={id === 0 ? true : false}
+                        isFirst={index === 0 ? true : false}
                         name={participant.title}
                         progress={participant.votes_percents}
                         votes={participant.votes_count}
                         voteCode={participant.vote_code}
-                        number={id + 1}
+                        number={index + 1}
                         photo={participant.photo}
                         smsNumber={data.data.sms_number}
                         winner={true}
@@ -279,25 +284,27 @@ const ParticipantsList = ({ vote_id }: IParams) => {
 
             {winnersCount > 1 ? <div className="w-full h-[1px] bg-[#3636A3]"></div> : null}
           </div>
+
           <div className="flex flex-col items-center max-w-[940px] w-full gap-5 justify-center mx-auto">
             {participantsData
-              ? participantsData.map((participant, id) =>
-                  participant.id !== participantsData[0].id && voteStatus ? (
+              ? participantsData.map((participant, index) =>
+                  participant.votes_count !== participantsData[0].votes_count ? (
                     participant.url ? (
                       <Link
                         href={participant.url ? participant.url : ''}
                         target="_blank"
                         className="w-full mx-auto">
                         <ParticipantCard
+                          index={index}
                           hasUrl={true}
                           key={v4()}
-                          voteStatus={voteStatus}
-                          isFirst={id === 0 ? true : false}
+                          voteStatus={voteStatus ? voteStatus : ''}
+                          isFirst={index === 0 ? true : false}
                           name={participant.title}
                           progress={participant.votes_percents}
                           votes={participant.votes_count}
                           voteCode={participant.vote_code}
-                          number={id + 1}
+                          number={index + 1}
                           photo={participant.photo}
                           smsNumber={data.data.sms_number}
                           winner={false}
@@ -307,13 +314,14 @@ const ParticipantsList = ({ vote_id }: IParams) => {
                       <ParticipantCard
                         hasUrl={false}
                         key={v4()}
-                        voteStatus={voteStatus}
-                        isFirst={id === 0 ? true : false}
+                        index={index}
+                        voteStatus={voteStatus ? voteStatus : ''}
+                        isFirst={index === 0 ? true : false}
                         name={participant.title}
                         progress={participant.votes_percents}
                         votes={participant.votes_count}
                         voteCode={participant.vote_code}
-                        number={id + 1}
+                        number={index + 1}
                         photo={participant.photo}
                         smsNumber={data.data.sms_number}
                         winner={false}

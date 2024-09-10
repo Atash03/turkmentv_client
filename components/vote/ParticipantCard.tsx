@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import placeholder from '@/public/person placeholder.svg';
 import clsx from 'clsx';
+import { motion, usePresence, Variant, Transition } from 'framer-motion';
 
 interface IProps {
   number: number;
@@ -16,6 +17,7 @@ interface IProps {
   voteStatus: string;
   winner: boolean;
   hasUrl: boolean;
+  index: number;
 }
 
 const ParticipantCard = ({
@@ -25,6 +27,7 @@ const ParticipantCard = ({
   votes,
   progress,
   voteCode,
+  index,
   hasUrl,
   isFirst,
   voteStatus,
@@ -32,9 +35,37 @@ const ParticipantCard = ({
 }: IProps) => {
   const substractedProgress = progress > 99 ? progress - 2 : progress;
 
+  const transition: Transition = {
+    type: 'spring',
+    stiffness: 500,
+    damping: 50,
+    mass: 1,
+    delay: index * 0.1,
+  };
+
+  const [isPresent, safeToRemove] = usePresence();
+
+  const animations = {
+    layout: true,
+    initial: 'out',
+    style: {
+      position: (isPresent ? 'static' : 'absolute') as 'static' | 'absolute', // Corrected cast
+    },
+    animate: isPresent ? 'in' : 'out',
+    variants: {
+      in: { scaleY: 1, opacity: 1 },
+      out: { scaleY: 0, opacity: 0, zIndex: -1 },
+      tapped: { scale: 0.98, opacity: 0.5, transition: { duration: 0.1 } },
+    },
+    onAnimationComplete: () => !isPresent && safeToRemove(),
+    transition,
+  };
+
   return winner && votes !== 0 ? (
     ////////////////////////////////////////////// Winner card
-    <div className="flex flex-col overflow-hidden bg-fillNavyBlue  max-w-[940px] w-full group">
+    <motion.div
+      // {...animations}
+      className="flex flex-col overflow-hidden bg-fillNavyBlue  max-w-[940px] w-full group">
       <div className="flex items-center gap-[5px] sm:gap-[20px] p-[5px] pt-[10px] w-full">
         <h3 className="text-[26px] sm:text-[80px] leading-[100%] font-bold text-fillNavyBlue text-stroke">
           {number}
@@ -104,15 +135,6 @@ const ParticipantCard = ({
               </h4>
             </div>
           </div>
-
-          {/* Progress bar */}
-          {/* <div className="ProgressBar w-full bg-[#3636A3] rounded-[8px]">
-            <div
-              style={{
-                width: `${substractedProgress.toString()}%`,
-              }}
-              className={`rounded-[8px] bg-[#6868B8] w-[${substractedProgress.toString()}%] h-[7px] sm:h-[28px]`}></div>
-          </div> */}
         </div>
       </div>
 
@@ -127,10 +149,13 @@ const ParticipantCard = ({
           ugrat
         </p>
       ) : null}
-    </div>
+    </motion.div>
   ) : (
     ////////////////////////////////////////////// Simple card
-    <div className="flex flex-col max-w-[940px] items-center w-full gap-[5px] sm:gap-[20px] group">
+    <motion.div
+      className="flex flex-col max-w-[940px] items-center w-full gap-[5px] sm:gap-[20px] group"
+      // {...animations}
+    >
       <div className="flex items-center gap-[5px] sm:gap-[20px] max-w-[900px] w-full px-[5px] sm:p-0">
         <h3 className="w-[24px] text-[16px] sm:text-[20px] leading-[100%] font-bold">{number}</h3>
         {photo && name ? (
@@ -207,7 +232,7 @@ const ParticipantCard = ({
         </p>
       ) : null}
       <div className="w-full h-[1px] bg-[#EDEDFA]"></div>
-    </div>
+    </motion.div>
   );
 };
 
