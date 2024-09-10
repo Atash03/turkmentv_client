@@ -125,15 +125,14 @@ const page = ({ params }: IParams) => {
               <div className="flex flex-col md:gap-[160px] gap-[80px]">
                 {data?.data ? (
                   <QuizQuestionList
-                    dynamic
-                    id={params.quiz_id}
+                    paramsId={params.quiz_id}
                     initialQuestionsData={data}
                     setQuizFinished={setQuizFinished}
                     quizFinished={quizFinished}
                   />
                 ) : null}
 
-                {data?.data.id && (
+                {data?.data.id && quizFinished && (
                   <QuizWinnerTable
                     smsNumber={data.data.sms_number}
                     quizId={data?.data.id}

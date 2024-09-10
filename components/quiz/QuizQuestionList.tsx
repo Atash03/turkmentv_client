@@ -10,43 +10,18 @@ interface IProps {
   setQuizFinished: Dispatch<boolean>;
   quizFinished: boolean;
   initialQuestionsData: IQuizQuestions;
-  id: string;
-  dynamic?: boolean;
+  paramsId?: string;
 }
 
 const QuizQuestionList = ({
   setQuizFinished,
   quizFinished,
   initialQuestionsData,
-  id,
-  dynamic,
+  paramsId,
 }: IProps) => {
   const [data, setData] = useState<IQuizQuestions>(initialQuestionsData);
   const { quizSearchData } = useContext(QuizContext).quizSearchContext;
   const { setQuestionsData } = useContext(QuizContext).quizQuestionsContext;
-
-  const [smsNumber, setSmsNumber] = useState<string>();
-  const [socket, setSocket] = useState<WebSocket | null>(null);
-  const [isConnected, setIsConnected] = useState(false);
-
-  // useEffect(() => {
-  //   Queries.getQuizQuestions().then((res) => setData(res));
-  //   data?.data.questions.map((question) =>
-  //     question.status === 'active' ? setQuizFinished(false) : setQuizFinished(true),
-  //   );
-
-  //   if (quizFinished === true) {
-  //     const interval = setInterval(() => {
-  //       Queries.getQuizQuestions().then((res) => {
-  //         setData(res);
-  //       });
-  //       data?.data.questions.map((question) =>
-  //         question.status === 'active' ? setQuizFinished(false) : setQuizFinished(true),
-  //       );
-  //     }, 15000);
-  //     return () => clearInterval(interval);
-  //   }
-  // }, []);
 
   useEffect(() => {
     // Queries.getQuizQuestions().then((res) => setData(res));
@@ -59,79 +34,72 @@ const QuizQuestionList = ({
     //     : setQuizFinished(true),
     // );
 
-    if (!dynamic && quizFinished === false) {
-      // const interval = setInterval(() => {
-      //   Queries.getQuizQuestions().then((res) => {
-      //     setData(res);
-      //     setQuestionsData(res.data.questions);
+    console.log('quizFinished', quizFinished);
 
-      //     res.data.questions.map((question) =>
-      //       question.status === 'active' || question.status === 'new'
-      //         ? setQuizFinished(false)
-      //         : setQuizFinished(true),
-      //     );
-      //   });
+    if (paramsId && !quizFinished) {
+      const interval = setInterval(() => {
+        Queries.getQuiz(paramsId).then((res) => {
+          setData(res);
+          setQuestionsData(res.data.questions);
 
-      //   // const isActive = data?.data.questions.some(
-      //   //   (question) => question.status === 'active' || question.status === 'new',
-      //   // );
+          res.data.questions.map((question) =>
+            question.status === 'active' || question.status === 'new'
+              ? setQuizFinished(false)
+              : setQuizFinished(true),
+          );
+        });
+      }, 60000);
+      return () => clearInterval(interval);
+    }
 
-      //   // data.data.questions.map((question) =>
-      //   //   question.status === 'active' || question.status === 'new'
-      //   //     ? setQuizFinished(false)
-      //   //     : setQuizFinished(true),
-      //   // );
-      // }, 60000);
-      // return () => clearInterval(interval);
-      Queries.getQuizQuestions().then((res) => {
-        setData(res);
-        setQuestionsData(res.data.questions);
-        setSmsNumber(res.data.sms_number);
+    if (!paramsId && !quizFinished) {
+      const interval = setInterval(() => {
+        Queries.getQuizQuestions().then((res) => {
+          setData(res);
+          setQuestionsData(res.data.questions);
 
-        res.data.questions.map((question) =>
-          question.status === 'active' || question.status === 'new'
-            ? setQuizFinished(false)
-            : setQuizFinished(true),
-        );
-      });
-    } else {
-      // const interval = setInterval(() => {
-      //   Queries.getQuiz(id).then((res) => {
-      //     setData(res);
-      //     setQuestionsData(res.data.questions);
+          res.data.questions.map((question) =>
+            question.status === 'active' || question.status === 'new'
+              ? setQuizFinished(false)
+              : setQuizFinished(true),
+          );
+        });
 
-      //     res.data.questions.map((question) =>
-      //       question.status === 'active' || question.status === 'new'
-      //         ? setQuizFinished(false)
-      //         : setQuizFinished(true),
-      //     );
-      //   });
-      // }, 60000);
-      // return () => clearInterval(interval);
+        // const isActive = data?.data.questions.some(
+        //   (question) => question.status === 'active' || question.status === 'new',
+        // );
 
-      Queries.getQuiz(id).then((res) => {
-        setData(res);
-        setQuestionsData(res.data.questions);
-        setSmsNumber(res.data.sms_number);
+        // data.data.questions.map((question) =>
+        //   question.status === 'active' || question.status === 'new'
+        //     ? setQuizFinished(false)
+        //     : setQuizFinished(true),
+        // );
+      }, 60000);
+      return () => clearInterval(interval);
 
-        res.data.questions.map((question) =>
-          question.status === 'active' || question.status === 'new'
-            ? setQuizFinished(false)
-            : setQuizFinished(true),
-        );
-      });
+      // Queries.getQuizQuestions().then((res) => {
+      //   setData(res);
+      //   setQuestionsData(res.data.questions);
+      //   setSmsNumber(res.data.sms_number);
+
+      //   res.data.questions.map((question) =>
+      //     question.status === 'active' || question.status === 'new'
+      //       ? setQuizFinished(false)
+      //       : setQuizFinished(true),
+      //   );
+      // });
     }
   }, [quizFinished]);
 
   return (
     <div className="flex flex-col gap-[40px] md:gap-[160px]">
       {data && !quizSearchData ? (
-        data.data.questions.map((question, id) =>
+        data.data.questions.map((question, paramsId) =>
           question.status !== 'new' ? (
             <QuizQuestion
               score={question.score}
               questionId={question.id}
-              questionNumber={id}
+              questionNumber={paramsId}
               finished={question.status}
               question={question.question}
               key={v4()}

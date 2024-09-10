@@ -87,7 +87,6 @@ const page = () => {
             <div className="flex flex-col md:gap-[160px] gap-[80px]">
               {data?.data ? (
                 <QuizQuestionList
-                  id="active"
                   initialQuestionsData={data}
                   setQuizFinished={setQuizFinished}
                   quizFinished={quizFinished}
@@ -97,7 +96,7 @@ const page = () => {
               {/* {data?.data.id && quizFinished ? (
                 <QuizWinnerTable quizId={data?.data.id} quizFinished={quizFinished} />
               ) : null} */}
-              {data?.data.id && (
+              {data?.data.id && quizFinished && (
                 <QuizWinnerTable
                   smsNumber={data.data.sms_number}
                   quizId={data?.data.id}

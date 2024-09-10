@@ -52,85 +52,84 @@ const QuizWinnerTable = ({ quizId, quizFinished, smsNumber }: IProps) => {
   useEffect(() => {
     Queries.getQuizWinners(quizId).then((res) => {
       setWinnersData(res);
-      console.log(res);
     });
   }, [quizId]);
 
-  useEffect(() => {
-    let socket: WebSocket | null = null;
-    let reconnectTimeout: NodeJS.Timeout | null = null;
-    let pingInterval: NodeJS.Timeout | null = null;
+  // useEffect(() => {
+  //   let socket: WebSocket | null = null;
+  //   let reconnectTimeout: NodeJS.Timeout | null = null;
+  //   let pingInterval: NodeJS.Timeout | null = null;
 
-    const connectWebSocket = () => {
-      try {
-        socket = new WebSocket(`wss://sms.turkmentv.gov.tm/ws/quiz?dst=${smsNumber}`);
-        setSocket(socket);
+  //   const connectWebSocket = () => {
+  //     try {
+  //       socket = new WebSocket(`wss://sms.turkmentv.gov.tm/ws/quiz?dst=${smsNumber}`);
+  //       setSocket(socket);
 
-        socket.onopen = () => {
-          console.log('WebSocket is connected');
-          setIsConnected(true);
+  //       socket.onopen = () => {
+  //         console.log('WebSocket is connected');
+  //         setIsConnected(true);
 
-          pingInterval = setInterval(() => {
-            if (socket?.readyState === WebSocket.OPEN) {
-              try {
-                socket.send(JSON.stringify({ type: 'ping' }));
-              } catch (error) {
-                console.error('Error sending ping:', error);
-              }
-            }
-          }, 25000); // Ping every 25 seconds
-        };
+  //         pingInterval = setInterval(() => {
+  //           if (socket?.readyState === WebSocket.OPEN) {
+  //             try {
+  //               socket.send(JSON.stringify({ type: 'ping' }));
+  //             } catch (error) {
+  //               console.error('Error sending ping:', error);
+  //             }
+  //           }
+  //         }, 25000); // Ping every 25 seconds
+  //       };
 
-        socket.onmessage = (event) => {
-          try {
-            console.log('Message received from WebSocket:', event.data);
-            const message = JSON.parse(event.data);
-            handleOnMessage(message);
-          } catch (error) {
-            console.error('Error processing message:', error);
-          }
-        };
+  //       socket.onmessage = (event) => {
+  //         try {
+  //           console.log('Message received from WebSocket:', event.data);
+  //           const message = JSON.parse(event.data);
+  //           handleOnMessage(message);
+  //         } catch (error) {
+  //           console.error('Error processing message:', error);
+  //         }
+  //       };
 
-        socket.onerror = (error) => {
-          console.error('WebSocket error:', error);
-        };
+  //       socket.onerror = (error) => {
+  //         console.error('WebSocket error:', error);
+  //       };
 
-        socket.onclose = () => {
-          console.log('WebSocket is closed');
-          setIsConnected(false);
+  //       socket.onclose = () => {
+  //         console.log('WebSocket is closed');
+  //         setIsConnected(false);
 
-          if (pingInterval) {
-            clearInterval(pingInterval);
-          }
+  //         if (pingInterval) {
+  //           clearInterval(pingInterval);
+  //         }
 
-          if (!reconnectTimeout) {
-            reconnectTimeout = setTimeout(() => {
-              console.log('Attempting to reconnect WebSocket...');
-              connectWebSocket();
-            }, 5000); // Reconnect after 5 seconds
-          }
-        };
-      } catch (error) {
-        console.error('WebSocket connection error:', error);
-      }
-    };
+  //         if (!reconnectTimeout) {
+  //           reconnectTimeout = setTimeout(() => {
+  //             console.log('Attempting to reconnect WebSocket...');
+  //             connectWebSocket();
+  //           }, 5000); // Reconnect after 5 seconds
+  //         }
+  //       };
+  //     } catch (error) {
+  //       console.error('WebSocket connection error:', error);
+  //     }
+  //   };
 
-    if (smsNumber && winnersData) {
-      connectWebSocket();
-    }
+  //   if (smsNumber && winnersData) {
+  //     connectWebSocket();
+  //   }
 
-    return () => {
-      if (socket) {
-        socket.close();
-      }
-      if (reconnectTimeout) {
-        clearTimeout(reconnectTimeout);
-      }
-      if (pingInterval) {
-        clearInterval(pingInterval);
-      }
-    };
-  }, [smsNumber]);
+  //   return () => {
+  //     if (socket) {
+  //       socket.close();
+  //     }
+  //     if (reconnectTimeout) {
+  //       clearTimeout(reconnectTimeout);
+  //     }
+  //     if (pingInterval) {
+  //       clearInterval(pingInterval);
+  //     }
+  //   };
+  // }, [smsNumber]);
 
   // Function to handle incoming WebSocket message and update winnersData
   const handleOnMessage = (message: Message) => {
