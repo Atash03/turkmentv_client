@@ -39,7 +39,7 @@ const MainSwiper = () => {
                 fill
                 unoptimized
                 unselectable="off"
-                className="pointer-events-none "
+                className="pointer-events-none"
               />
             </Link>
           </SwiperSlide>
