@@ -23,7 +23,7 @@ interface IParams {
 }
 
 const PageItem = ({ params }: IParams) => {
-  const responsive = useMediaQuery('(max-width: 425px)');
+  const responsive = useMediaQuery('(max-width: 768px)');
 
   const { data, isFetching, error } = useQuery({
     queryKey: ['page_item'],
@@ -44,14 +44,16 @@ const PageItem = ({ params }: IParams) => {
         <div className="main-news flex md:flex-row flex-col gap-6">
           {data?.data.image && data.data.title ? (
             responsive && data.data.mobile_image ? (
-              <div className="w-full h-[300px] relative ">
+              <div className="relative">
                 <Image
-                  src={data?.data.image}
+                  src={data?.data.mobile_image}
                   alt={data?.data.title}
-                  unoptimized
-                  unselectable="off"
-                  fill
-                  priority
+                  width={700}
+                  height={400}
+                  // unoptimized
+                  // unselectable="off"
+                  // fill
+                  // priority
                   className="w-full h-full object-cover"
                 />
               </div>
