@@ -73,9 +73,9 @@ export class Queries {
   }
 
   public static async getVideo(id: number): Promise<VideoModel> {
-    return await fetch(`${baseUrl.MATERIALS_SRC}${routes.video(id)}`, {
-      next: { revalidate: 3600 },
-    }).then((res) => res.json().then((res) => res as VideoModel));
+    return await fetch(`${baseUrl.MATERIALS_SRC}${routes.video(id)}`).then((res) =>
+      res.json().then((res) => res as VideoModel),
+    );
   }
 
   public static async getPage(id: string): Promise<PageItemModel> {
