@@ -52,16 +52,6 @@ const VideoPlayer = ({ maxHeight, maxWidth, video_id }: IProps) => {
       {hasWindow ? (
         data?.data.content_url.endsWith('.mp4') ? (
           <div className="lg:w-[700px] md:w-[550px] w-full h-[200px] sm:h-[250px] md:h-[350px] lg:h-[420px]">
-            {/* <ReactPlayer
-              height={'100%'}
-              width={'100%'}
-              controls
-              playsInline
-              playing={true}
-              light={data?.data.banner_url}
-              url={data!.data.video_stream_url}
-              onStart={() => onPlayHandler()}
-            /> */}
             <video
               controls
               src={data!.data.video_stream_url}
@@ -74,10 +64,10 @@ const VideoPlayer = ({ maxHeight, maxWidth, video_id }: IProps) => {
           <div className="flex flex-col gap-4 h-fit">
             <div className="relative lg:w-[700px] md:w-[550px] w-full h-[200px] sm:h-[400px]  md:h-[420px]">
               {data?.data.banner_url ? (
-                <Image src={data?.data.banner_url} fill alt={'image'} />
+                <Image src={data?.data.banner_url} width={700} height={420} alt={'image'} />
               ) : null}
             </div>
-            <audio controls className="w-full rounded bg-white" onLoadStart={() => onPlayHandler()}>
+            <audio controls className="w-full rounded bg-white" onPlay={() => onPlayHandler()}>
               <source src={data?.data.content_url} />
             </audio>
           </div>
