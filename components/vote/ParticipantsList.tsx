@@ -195,7 +195,7 @@ const ParticipantsList = ({ vote_id }: IParams) => {
 
     return (
       <div className="flex flex-col gap-[20px] sm:gap-[40px] w-full items-center">
-        {data.data.description ? <PageBage title={data.data.title} /> : null}
+        {data.data.description ? <PageBage title={data.data.description} /> : null}
 
         {data.data.banner ? (
           <div className="relative w-full md:min-h-[150px] md:h-auto h-[100px] ">
