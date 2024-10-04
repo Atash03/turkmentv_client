@@ -42,6 +42,106 @@ export const theme = {
       fillFormRest: '#E6E6FA',
       textCaptioninform: '#BCBCD6',
       fillLinkRest: '#878799',
+
+      // UPDATED UI KIT =====================================================================================================
+      ////////////////////////////////// Light theme
+
+      // Background
+      lightBackground: '#FCF8FF',
+      // Primary
+      lightPrimary: '#575992',
+      lightOnPrimary: '#FFFFFF',
+      lightPrimaryContainer: '#E1E0FF',
+      lightOnPrimaryContainer: '#12144B',
+      // Secondary
+      lightSecondary: '#5D5D72',
+      lightOnSecondary: '#FFFFFF',
+      lightSecondaryContainer: '#E2E0F9',
+      lightOnSecondaryContainer: '#191A2C',
+      // Tertiary
+      lightTertiary: '#79536A',
+      lightOnTertiary: '#FFFFFF',
+      lightTertiaryContainer: '#FFD8EC',
+      lightOnTertiaryContainer: '#2E1125',
+      // Error
+      lightError: '#BA1A1A',
+      lightOnError: '#FFFFFF',
+      lightErrorContainer: '#FFDAD6',
+      lightOnErrorContainer: '#410002',
+      // Surface
+      lightSurface: '#FCF8FF',
+      lightOnSurface: '#1B1B21',
+      lightSurfaceVariant: '#E4E1EC',
+      lightOnSurfaceVariant: '#46464F',
+      lightSurfaceContainerLowest: '#FFFFFF',
+      lightSurfaceContainerLow: '#F6F2FA',
+      lightSurfaceContainer: '#F0ECF4',
+      lightSurfaceContainerHigh: '#EAE7EF',
+      lightSurfaceContainerHigher: '#E4E1E9',
+      // Outline
+      lightOutline: '#777680',
+      lightOutlineVariant: '#C7C5D0',
+    },
+    fontSize: {
+      // Display
+      display1: '56px',
+      display2: '48px',
+      display3: '44px',
+
+      // Heading
+      heading1: '36px',
+      heading2: '32px',
+      heading3: '28px',
+
+      // Text
+      textLarge: '18px',
+      textBase: '16px',
+      textSmall: '14px',
+      textXSmall: '12px',
+    },
+    lineHeight: {
+      // Display 1
+      display1: '56px',
+
+      // Display 2
+      display2: '56px',
+
+      // Display 3
+      display3: '56px',
+
+      // Heading 1
+      heading1: '56px',
+
+      // Heading 2
+      heading2: '56px',
+
+      // Heading 3
+      heading3: '56px',
+
+      // Heading 4
+      heading4: '56px',
+
+      // Heading 5
+      heading5: '56px',
+
+      // Heading 6
+      heading6: '56px',
+
+      // Text large
+      textLarge: '27px',
+
+      // Text base
+      textBase: '24px',
+
+      // Text small
+      textSmall: '20px',
+
+      // Text xSmall
+      textXSmall: '56px',
+    },
+    dropShadow: {
+      lightDropShadow1: ['0 1px 3px rgba(0, 0, 0, 0.15)', '0 1px 3px rgba(0, 0, 0, 0.15)'],
+      '4xl': ['0 35px 35px rgba(0, 0, 0, 0.25)', '0 45px 65px rgba(0, 0, 0, 0.15)'],
     },
     fontFamily: {
       aeroport: ['var(--font-aeroport)', ...fontFamily.sans],
@@ -57,6 +157,7 @@ export const theme = {
       form: '0px 4px 8px rgba(0, 0, 0, 0.25)',
       quizButton: '0px 2px 16px 0px rgba(0, 0, 0, 0.10)',
       tableShadow: '0px 2px 16px rgba(0, 0, 0, 0.1)',
+      lightBoxShadow1: ['0 1px 3px 1px rgba(0, 0, 0, 0.3)', '0 1px 3px 1px rgba(0, 0, 0, 0.15)'],
     },
     gridTemplateColumns: {
       home_custom: '56% 44%',

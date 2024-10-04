@@ -80,6 +80,7 @@
 
 html {
   overflow-x: hidden;
+
   /* min-height: 50vh; */
 }
 
@@ -179,6 +180,9 @@ big {
 }
 
 @layer utilities {
+  html {
+    @apply bg-lightBackground;
+  }
   .input-style {
     @apply bg-[#E6E6FA] rounded-xl py-3 px-4 placeholder:text-[#BCBCD6] outline-none;
   }
