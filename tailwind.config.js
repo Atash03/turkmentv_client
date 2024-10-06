@@ -71,6 +71,7 @@ export const theme = {
       // Surface
       lightSurface: '#FCF8FF',
       lightOnSurface: '#1B1B21',
+      lightOnSurfaceDisabled: 'rgba(27, 27, 33, 0.12)',
       lightSurfaceVariant: '#E4E1EC',
       lightOnSurfaceVariant: '#46464F',
       lightSurfaceContainerLowest: '#FFFFFF',
@@ -92,6 +93,9 @@ export const theme = {
       heading1: '36px',
       heading2: '32px',
       heading3: '28px',
+      heading4: '26px',
+      heading5: '24px',
+      heading6: '20px',
 
       // Text
       textLarge: '18px',
@@ -101,7 +105,7 @@ export const theme = {
     },
     lineHeight: {
       // Display 1
-      display1: '56px',
+      display1: '64px',
 
       // Display 2
       display2: '56px',
@@ -110,22 +114,22 @@ export const theme = {
       display3: '56px',
 
       // Heading 1
-      heading1: '56px',
+      heading1: '44px',
 
       // Heading 2
-      heading2: '56px',
+      heading2: '40px',
 
       // Heading 3
-      heading3: '56px',
+      heading3: '36px',
 
       // Heading 4
-      heading4: '56px',
+      heading4: '34px',
 
       // Heading 5
-      heading5: '56px',
+      heading5: '32px',
 
       // Heading 6
-      heading6: '56px',
+      heading6: '28px',
 
       // Text large
       textLarge: '27px',

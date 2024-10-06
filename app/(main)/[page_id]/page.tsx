@@ -36,7 +36,7 @@ const PageItem = ({ params }: IParams) => {
   return (
     <div className="container">
       <div className="flex flex-col gap-8 py-6">
-        <NextSeo title={data!.data.title} description={data!.data.content} />
+        {data && <NextSeo title={data.data.title} description={data.data.content} />}
         <div className="flex flex-col gap-2">
           {data?.data.title ? <PageTitle title={data?.data.title} /> : <Loader />}
         </div>
