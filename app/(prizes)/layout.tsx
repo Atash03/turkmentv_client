@@ -18,7 +18,7 @@ const layout = ({ children }: PropsWithChildren) => {
       <div className={`dark:bg-black transition-all h-full ${roboto.className}`}>
         <h1 className="hidden">Turkmen TV</h1>
         <Nav />
-        <main className="mt-[64px] mb-[128px] w-full">
+        <main className="mt-[32px] md:mt-[64px] mb-[64px] md:mb-[128px] w-full">
           <div className="container">{children}</div>
         </main>
         <Footer />

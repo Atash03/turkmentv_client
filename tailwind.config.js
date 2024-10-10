@@ -141,7 +141,7 @@ export const theme = {
       textSmall: '20px',
 
       // Text xSmall
-      textXSmall: '56px',
+      textXSmall: '16px',
     },
     dropShadow: {
       lightDropShadow1: ['0 1px 3px rgba(0, 0, 0, 0.15)', '0 1px 3px rgba(0, 0, 0, 0.15)'],

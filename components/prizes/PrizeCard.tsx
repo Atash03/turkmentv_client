@@ -1,17 +1,37 @@
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import { Button } from 'react-day-picker';
+import { Dispatch, SetStateAction } from 'react';
+import { ClassNames } from '@emotion/react';
 
 interface IProps {
   variant: 'default' | 'selected' | 'disabled';
+  prizeId: number;
+  setSelectedPrize: Dispatch<SetStateAction<null | number>>;
+  className?: string;
 }
 
-const PrizeCard = ({ variant }: IProps) => {
+const PrizeCard = ({ variant, prizeId, setSelectedPrize, className }: IProps) => {
   return (
     <div
-      className={cn('bg-lightSurfaceContainerHigher flex rounded-[12px] overflow-hidden', {
-        'opacity-50': variant === 'disabled',
-      })}>
-      <div className="flex-1  overflow-hidden">
+      className={cn(
+        'bg-lightSurfaceContainerHigher flex md:flex-row flex-col rounded-[12px] overflow-hidden',
+        className,
+        {
+          'opacity-50': variant === 'disabled',
+        },
+      )}>
+      <div className="flex-1 overflow-hidden md:h-full h-[186px]">
         <Image width={416} height={248} src="/prize.jpg" alt="prize" className="h-full w-full" />
       </div>
       <div className="flex-1 p-[16px] flex flex-col gap-[16px]">
@@ -23,9 +43,26 @@ const PrizeCard = ({ variant }: IProps) => {
           Этот автомобиль отличается высоким уровнем комфорта, стиля и технологий.{' '}
         </p>
         {variant === 'default' ? (
-          <button className="px-[24px] py-[10px] w-fit text-textSmall leading-textSmall -tracking-[-1%] font-medium bg-lightPrimary text-lightOnPrimary rounded-[40px]">
-            Выбрать
-          </button>
+          <Dialog>
+            <DialogTrigger className="px-[24px] py-[10px] w-full md:w-fit text-textSmall leading-textSmall -tracking-[-1%] font-medium bg-lightPrimary text-lightOnPrimary rounded-[40px]">
+              Выбрать
+            </DialogTrigger>
+            <DialogContent className="bg-lightSurfaceContainer flex flex-col gap-[8px]">
+              <DialogHeader className="flex flex-col gap-[8px]">
+                <DialogTitle>Успешно!</DialogTitle>
+                <DialogDescription>Все прошло успешно!</DialogDescription>
+              </DialogHeader>
+              <DialogFooter>
+                <DialogClose asChild>
+                  <button
+                    className="px-[24px] py-[10px]  w-full text-textSmall leading-textSmall -tracking-[-1%] font-medium bg-lightPrimary text-lightOnPrimary rounded-[40px]"
+                    onClick={() => setSelectedPrize(prizeId)}>
+                    Закрыть
+                  </button>
+                </DialogClose>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         ) : variant === 'disabled' ? (
           <button
             disabled
