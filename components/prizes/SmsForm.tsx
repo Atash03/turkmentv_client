@@ -4,11 +4,9 @@ import React, { useState, useEffect, FormEvent } from 'react';
 import axios from 'axios';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
+import { GiftsType } from '@/typings/gifts/gifts.type';
 
 // Define the expected shape of the API response
-interface GiftResponse {
-  data: any; // Replace 'any' with the actual data type if known
-}
 
 const SmsForm: React.FC = () => {
   const [inputValue, setInputValue] = useState<string>('');
@@ -17,7 +15,7 @@ const SmsForm: React.FC = () => {
   const router = useRouter();
 
   // TanStack Query mutation for the API request
-  const mutation = useMutation<GiftResponse, Error, string>({
+  const mutation = useMutation<GiftsType, Error, string>({
     mutationKey: [`gifts-${inputValue}`], // Using the dynamic query key
     mutationFn: (code: string) => axios.get(`https://sms.turkmentv.gov.tm/api/gifts/${code}`),
     onSuccess: (data) => {
