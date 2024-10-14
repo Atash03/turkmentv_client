@@ -167,7 +167,7 @@ const MobileMenu = () => {
                         }}>
                         TV market
                       </Link>
-                      <Link
+                      {/* <Link
                         href={'/prizes/auth'}
                         className="block text-2xl text-white transition-all font-roboto font-bold"
                         style={path.includes('prizes') ? { color: '#FFAB48' } : {}}
@@ -176,7 +176,7 @@ const MobileMenu = () => {
                           onClickCloseBurgerHandler();
                         }}>
                         Sowgatlar
-                      </Link>
+                      </Link> */}
                     </div>
                   </div>
                 </li>

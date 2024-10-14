@@ -140,13 +140,13 @@ const Nav = () => {
                       onClick={() => setDropDownOpened(false)}>
                       SMS ulgamy
                     </Link>
-                    <Link
+                    {/* <Link
                       href={'/prizes/auth'}
                       className="block min-w-fit text-lg text-white transition-all font-roboto font-bold"
                       style={path.includes('/prizes/auth') ? { color: '#FFAB48' } : {}}
                       onClick={() => setDropDownOpened(false)}>
                       Sowgatlar
-                    </Link>
+                    </Link> */}
                   </div>
                 </div>
               </li>
