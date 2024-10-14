@@ -20,13 +20,12 @@ const PrizesPage = ({ params }: { params: { user_id: string } }) => {
 
   // Fetching data using TanStack Query
   const { data, isLoading, error } = useQuery<GiftsType, Error>(
-    [`gifts-${params.user_id}`, params.user_id, selectedPrize], // Query key using user_id
+    [`gifts-${params.user_id}`, params.user_id], // Query key using user_id
     () =>
       axios
         .get(`https://sms.turkmentv.gov.tm/api/gifts/${params.user_id}`)
         .then((response) => response.data),
     {
-      staleTime: 60000, // Cache data for 1 minute
       // Handle error with onError callback to trigger the redirect
       onError: () => {
         router.push('/prizes/auth');

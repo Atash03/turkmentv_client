@@ -153,6 +153,7 @@ const MobileMenu = () => {
                       <Link
                         href={'/vote'}
                         className="block text-2xl text-white transition-all font-roboto font-bold "
+                        style={path.includes('vote') ? { color: '#FFAB48' } : {}}
                         onClick={() => {
                           setDropDownOpened(false);
                           onClickCloseBurgerHandler();
@@ -167,6 +168,16 @@ const MobileMenu = () => {
                           onClickCloseBurgerHandler();
                         }}>
                         TV market
+                      </Link>
+                      <Link
+                        href={'/prizes/auth'}
+                        className="block text-2xl text-white transition-all font-roboto font-bold"
+                        style={path.includes('prizes') ? { color: '#FFAB48' } : {}}
+                        onClick={() => {
+                          setDropDownOpened(false);
+                          onClickCloseBurgerHandler();
+                        }}>
+                        Sowgatlar
                       </Link>
                     </div>
                   </div>

@@ -36,7 +36,9 @@ const PrizeCard = ({
   className,
 }: IProps) => {
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
-  const [dialogTitle, setDialogTitle] = useState<string>('Успешно');
+  const [dialogTitle, setDialogTitle] = useState<string>('Выберите приз');
+  const [dialogDescription, setDialogDescription] = useState<string>('Загрузка...');
+  const [isSuccess, setIsSuccess] = useState<boolean>(false);
 
   // TanStack Query mutation for the API request
   const choosePrizeMutation = useMutation({
@@ -45,20 +47,34 @@ const PrizeCard = ({
         code,
       }),
     onSuccess: () => {
-      // Set the selected prize on successful API request
-      setSelectedPrize(id);
       setDialogTitle('Успешно');
-      setDialogOpen(true); // Open the dialog on success
+      setDialogDescription('Приз успешно выбран.');
+      setIsSuccess(true); // Mark as success so we can handle setting the prize when dialog closes
     },
     onError: () => {
-      // Set the dialog title to "Ошибка" on error
       setDialogTitle('Ошибка');
-      setDialogOpen(true); // Open the dialog on error
+      setDialogDescription('Произошла ошибка, попробуйте еще раз.');
+      setIsSuccess(false); // Reset on error
     },
   });
 
-  const handleDialogTriggerClick = () => {
+  const handleDialogOpen = () => {
+    // Reset the dialog to show the loading state
+    setDialogTitle('Загрузка...');
+    setDialogDescription('Пожалуйста подождите');
+    setIsSuccess(false); // Reset success state before opening
+
+    // Trigger the mutation when the dialog opens
     choosePrizeMutation.mutate();
+  };
+
+  const handleDialogClose = (open: boolean) => {
+    setDialogOpen(open);
+
+    // Check if the dialog was closed and if the mutation was successful
+    if (!open && isSuccess) {
+      setSelectedPrize(id); // Set the selected prize when the dialog closes after success
+    }
   };
 
   return (
@@ -86,28 +102,40 @@ const PrizeCard = ({
         <p className="text-textSmall leading-textSmall -tracking-[-1%] text-lightOnSurfaceVariant">
           {description}
         </p>
+
         {variant === 'default' ? (
-          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-            <DialogTrigger
-              className="px-[24px] py-[10px] w-full md:w-fit text-textSmall leading-textSmall -tracking-[-1%] font-medium bg-lightPrimary text-lightOnPrimary rounded-[40px]"
-              onClick={handleDialogTriggerClick}
-              disabled={choosePrizeMutation.isLoading}>
-              {choosePrizeMutation.isLoading ? 'Loading...' : 'Выбрать'}
-            </DialogTrigger>
-            <DialogContent className="bg-lightSurfaceContainer flex flex-col gap-[8px]">
-              <DialogHeader className="flex flex-col gap-[8px]">
-                <DialogTitle>{dialogTitle}</DialogTitle>
-                <DialogDescription>Все прошло успешно!</DialogDescription>
-              </DialogHeader>
-              <DialogFooter>
-                <DialogClose asChild>
-                  <button className="px-[24px] py-[10px] w-full text-textSmall leading-textSmall -tracking-[-1%] font-medium bg-lightPrimary text-lightOnPrimary rounded-[40px]">
-                    Закрыть
+          <>
+            {/* DialogTrigger to open the dialog */}
+            <div>
+              <Dialog open={dialogOpen} onOpenChange={handleDialogClose}>
+                <DialogTrigger asChild>
+                  <button
+                    className="px-[24px] py-[10px] w-full md:w-fit text-textSmall leading-textSmall -tracking-[-1%] font-medium bg-lightPrimary text-lightOnPrimary rounded-[40px]"
+                    onClick={handleDialogOpen}
+                    disabled={choosePrizeMutation.isLoading}>
+                    {choosePrizeMutation.isLoading ? 'Loading...' : 'Выбрать'}
                   </button>
-                </DialogClose>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
+                </DialogTrigger>
+
+                {/* DialogContent that shows loading or response */}
+                <DialogContent className="bg-lightSurfaceContainer flex flex-col gap-[8px]">
+                  <DialogHeader className="flex flex-col gap-[8px]">
+                    <DialogTitle>{dialogTitle}</DialogTitle>
+                    <DialogDescription>{dialogDescription}</DialogDescription>
+                  </DialogHeader>
+                  {dialogTitle !== 'Загрузка...' && (
+                    <DialogFooter>
+                      <DialogClose asChild>
+                        <button className="px-[24px] py-[10px] w-full text-textSmall leading-textSmall -tracking-[-1%] font-medium bg-lightPrimary text-lightOnPrimary rounded-[40px]">
+                          Закрыть
+                        </button>
+                      </DialogClose>
+                    </DialogFooter>
+                  )}
+                </DialogContent>
+              </Dialog>
+            </div>
+          </>
         ) : variant === 'disabled' ? (
           <button
             disabled

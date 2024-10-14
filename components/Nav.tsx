@@ -107,7 +107,7 @@ const Nav = () => {
                   </svg>
 
                   <div
-                    className={`absolute top-10 left-1/2 -translate-x-1/2 bg-[#353598] flex flex-col gap-4 p-[24px] rounded-[8px] transition-all duration-300 w-[150px] ${
+                    className={`absolute top-10 left-1/2 -translate-x-1/2 bg-[#353598] flex flex-col gap-4 p-[24px] rounded-[8px] transition-all duration-300 w-[160px] ${
                       dropDownOpened
                         ? 'opacity-100 translate-y-0 pointer-events-auto'
                         : ' opacity-0 translate-y-2 pointer-events-none'
@@ -136,8 +136,16 @@ const Nav = () => {
                     <Link
                       href={'/sms/sign_up'}
                       className="block min-w-fit text-lg text-white transition-all font-roboto font-bold"
+                      style={path.includes('/sms/sign_up') ? { color: '#FFAB48' } : {}}
                       onClick={() => setDropDownOpened(false)}>
                       SMS ulgamy
+                    </Link>
+                    <Link
+                      href={'/prizes/auth'}
+                      className="block min-w-fit text-lg text-white transition-all font-roboto font-bold"
+                      style={path.includes('/prizes/auth') ? { color: '#FFAB48' } : {}}
+                      onClick={() => setDropDownOpened(false)}>
+                      Sowgatlar
                     </Link>
                   </div>
                 </div>
