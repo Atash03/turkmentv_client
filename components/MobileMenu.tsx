@@ -2,8 +2,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { AiOutlineUser } from 'react-icons/ai';
-import ThemeSwitch from './home/ThemeSwitch';
 import { useContext, useEffect, useRef, useState } from 'react';
 import GlobalContext from '@/context/GlobalContext';
 import close from '@/public/close-white.svg';
