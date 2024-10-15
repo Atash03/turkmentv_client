@@ -1,18 +1,18 @@
-'use client';
-import React, { useContext, useEffect, useState } from 'react';
-import GradientTitle from './GradientTitle';
-import ParticipantCard from './ParticipantCard';
-import { v4 } from 'uuid';
-import { IAllVotes, VotingItem } from '@/models/allVotes.model';
-import { Queries } from '@/api/queries';
-import Loader from '../Loader';
-import VoteContext from '@/context/VoteContext';
-import PageBage from './PageBage';
-import Image from 'next/image';
-import { useMediaQuery } from 'usehooks-ts';
-import Countdown from './Countdown';
-import Link from 'next/link';
-import { AnimatePresence } from 'framer-motion';
+"use client";
+import React, { useContext, useEffect, useState } from "react";
+import GradientTitle from "./GradientTitle";
+import ParticipantCard from "./ParticipantCard";
+import { v4 } from "uuid";
+import { IAllVotes, VotingItem } from "@/models/allVotes.model";
+import { Queries } from "@/api/queries";
+import Loader from "../Loader";
+import VoteContext from "@/context/VoteContext";
+import PageBage from "./PageBage";
+import Image from "next/image";
+import { useMediaQuery } from "usehooks-ts";
+import Countdown from "./Countdown";
+import Link from "next/link";
+import { AnimatePresence } from "framer-motion";
 
 interface IParams {
   vote_id?: string;
@@ -37,7 +37,7 @@ const ParticipantsList = ({ vote_id }: IParams) => {
   const [socket, setSocket] = useState<WebSocket | null>(null);
   const [isConnected, setIsConnected] = useState(false);
 
-  const mobile = useMediaQuery('(max-width: 768px)');
+  const mobile = useMediaQuery("(max-width: 768px)");
 
   const { setVoteDescription } = useContext(VoteContext).voteDescriptionContext;
 
@@ -72,21 +72,23 @@ const ParticipantsList = ({ vote_id }: IParams) => {
 
     const connectWebSocket = () => {
       try {
-        socket = new WebSocket(`wss://sms.turkmentv.gov.tm/ws/voting?dst=${smsNumber}`);
+        socket = new WebSocket(
+          `wss://sms.turkmentv.gov.tm/ws/voting?dst=${smsNumber}`
+        );
         setSocket(socket);
 
         socket.onopen = () => {
-          console.log('WebSocket is connected');
+          console.log("WebSocket is connected");
           setIsConnected(true);
           // addVotes();
 
           pingInterval = setInterval(() => {
             if (socket?.readyState === WebSocket.OPEN) {
               try {
-                socket.send(JSON.stringify({ type: 'ping' }));
+                socket.send(JSON.stringify({ type: "ping" }));
                 // addVotes();
               } catch (error) {
-                console.error('Error sending ping:', error);
+                console.error("Error sending ping:", error);
               }
             }
           }, 25000); // Ping every 25 seconds
@@ -94,20 +96,20 @@ const ParticipantsList = ({ vote_id }: IParams) => {
 
         socket.onmessage = (event) => {
           try {
-            console.log('Message received from WebSocket:', event.data);
+            console.log("Message received from WebSocket:", event.data);
             const message = JSON.parse(event.data);
             handleWebSocketMessage(message);
           } catch (error) {
-            console.error('Error processing message:', error);
+            console.error("Error processing message:", error);
           }
         };
 
         socket.onerror = (error) => {
-          console.error('WebSocket error:', error);
+          console.error("WebSocket error:", error);
         };
 
         socket.onclose = () => {
-          console.log('WebSocket is closed');
+          console.log("WebSocket is closed");
           setIsConnected(false);
 
           if (pingInterval) {
@@ -116,13 +118,13 @@ const ParticipantsList = ({ vote_id }: IParams) => {
 
           if (!reconnectTimeout) {
             reconnectTimeout = setTimeout(() => {
-              console.log('Attempting to reconnect WebSocket...');
+              console.log("Attempting to reconnect WebSocket...");
               connectWebSocket();
             }, 5000); // Reconnect after 5 seconds
           }
         };
       } catch (error) {
-        console.error('WebSocket connection error:', error);
+        console.error("WebSocket connection error:", error);
       }
     };
 
@@ -149,7 +151,9 @@ const ParticipantsList = ({ vote_id }: IParams) => {
 
       // Update the corresponding voting item
       const updatedItems = prevVotingItems.map((item, index) =>
-        item.id === message.voting_item_id ? { ...item, votes_count: item.votes_count + 1 } : item,
+        item.id === message.voting_item_id
+          ? { ...item, votes_count: item.votes_count + 1 }
+          : item
       );
 
       // Sort the updated items array by votes_count in descending order
@@ -163,10 +167,10 @@ const ParticipantsList = ({ vote_id }: IParams) => {
 
       // Update the corresponding voting item
       const updatedItems = prevVotingItems.map((item, index) =>
-        index === 1 ? { ...item, votes_count: item.votes_count + 1 } : item,
+        index === 1 ? { ...item, votes_count: item.votes_count + 1 } : item
       );
 
-      console.log('votes updated');
+      console.log("votes updated");
       console.log(updatedItems.sort((a, b) => b.votes_count - a.votes_count));
       // Sort the updated items array by votes_count in descending order
       return updatedItems.sort((a, b) => b.votes_count - a.votes_count);
@@ -176,7 +180,10 @@ const ParticipantsList = ({ vote_id }: IParams) => {
   const winnersCountHandle = (winners: VotingItem[]) => {
     let count = 0;
     winners.map((winner) => {
-      if (winner.votes_percents === 100 && winner.votes_count === winners[0].votes_count) {
+      if (
+        winner.votes_percents === 100 &&
+        winner.votes_count === winners[0].votes_count
+      ) {
         count++;
         setWinnersCount(count);
       }
@@ -190,21 +197,27 @@ const ParticipantsList = ({ vote_id }: IParams) => {
     if (!data?.data) {
       return (
         <div className="py-12">
-          <GradientTitle title={'No voting to show on the site'} size="big" />
+          <GradientTitle title={"No voting to show on the site"} size="big" />
         </div>
       );
     }
 
     return (
       <div className="flex flex-col gap-[20px] sm:gap-[40px] w-full items-center">
-        {data.data.description ? <PageBage title={data.data.description} /> : null}
+        {data.data.description ? (
+          <PageBage title={data.data.description} />
+        ) : null}
 
         {data.data.banner ? (
           <div className="relative w-full md:min-h-[150px] md:h-auto h-[100px] ">
             {mobile ? (
               <Image
                 fill
-                src={data.data.banner_mobile !== null ? data.data.banner_mobile : data.data.banner}
+                src={
+                  data.data.banner_mobile !== null
+                    ? data.data.banner_mobile
+                    : data.data.banner
+                }
                 alt={data.data.title}
                 unselectable="off"
                 unoptimized
@@ -235,22 +248,26 @@ const ParticipantsList = ({ vote_id }: IParams) => {
           ) : null}
 
           <div className="flex w-full flex-col items-center gap-[10px] sm:gap-[20px]">
-            {winnersCount > 1 ? <GradientTitle title="победители" size="small" /> : null}
+            {winnersCount > 1 ? (
+              <GradientTitle title="победители" size="small" />
+            ) : null}
 
             {participantsData && participantsData[0].votes_count > 0 ? (
               <div className="flex flex-col items-center overflow-hidden bg-fillNavyBlue rounded-[10px] sm:rounded-[30px] max-w-[940px] w-full px-[5px] py-[20px] sm:p-[20px] sm:gap-[20px] gap-[10px]">
                 {participantsData.map((participant, index) =>
-                  participant.votes_count === participantsData[0].votes_count ? (
+                  participant.votes_count ===
+                  participantsData[0].votes_count ? (
                     participant.url ? (
                       <Link
-                        href={participant.url ? participant.url : ''}
+                        href={participant.url ? participant.url : ""}
                         target="_blank"
-                        className="w-full">
+                        className="w-full"
+                        key={v4()}
+                      >
                         <ParticipantCard
-                          key={v4()}
                           index={index}
                           hasUrl={true}
-                          voteStatus={voteStatus ? voteStatus : ''}
+                          voteStatus={voteStatus ? voteStatus : ""}
                           isFirst={index === 0 ? true : false}
                           name={participant.title}
                           progress={participant.votes_percents}
@@ -267,7 +284,7 @@ const ParticipantsList = ({ vote_id }: IParams) => {
                         key={v4()}
                         index={index}
                         hasUrl={false}
-                        voteStatus={voteStatus ? voteStatus : ''}
+                        voteStatus={voteStatus ? voteStatus : ""}
                         isFirst={index === 0 ? true : false}
                         name={participant.title}
                         progress={participant.votes_percents}
@@ -279,12 +296,14 @@ const ParticipantsList = ({ vote_id }: IParams) => {
                         winner={true}
                       />
                     )
-                  ) : null,
+                  ) : null
                 )}
               </div>
             ) : null}
 
-            {winnersCount > 1 ? <div className="w-full h-[1px] bg-[#3636A3]"></div> : null}
+            {winnersCount > 1 ? (
+              <div className="w-full h-[1px] bg-[#3636A3]"></div>
+            ) : null}
           </div>
 
           <div className="flex flex-col items-center max-w-[940px] w-full gap-5 justify-center mx-auto">
@@ -293,14 +312,15 @@ const ParticipantsList = ({ vote_id }: IParams) => {
                   !hasVotes ? (
                     participant.url ? (
                       <Link
-                        href={participant.url ? participant.url : ''}
+                        href={participant.url ? participant.url : ""}
                         target="_blank"
-                        className="w-full mx-auto">
+                        className="w-full mx-auto"
+                        key={v4()}
+                      >
                         <ParticipantCard
                           index={index}
                           hasUrl={true}
-                          key={v4()}
-                          voteStatus={voteStatus ? voteStatus : ''}
+                          voteStatus={voteStatus ? voteStatus : ""}
                           isFirst={index === 0 ? true : false}
                           name={participant.title}
                           progress={participant.votes_percents}
@@ -317,7 +337,7 @@ const ParticipantsList = ({ vote_id }: IParams) => {
                         hasUrl={false}
                         key={v4()}
                         index={index}
-                        voteStatus={voteStatus ? voteStatus : ''}
+                        voteStatus={voteStatus ? voteStatus : ""}
                         isFirst={index === 0 ? true : false}
                         name={participant.title}
                         progress={participant.votes_percents}
@@ -330,17 +350,19 @@ const ParticipantsList = ({ vote_id }: IParams) => {
                       />
                     )
                   ) : (
-                    participant.votes_count !== participantsData[0].votes_count &&
+                    participant.votes_count !==
+                      participantsData[0].votes_count &&
                     (participant.url ? (
                       <Link
-                        href={participant.url ? participant.url : ''}
+                        href={participant.url ? participant.url : ""}
                         target="_blank"
-                        className="w-full mx-auto">
+                        className="w-full mx-auto"
+                        key={v4()}
+                      >
                         <ParticipantCard
                           index={index}
                           hasUrl={true}
-                          key={v4()}
-                          voteStatus={voteStatus ? voteStatus : ''}
+                          voteStatus={voteStatus ? voteStatus : ""}
                           isFirst={index === 0 ? true : false}
                           name={participant.title}
                           progress={participant.votes_percents}
@@ -357,7 +379,7 @@ const ParticipantsList = ({ vote_id }: IParams) => {
                         hasUrl={false}
                         key={v4()}
                         index={index}
-                        voteStatus={voteStatus ? voteStatus : ''}
+                        voteStatus={voteStatus ? voteStatus : ""}
                         isFirst={index === 0 ? true : false}
                         name={participant.title}
                         progress={participant.votes_percents}
@@ -369,7 +391,7 @@ const ParticipantsList = ({ vote_id }: IParams) => {
                         winner={false}
                       />
                     ))
-                  ),
+                  )
                 )
               : null}
           </div>
