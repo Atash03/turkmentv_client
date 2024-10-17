@@ -30,7 +30,7 @@ const SmsForm: React.FC = () => {
     },
     onError: (error) => {
       // Set error message when API request fails
-      setErrorMessage('Код не действителен. Пожалуйста, попробуйте еще раз.');
+      setErrorMessage('Kod nädogry');
     },
   });
 
@@ -56,9 +56,9 @@ const SmsForm: React.FC = () => {
     <form
       onSubmit={handleSubmit}
       className="bg-lightSurface rounded-[24px] p-[40px] w-fit flex flex-col gap-[24px] shadow-lightBoxShadow1">
-      <h1 className="text-display3 font-[500] leading-display3 ">Вход в «подарошную»</h1>
+      <h1 className="text-display3 font-[500] leading-display3 ">Koduňyzy giriziň</h1>
       <div className="flex flex-col gap-[8px]">
-        <h2 className="text-textBasebase font-medium leading-textBase">Промокод</h2>
+        {/* <h2 className="text-textBasebase font-medium leading-textBase">Промокод</h2> */}
         <input
           type="text"
           value={inputValue}
@@ -74,7 +74,7 @@ const SmsForm: React.FC = () => {
         type="submit"
         disabled={inputValue.length !== 6 || mutation.isLoading}
         className="text-textLarge leading-textLarge py-[12px] w-full flex justify-center items-center rounded-[12px] bg-lightPrimary font-medium text-lightOnPrimary">
-        {mutation.isLoading ? 'Loading...' : 'Войти'}
+        {mutation.isLoading ? 'Loading...' : 'Giriş'}
       </button>
     </form>
   );
