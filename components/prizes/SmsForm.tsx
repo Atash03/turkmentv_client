@@ -55,7 +55,7 @@ const SmsForm: React.FC = () => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-lightSurface rounded-[24px] p-[40px] w-fit flex flex-col gap-[24px] shadow-lightBoxShadow1">
+      className="bg-lightSurface rounded-[24px] p-[40px] w-[530px] flex flex-col gap-[24px] shadow-lightBoxShadow1">
       <h1 className="text-display3 font-[500] leading-display3 ">Koduňyzy giriziň</h1>
       <div className="flex flex-col gap-[8px]">
         {/* <h2 className="text-textBasebase font-medium leading-textBase">Промокод</h2> */}
