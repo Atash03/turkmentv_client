@@ -211,13 +211,13 @@ const QuizWinnerTable = ({ quizId, quizFinished, smsNumber }: IProps) => {
 
             {winnersData?.data[0].client.answers.length !== 0 ? (
               <div className="text-center flex justify-center items-center text-base text-textBlack leading-[125%] font-semibold w-[100%] px-3 py-5">
-                <span>Soraglara näçinji jogap berdi</span>
+                <span>Soraglara jogap berilişiň nobaty</span>
               </div>
             ) : null}
 
             {winnersData?.data[0].total_score_of_client ? (
               <div className="text-center flex justify-center items-center text-base text-textBlack leading-[125%] font-semibold max-w-[180px] w-[100%] px-3 py-5">
-                <span>Jogaplaryň jemi</span>
+                <span>Nobatlaryň jemi</span>
               </div>
             ) : null}
             {winnersData?.data[0].total_score_of_client ? (
