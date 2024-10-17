@@ -5,6 +5,8 @@ import axios from 'axios';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { GiftsType } from '@/typings/gifts/gifts.type';
 import { useRouter } from 'next/navigation';
+import { useMediaQuery } from 'usehooks-ts';
+import Image from 'next/image';
 
 // Define the expected shape of the fetched data
 interface Prize {
@@ -17,6 +19,7 @@ const PrizesPage = ({ params }: { params: { user_id: string } }) => {
   const [selectedPrize, setSelectedPrize] = useState<null | number>(null);
   const queryClient = useQueryClient();
   const router = useRouter();
+  const mobile = useMediaQuery('(max-width: 768px)');
 
   // Fetching data using TanStack Query
   const { data, isLoading, error } = useQuery<GiftsType, Error>(
@@ -48,21 +51,25 @@ const PrizesPage = ({ params }: { params: { user_id: string } }) => {
 
   return (
     <div className="flex flex-col gap-[32px] md:gap-[64px] items-center">
-      <header className="flex flex-col gap-[24px]">
+      <header className="flex flex-col items-center gap-[24px]">
         <div className="flex flex-col gap-[8px] max-w-[639px] w-full">
           <h1 className="text-lightOnSurface text-heading1 leading-heading1 md:text-display1 md:leading-display1 tracking-[-1%] text-center font-medium">
             {data.data.title}
           </h1>
-          <p className="text-center text-textSmall leading-textSmall md:text-textBase md:leading-textBase tracking-[-1%] text-lightOnSurface">
-            Поздравляю с победой в викторине! Вы стали победителем и получаете возможность выбрать
-            подарок по своему выбору. Пожалуйста, ознакомьтесь с доступными вариантами подарков и
-            сообщите нам ваше предпочтение. С нетерпением ждем вашего выбора, чтобы доставить вам
-            заслуженный приз!
-          </p>
         </div>
-        <p className="text-center text-textXSmall leading-textXSmall md:text-textSmall md:leading-textSmall tracking-[0.4px] md:-tracking-[1%] text-lightOnSurface">
-          Есть вопросы? Обратись XYXYXY!
-        </p>
+        {data.data.image && (
+          <div className="w-full md:max-h-[150px] max-h-[100px] ">
+            <Image
+              width={1250}
+              height={150}
+              src={data.data.image}
+              alt={data.data.title}
+              unselectable="off"
+              unoptimized
+              className="rounded-[40px] w-full h-full object-cover"
+            />
+          </div>
+        )}
       </header>
       <div className="flex flex-col gap-[24px] md:gap-[16px] items-center max-w-[832px] w-full">
         {data.data.gifts &&
