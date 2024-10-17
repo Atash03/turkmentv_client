@@ -6,11 +6,18 @@ interface CountdownProps {
   startsAt: string;
   endsAt: string;
   setVoteStatus: Dispatch<SetStateAction<string | undefined>>;
+  setEventStatus: Dispatch<SetStateAction<string>>;
+  eventStatus: string;
 }
 
-const Countdown: React.FC<CountdownProps> = ({ startsAt, endsAt, setVoteStatus }) => {
+const Countdown: React.FC<CountdownProps> = ({
+  startsAt,
+  endsAt,
+  setVoteStatus,
+  setEventStatus,
+  eventStatus,
+}) => {
   const [timeLeft, setTimeLeft] = useState<string>('');
-  const [eventStatus, setEventStatus] = useState<string>('Finished');
 
   useEffect(() => {
     // Parsing the start and end times to Date objects in the correct format
