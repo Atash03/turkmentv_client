@@ -1,15 +1,15 @@
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
-// import {
-//   Dialog,
-//   DialogClose,
-//   DialogContent,
-//   DialogDescription,
-//   DialogFooter,
-//   DialogHeader,
-//   DialogTitle,
-//   DialogTrigger,
-// } from '@/components/ui/dialog';
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 import { Dispatch, SetStateAction, useState } from 'react';
 import axios from 'axios';
 import { useMutation } from '@tanstack/react-query';

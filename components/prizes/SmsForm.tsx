@@ -30,7 +30,7 @@ const SmsForm: React.FC = () => {
     },
     onError: (error) => {
       // Set error message when API request fails
-      setErrorMessage('Промокод не действителен. Пожалуйста, попробуйте еще раз.');
+      setErrorMessage('Код не действителен. Пожалуйста, попробуйте еще раз.');
     },
   });
 
