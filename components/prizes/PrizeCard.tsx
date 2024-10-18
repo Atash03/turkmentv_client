@@ -90,7 +90,7 @@ const PrizeCard = ({
         <Image
           width={416}
           height={248}
-          src={image ? image : '/prize.jpg'}
+          src={image ? image : '/gift-placeholder.png'}
           alt="prize"
           className="h-full w-full"
         />
@@ -113,7 +113,7 @@ const PrizeCard = ({
                     className="px-[24px] py-[10px] w-full md:w-fit text-textSmall leading-textSmall -tracking-[-1%] font-medium bg-lightPrimary text-lightOnPrimary rounded-[40px]"
                     onClick={handleDialogOpen}
                     disabled={choosePrizeMutation.isLoading}>
-                    {choosePrizeMutation.isLoading ? 'Loading...' : 'Выбрать'}
+                    {choosePrizeMutation.isLoading ? 'Loading...' : 'Saýla'}
                   </button>
                 </DialogTrigger>
 
@@ -127,7 +127,7 @@ const PrizeCard = ({
                     <DialogFooter>
                       <DialogClose asChild>
                         <button className="px-[24px] py-[10px] w-full text-textSmall leading-textSmall -tracking-[-1%] font-medium bg-lightPrimary text-lightOnPrimary rounded-[40px]">
-                          Закрыть
+                          Ýapmak
                         </button>
                       </DialogClose>
                     </DialogFooter>
