@@ -13,6 +13,12 @@ const nextConfig = {
       },
       {
         protocol: 'https',
+        hostname: 'sms.turkmentv.gov.tm',
+        port: '',
+        // pathname: '/account123/**',
+      },
+      {
+        protocol: 'https',
         hostname: 'smstv.gov.tm',
         port: '',
       },
