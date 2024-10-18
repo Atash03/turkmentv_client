@@ -39,7 +39,7 @@ const PrizesPage = ({ params }: { params: { user_id: string } }) => {
   if (isLoading)
     return (
       <div className="flex justify-center items-center h-full text-heading2 leading-heading2 font-medium min-h-[50vh]">
-        Loading...
+        Ýüklenilýär...
       </div>
     );
 

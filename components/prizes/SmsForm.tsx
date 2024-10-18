@@ -64,7 +64,8 @@ const SmsForm: React.FC = () => {
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           className="px-[16px] py-[12px] bg-lightPrimaryContainer rounded-[12px] outline-none text-lightOnSurfaceVariant text-textSmall leading-textSmall"
-          placeholder="Введите свой промокод"
+          placeholder="Öz koduňyzy giriziň
+          "
         />
         {errorMessage && (
           <p className="text-lightError text-textSmall leading-textSmall">{errorMessage}</p>
@@ -74,7 +75,7 @@ const SmsForm: React.FC = () => {
         type="submit"
         disabled={inputValue.length !== 6 || mutation.isLoading}
         className="text-textLarge leading-textLarge py-[12px] w-full flex justify-center items-center rounded-[12px] bg-lightPrimary font-medium text-lightOnPrimary">
-        {mutation.isLoading ? 'Loading...' : 'Giriş'}
+        {mutation.isLoading ? 'Ýüklenilýär...' : 'Giriş'}
       </button>
     </form>
   );

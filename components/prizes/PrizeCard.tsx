@@ -47,21 +47,21 @@ const PrizeCard = ({
         code,
       }),
     onSuccess: () => {
-      setDialogTitle('Успешно');
-      setDialogDescription('Приз успешно выбран.');
+      setDialogTitle('Üstünlikli');
+      setDialogDescription('Sowgat üstünlikli saýlanyldy.');
       setIsSuccess(true); // Mark as success so we can handle setting the prize when dialog closes
     },
     onError: () => {
-      setDialogTitle('Ошибка');
-      setDialogDescription('Произошла ошибка, попробуйте еще раз.');
+      setDialogTitle('Ýalňyşlyk');
+      setDialogDescription('Ýalňyşlyk ýüze çykdy, gaýtadan synanşyp görmegiňizi haýyş edýäris.');
       setIsSuccess(false); // Reset on error
     },
   });
 
   const handleDialogOpen = () => {
     // Reset the dialog to show the loading state
-    setDialogTitle('Загрузка...');
-    setDialogDescription('Пожалуйста подождите');
+    setDialogTitle('Ýüklenilýär...');
+    setDialogDescription('Haýyş edýäris, garaşyň');
     setIsSuccess(false); // Reset success state before opening
 
     // Trigger the mutation when the dialog opens
@@ -113,7 +113,7 @@ const PrizeCard = ({
                     className="px-[24px] py-[10px] w-full md:w-fit text-textSmall leading-textSmall -tracking-[-1%] font-medium bg-lightPrimary text-lightOnPrimary rounded-[40px]"
                     onClick={handleDialogOpen}
                     disabled={choosePrizeMutation.isLoading}>
-                    {choosePrizeMutation.isLoading ? 'Loading...' : 'Saýla'}
+                    {choosePrizeMutation.isLoading ? 'Ýüklenilýär...' : 'Saýla'}
                   </button>
                 </DialogTrigger>
 
@@ -123,11 +123,11 @@ const PrizeCard = ({
                     <DialogTitle>{dialogTitle}</DialogTitle>
                     <DialogDescription>{dialogDescription}</DialogDescription>
                   </DialogHeader>
-                  {dialogTitle !== 'Загрузка...' && (
+                  {dialogTitle !== 'Ýüklenilýär...' && (
                     <DialogFooter>
                       <DialogClose asChild>
                         <button className="px-[24px] py-[10px] w-full text-textSmall leading-textSmall -tracking-[-1%] font-medium bg-lightPrimary text-lightOnPrimary rounded-[40px]">
-                          Ýapmak
+                          Öçür
                         </button>
                       </DialogClose>
                     </DialogFooter>
@@ -140,13 +140,13 @@ const PrizeCard = ({
           <button
             disabled
             className="px-[24px] py-[10px] w-fit text-textSmall leading-textSmall opacity-[0.12] -tracking-[-1%] font-medium bg-lightOnSurfaceDisabled text-lightOnSurface rounded-[40px]">
-            Недоступно
+            Elýeterli däl
           </button>
         ) : variant === 'selected' ? (
           <button
             disabled
             className="px-[24px] py-[10px] w-fit text-textSmall leading-textSmall -tracking-[-1%] font-medium bg-lightOnSurfaceDisabled text-lightOnSurface rounded-[40px]">
-            Выбрано
+            Saýlandy
           </button>
         ) : null}
       </div>
