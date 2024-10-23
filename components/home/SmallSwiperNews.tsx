@@ -34,9 +34,9 @@ const SmallSwiperNews = () => {
           clickable: true,
         }}>
         {/* PAY ATTENTION [data] is wrapped in an array */}
-        <SwiperSlide>
-          <LinkBlock href="/news" content="Habarlar" color="#a554f0" />
-        </SwiperSlide>
+        {/* <SwiperSlide>
+          <LinkBlock href={''} content="Habarlar" color="#a554f0" />
+        </SwiperSlide> */}
         {data?.data.map((item, index) => (
           <SwiperSlide key={v4()} className="">
             <Link href={item ? `news/${item.id}` : ''} className="relative ">
