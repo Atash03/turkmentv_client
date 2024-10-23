@@ -37,7 +37,7 @@ export class Queries {
   }
 
   public static async getlastNews(): Promise<NewsModel> {
-    return await fetch(`${baseUrl.NEWS_SRC}${routes.news}?locale=tm&count=5`, {
+    return await fetch(`https://turkmentv.gov.tm/v2/api/slider?type=small3`, {
       next: { revalidate: 3600 },
     }).then((res) => res.json().then((res) => res as NewsModel));
   }

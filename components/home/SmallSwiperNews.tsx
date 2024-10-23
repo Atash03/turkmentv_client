@@ -42,7 +42,7 @@ const SmallSwiperNews = () => {
             <Link href={item ? `news/${item.id}` : ''} className="relative ">
               <div className="relative w-full h-full">
                 <Image
-                  src={item.featured_images[0].path}
+                  src={item.image}
                   alt="small_banner"
                   fill
                   unoptimized
