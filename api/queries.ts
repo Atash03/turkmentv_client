@@ -7,7 +7,7 @@ import { ChannelsModel } from '@/models/channels.model';
 import { HomeModel } from '@/models/home.model';
 import { LiveDescriptionModel } from '@/models/liveDescription.model';
 import { MarqueeModel } from '@/models/marquee.model';
-import { NewsModel } from '@/models/news.model';
+import { NewsModel, NewsType } from '@/models/news.model';
 import { NewsItemModel } from '@/models/newsItem.model';
 import { PageItemModel } from '@/models/pageItem.model';
 import { PlansModel } from '@/models/plans.model';
@@ -37,9 +37,15 @@ export class Queries {
   }
 
   public static async getlastNews(): Promise<NewsModel> {
-    return await fetch(`https://turkmentv.gov.tm/v2/api/slider?type=small3`, {
+    return await fetch(`${baseUrl.NEWS_SRC}${routes.news}?locale=tm&count=5`, {
       next: { revalidate: 3600 },
     }).then((res) => res.json().then((res) => res as NewsModel));
+  }
+
+  public static async getHomeBanner3(): Promise<NewsType> {
+    return await fetch(`https://turkmentv.gov.tm/v2/api/slider?type=small3`, {
+      next: { revalidate: 3600 },
+    }).then((res) => res.json().then((res) => res as NewsType));
   }
 
   public static async getNewsItem(id: string): Promise<NewsItemModel> {

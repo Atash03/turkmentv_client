@@ -13,7 +13,7 @@ import LinkBlock from './LinkBlock';
 const SmallSwiperNews = () => {
   const { data, isFetching, error } = useQuery({
     queryKey: ['small_slider_news'],
-    queryFn: () => Queries.getlastNews(),
+    queryFn: () => Queries.getHomeBanner3(),
   });
 
   if (isFetching) return <Loader height={'100%'} />;
