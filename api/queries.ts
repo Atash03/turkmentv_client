@@ -48,6 +48,12 @@ export class Queries {
     }).then((res) => res.json().then((res) => res as NewsType));
   }
 
+  public static async getHomeBannerSingle3(id: string): Promise<NewsType> {
+    return await fetch(`https://turkmentv.gov.tm/v2/api/slider?type=small3/${id}`, {
+      next: { revalidate: 3600 },
+    }).then((res) => res.json().then((res) => res as NewsType));
+  }
+
   public static async getNewsItem(id: string): Promise<NewsItemModel> {
     return await fetch(`${baseUrl.NEWS_SRC}${routes.newsItem(id)}?locale=tm`, {
       next: { revalidate: 3600 },

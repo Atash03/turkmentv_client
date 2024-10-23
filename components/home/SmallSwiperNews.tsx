@@ -19,6 +19,8 @@ const SmallSwiperNews = () => {
   if (isFetching) return <Loader height={'100%'} />;
   if (error) return <h1>{JSON.stringify(error)}</h1>;
 
+  console.log(!!null);
+
   return (
     <div className="small-swiper flex-1">
       <Swiper
@@ -39,7 +41,9 @@ const SmallSwiperNews = () => {
         </SwiperSlide> */}
         {data?.data.map((item, index) => (
           <SwiperSlide key={v4()} className="">
-            <Link href={item ? `news/${item.id}` : ''} className="relative ">
+            <Link
+              href={item.page_id ? `news/${item.page_id}` : item.url || ''}
+              className="relative ">
               <div className="relative w-full h-full">
                 <Image
                   src={item.image}
