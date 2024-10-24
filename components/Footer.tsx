@@ -13,13 +13,13 @@ const Footer = () => {
         <div className="footer-inner py-[22px] md:px-8 md:grid md:grid-cols-footer flex flex-col gap-6 overflow-x-hidden">
           <div className="flex flex-col md:gap-14 gap-6">
             <ul className="grid grid-cols-2 gap-3">
-              <li>
+              {/* <li>
                 <Link
                   href={'/news'}
                   className="w-full h-full text-left font-roboto text-lg text-white">
                   Habarlar
                 </Link>
-              </li>
+              </li> */}
               <li>
                 <Link
                   href={'/advert'}

@@ -58,7 +58,7 @@ const MobileMenu = () => {
                 </div>
               </div>
               <ul className="flex flex-col gap-10 items-start justify-center p-6">
-                <li>
+                {/* <li>
                   <Link
                     className="block text-3xl text-white transition-all font-roboto font-bold dark:text-white"
                     onClick={() => onClickCloseBurgerHandler()}
@@ -66,7 +66,7 @@ const MobileMenu = () => {
                     style={path.includes('news') ? { color: '#FFAB48' } : {}}>
                     Habarlar
                   </Link>
-                </li>
+                </li> */}
                 <li>
                   <Link
                     href={'/treasury'}
