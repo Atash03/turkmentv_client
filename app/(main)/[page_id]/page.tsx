@@ -42,8 +42,9 @@ const PageItem = ({ params }: IParams) => {
         </div>
 
         <div className="main-news flex md:flex-row flex-col gap-6">
-          {data?.data.image && data.data.title ? (
-            responsive && data.data.mobile_image ? (
+          {data?.data.image &&
+            data.data.title &&
+            (responsive && data.data.mobile_image ? (
               <div className="relative">
                 <Image
                   src={data?.data.mobile_image}
@@ -69,10 +70,7 @@ const PageItem = ({ params }: IParams) => {
                   className="w-full h-full object-cover"
                 />
               </div>
-            )
-          ) : (
-            <Loader />
-          )}
+            ))}
           <div className="flex flex-col gap-3 text-black text-lg">
             {data?.data.content ? (
               <p
