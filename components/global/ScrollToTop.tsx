@@ -19,6 +19,13 @@ const ScrollToTop = () => {
     };
   }, []);
 
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
+  };
+
   return (
     <div
       className={cn(
@@ -27,7 +34,8 @@ const ScrollToTop = () => {
           'opacity-100 pointer-events-auto': scrollY,
           'opacity-0 pointer-events-none': !scrollY,
         },
-      )}>
+      )}
+      onClick={scrollToTop}>
       <ChevronUp />
     </div>
   );

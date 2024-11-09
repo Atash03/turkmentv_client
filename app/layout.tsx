@@ -50,7 +50,7 @@ export default function RootLayout({ children }: IProps) {
       <head>
         <link rel="icon" href="/logo.png" sizes="any" />
       </head>
-      <body className="-z-0 relative">
+      <body className="relative overflow-x-hidden">
         <QueryProvider>{children}</QueryProvider>
       </body>
 
