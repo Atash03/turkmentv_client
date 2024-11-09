@@ -223,7 +223,7 @@ const QuizAccordion = ({ finished, questionId }: TProps) => {
           className={`w-full ${
             opened ? 'bg-fillRed text-white' : 'bg-fillButtonLowContrastDefault text-textDarkt'
           } flex items-center justify-center text-xs md:text-base uppercase leading-[150%] p-[8px] md:py-5 gap-[5px] md:gap-[10px] transition-all delay-[0.2s] font-medium `}>
-          Taryhy gör
+          Netijeler
           <div>
             <svg
               xmlns="http://www.w3.org/2000/svg"
