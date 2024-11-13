@@ -210,4 +210,8 @@ big {
   .pagination-current {
     @apply px-3 py-1 rounded-md border bg-fillButtonAccentDefault text-white text-[12px];
   }
+
+  .font-display-1-regular {
+    @apply font-roboto text-[56px] leading-[64px] -tracking-[1%] font-normal;
+  }
 }
