@@ -215,3 +215,22 @@ big {
     @apply font-roboto text-[56px] leading-[64px] -tracking-[1%] font-normal;
   }
 }
+
+.font-heading-1-regular {
+  @apply -tracking-[1%] text-[36px] leading-[44px];
+}
+
+.font-heading-3-regular {
+  @apply -tracking-[1%] text-[28px] leading-[36px];
+}
+
+.font-heading-5-regular {
+  @apply -tracking-[1%] text-[24px] leading-[32px];
+}
+
+.font-base-medium {
+  @apply font-medium -tracking-[1%] text-[16px] leading-[24px];
+}
+.font-small-regular {
+  @apply -tracking-[1%] text-[14px] leading-[20px];
+}
