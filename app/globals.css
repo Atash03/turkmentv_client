@@ -93,7 +93,8 @@ html {
 }
 
 .text-stroke {
-  text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;
+  text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white,
+    1px 1px 0 white;
 }
 
 .big-swiper .swiper-pagination-bullet {
@@ -121,20 +122,20 @@ html {
 
 .small-swiper .swiper-button-next:after {
   color: white;
-  content: url('/arrow-right-small.svg');
+  content: url("/arrow-right-small.svg");
 }
 .small-swiper .swiper-button-prev:after {
   color: white;
-  content: url('/arrow-left-small.svg');
+  content: url("/arrow-left-small.svg");
 }
 
 .big-swiper .swiper-button-next:after {
   color: white;
-  content: url('/arrow-right-big.svg');
+  content: url("/arrow-right-big.svg");
 }
 .big-swiper .swiper-button-prev:after {
   color: white;
-  content: url('/arrow-left-big.svg');
+  content: url("/arrow-left-big.svg");
 }
 
 video {
@@ -187,15 +188,15 @@ big {
     @apply bg-[#E6E6FA] rounded-xl py-3 px-4 placeholder:text-[#BCBCD6] outline-none;
   }
 
-  .calendar [aria-label='Go to next month'] {
+  .calendar [aria-label="Go to next month"] {
     @apply shadow-sm transition-all;
   }
 
-  .calendar [aria-label='Go to previous month'] {
+  .calendar [aria-label="Go to previous month"] {
     @apply shadow-sm transition-all;
   }
 
-  .day-styles [name='day'] {
+  .day-styles [name="day"] {
     @apply p-4 text-textDarkt leading-[140%] bg-purple-600 rounded-full;
   }
 
@@ -233,4 +234,8 @@ big {
 }
 .font-small-regular {
   @apply -tracking-[1%] text-[14px] leading-[20px];
+}
+
+.text-countdown {
+  @apply font-roboto text-[60px] leading-[70px] -tracking-[1%];
 }
