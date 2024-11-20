@@ -1,5 +1,6 @@
-"use client";
+'use client';
 
+import Image from 'next/image';
 // import React, { useRef, useState, useEffect } from "react";
 
 // const SpinWheel: React.FC = () => {
@@ -160,7 +161,7 @@
 
 // export default SpinWheel;
 
-import { useState } from "react";
+import { useState } from 'react';
 
 const SpinWheel: React.FC = () => {
   const [isSpinning, setIsSpinning] = useState(false);
@@ -178,7 +179,7 @@ const SpinWheel: React.FC = () => {
     // Countdown logic
     const countdownInterval = setInterval(() => {
       setCountdown((prev) => {
-        if (prev === 1) {
+        if (prev === 0) {
           clearInterval(countdownInterval);
           return 0;
         }
@@ -191,7 +192,7 @@ const SpinWheel: React.FC = () => {
       setIsSpinning(false);
       setRotation((prev) => prev % 360); // Normalize the rotation
       setCountdown(5); // Reset countdown for the next spin
-    }, 5000); // Spin duration
+    }, 6000); // Spin duration
   };
 
   return (
@@ -203,41 +204,18 @@ const SpinWheel: React.FC = () => {
           className="relative w-[530px] h-[530px] rounded-full border-[15px] border-[#8589DE] overflow-hidden"
           style={{
             transform: `rotate(${rotation}deg)`,
-            transition: isSpinning ? "transform 5s ease-out" : "",
-          }}
-        >
+            transition: isSpinning ? 'transform 5s ease-out' : '',
+          }}>
           {/* Wheel Segments */}
-          <div
-            className="absolute inset-0 rounded-full bg-white"
-            style={{
-              background: `conic-gradient(
-                #E1E0FF 0% 4.166%,
-                #575992 4.166% 8.333%,
-                #E1E0FF 8.333% 12.5%,
-                #575992 12.5% 16.666%,
-                #E1E0FF 16.666% 20.833%,
-                #575992 20.833% 25%,
-                #E1E0FF 25% 29.166%,
-                #575992 29.166% 33.333%,
-                #E1E0FF 33.333% 37.5%,
-                #575992 37.5% 41.666%,
-                #E1E0FF 41.666% 45.833%,
-                #575992 45.833% 50%,
-                #E1E0FF 50% 54.166%,
-                #575992 54.166% 58.333%,
-                #E1E0FF 58.333% 62.5%,
-                #575992 62.5% 66.666%,
-                #E1E0FF 66.666% 70.833%,
-                #575992 70.833% 75%,
-                #E1E0FF 75% 79.166%,
-                #575992 79.166% 83.333%,
-                #E1E0FF 83.333% 87.5%,
-                #575992 87.5% 91.666%,
-                #E1E0FF 91.666% 95.833%,
-                #575992 95.833% 100%
-              )`,
-            }}
-          ></div>
+          <div className="absolute inset-0 rounded-full bg-white w-[500px] h-[500px]">
+            <Image
+              src={'/wheel-circle.svg'}
+              alt="wheel"
+              height={500}
+              width={500}
+              className="w-full h-full object-cover"
+            />
+          </div>
         </div>
 
         {/* Countdown Display */}
@@ -253,12 +231,9 @@ const SpinWheel: React.FC = () => {
         onClick={spinWheel}
         disabled={isSpinning}
         className={`mt-6 px-6 py-3 rounded-full text-white font-bold ${
-          isSpinning
-            ? "bg-gray-400 cursor-not-allowed"
-            : "bg-blue-500 hover:bg-blue-700"
-        }`}
-      >
-        {isSpinning ? "Spinning..." : "Spin the Wheel"}
+          isSpinning ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-700'
+        }`}>
+        {isSpinning ? 'Spinning...' : 'Spin the Wheel'}
       </button>
     </div>
   );

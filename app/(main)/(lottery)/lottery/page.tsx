@@ -1,7 +1,7 @@
-import CountDown from "@/components/lottery/countDown/CountDown";
-import SpinWheel from "@/components/lottery/spinWheel/SpinWheel";
-import Image from "next/image";
-import React from "react";
+import CountDown from '@/components/lottery/countDown/CountDown';
+import SpinWheel from '@/components/lottery/spinWheel/SpinWheel';
+import Image from 'next/image';
+import React from 'react';
 
 const page = () => {
   return (
@@ -32,19 +32,15 @@ const page = () => {
             <div className="flex flex-col w-full p-8 gap-4">
               <div className="flex flex-col gap-2 pb-4 border-b border-lightOutlineVariant">
                 <h4 className="font-heading-3-regular">Results</h4>
-                <p className="font-base-medium">
-                  The results after each stage will be shown here.
-                </p>
+                <p className="font-base-medium">The results after each stage will be shown here.</p>
               </div>
 
-              {[...Array(5)].map((item, index) => (
+              {/* {[...Array(5)].map((item, index) => (
                 <div className="flex flex-col gap-2 pb-4 last:border-none border-b border-lightOutlineVariant">
-                  <h4 className="font-heading-5-regular">
-                    The winner of the {index + 1} stage:
-                  </h4>
+                  <h4 className="font-heading-5-regular">The winner of the {index + 1} stage:</h4>
                   <p className="font-base-medium">8 XX XX-XX-XX</p>
                 </div>
-              ))}
+              ))} */}
             </div>
 
             {/* Sping the wheel */}
@@ -64,11 +60,10 @@ const page = () => {
                 <h3 className="font-heading-5-regular">Umumy düzgünler:</h3>
                 <ul className="list-disc flex flex-col gap-4 pl-[16px]">
                   {Array(5)
-                    .fill(" ")
+                    .fill(' ')
                     .map((item) => (
                       <li className="font-small-regular">
-                        Ilkinji we dogry jogap beren sanawda ilkinji ýeri
-                        eýelýär
+                        Ilkinji we dogry jogap beren sanawda ilkinji ýeri eýelýär
                       </li>
                     ))}
                 </ul>
@@ -78,7 +73,7 @@ const page = () => {
                 <h3 className="font-heading-5-regular">Üns beriň:</h3>
                 <ul className="list-disc flex flex-col gap-4 pl-[16px]">
                   {Array(1)
-                    .fill(" ")
+                    .fill(' ')
                     .map((item) => (
                       <li className="font-small-regular">SMS = 1 manat</li>
                     ))}
