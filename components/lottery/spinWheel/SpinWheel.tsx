@@ -197,29 +197,36 @@ const SpinWheel: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center">
-      {/* Outer Border */}
-      <div className="relative w-[554px] h-[554px] rounded-full border-[12px] border-[#5D5D72] flex items-center justify-center">
-        {/* Inner Border */}
+      <div className="relative rounded-full w-[554px] h-[554px]">
+        {/* Wheel triangle */}
+        <Image
+          src={'/wheel-triangle.svg'}
+          alt="wheel"
+          height={34}
+          width={35}
+          className="absolute z-10 left-[50%] -translate-x-[50%] top-7"
+        />
+
+        {/* Wheel */}
         <div
-          className="relative w-[530px] h-[530px] rounded-full border-[15px] border-[#8589DE] overflow-hidden"
           style={{
             transform: `rotate(${rotation}deg)`,
             transition: isSpinning ? 'transform 5s ease-out' : '',
-          }}>
-          {/* Wheel Segments */}
-          <div className="absolute inset-0 rounded-full bg-white w-[500px] h-[500px]">
+          }}
+          className="p-3 bg-[#5D5D72] rounded-full overflow-hidden">
+          <div className="p-[15px] bg-[#8589DE] rounded-full ">
             <Image
-              src={'/wheel-circle.svg'}
+              src={'/wheel-circle-inner.png'}
               alt="wheel"
-              height={500}
-              width={500}
+              height={530}
+              width={530}
               className="w-full h-full object-cover"
             />
           </div>
         </div>
 
-        {/* Countdown Display */}
-        <div className="absolute w-[105px] h-[105px] rounded-full bg-white flex items-center justify-center shadow-[0px_1px_3px_1px_rgba(0,0,0,0.5),_0px_1px_2px_0px_rgba(0,0,0,0.3)]">
+        {/* Countdown */}
+        <div className="absolute top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] w-[105px] h-[105px] rounded-full z-10 bg-white flex items-center justify-center ">
           <span className="text-[#79536A] font-roboto text-[60px] leading-[70px] tracking-[-1%]">
             {countdown}
           </span>
