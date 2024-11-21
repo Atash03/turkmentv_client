@@ -61,8 +61,8 @@ const page = () => {
                 <ul className="list-disc flex flex-col gap-4 pl-[16px]">
                   {Array(5)
                     .fill(' ')
-                    .map((item) => (
-                      <li className="font-small-regular">
+                    .map((item, i) => (
+                      <li className="font-small-regular" key={i}>
                         Ilkinji we dogry jogap beren sanawda ilkinji ýeri eýelýär
                       </li>
                     ))}

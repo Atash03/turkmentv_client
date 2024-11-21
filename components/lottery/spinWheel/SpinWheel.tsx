@@ -162,11 +162,26 @@ import Image from 'next/image';
 // export default SpinWheel;
 
 import { useState } from 'react';
+import ConfettiExplosion, { ConfettiProps } from 'react-confetti-explosion';
+
+const largeProps: ConfettiProps = {
+  force: 0.8,
+  duration: 3000,
+  particleCount: 300,
+  width: 1600,
+  colors: ['#041E43', '#1471BF', '#5BB4DC', '#FC027B', '#66D805'],
+};
 
 const SpinWheel: React.FC = () => {
   const [isSpinning, setIsSpinning] = useState(false);
   const [countdown, setCountdown] = useState(5);
   const [rotation, setRotation] = useState(0);
+  const [showConfetti, setShowConfetti] = useState(false);
+
+  const triggerConfetti = () => {
+    setShowConfetti(true);
+    setTimeout(() => setShowConfetti(false), 5000); // Hide confetti after 5 seconds
+  };
 
   const spinWheel = () => {
     if (isSpinning) return;
@@ -192,11 +207,13 @@ const SpinWheel: React.FC = () => {
       setIsSpinning(false);
       setRotation((prev) => prev % 360); // Normalize the rotation
       setCountdown(5); // Reset countdown for the next spin
+      triggerConfetti();
     }, 6000); // Spin duration
   };
 
   return (
     <div className="flex flex-col items-center">
+      {/* {showConfetti && <ConfettiExplosion {...largeProps} />} */}
       <div className="relative rounded-full w-[554px] h-[554px]">
         {/* Wheel triangle */}
         <Image

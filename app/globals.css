@@ -245,3 +245,25 @@ big {
   background-size: cover;
   background-repeat: no-repeat;
 }
+
+.confetti-piece {
+  position: absolute;
+  /* border-radius: 50%; */
+  animation: confetti-move ease-in-out forwards;
+  opacity: 0.8; /* Slight transparency for shiny effect */
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Add depth */
+}
+
+@keyframes confetti-move {
+  0% {
+    opacity: 1;
+    transform: translateX(0) translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateX(calc(var(--end-x) / 2)) translateY(-30vh) rotate(180deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(var(--end-x)) translateY(100vh) rotate(360deg);
+  }
+}
