@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import React, { useEffect, useState } from 'react';
-import { cn } from '@/lib/utils'; // Assuming `cn` is defined in `lib/utils`
+import React, { useEffect, useState } from "react";
+import { cn } from "@/lib/utils"; // Assuming `cn` is defined in `lib/utils`
 
 const Confetti: React.FC = () => {
   const [confetti, setConfetti] = useState<number[]>([]);
@@ -19,11 +19,11 @@ const Confetti: React.FC = () => {
 
   const randomColor = () => {
     const colors = [
-      'linear-gradient(45deg, #5D5D72, #8589DE)',
-      'linear-gradient(45deg, #E1E0FF, #575992)',
-      '#8589DE',
-      '#575992',
-      '#E1E0FF',
+      "linear-gradient(45deg, #5D5D72, #8589DE)",
+      "linear-gradient(45deg, #E1E0FF, #575992)",
+      "#8589DE",
+      "#575992",
+      "#E1E0FF",
     ];
     return colors[Math.floor(Math.random() * colors.length)];
   };
@@ -44,7 +44,7 @@ const Confetti: React.FC = () => {
         return (
           <div
             key={i}
-            className={cn('absolute', 'confetti-piece')}
+            className={cn("absolute", "confetti-piece")}
             style={
               {
                 top: `${randomStartY}%`,
@@ -55,9 +55,10 @@ const Confetti: React.FC = () => {
                 animationDuration: `${randomDuration}s`,
                 animationDelay: `${randomDelay}s`,
                 transform: `rotate(${randomRotation}deg)`,
-                '--end-x': `${randomEndX}vw`,
+                "--end-x": `${randomEndX}vw`,
               } as React.CSSProperties
-            }></div>
+            }
+          ></div>
         );
       })}
     </div>
