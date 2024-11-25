@@ -102,8 +102,8 @@ const Footer = () => {
           </div>
           <div className="flex flex-col gap-9">
             <p className="relative font-roboto font-normal opacity-60 text-white flex flex-col gap-3 pl-[18px]">
-              <a href="tel:+99312493705">Phone: +993 12 493705</a>
-              <span>Aşgabat şäheri Oguzhan 13</span>
+              {/* <a href="tel:+99312493705">Phone: +993 12 493705</a>
+              <span>Aşgabat şäheri Oguzhan 13</span> */}
               <a href="mailto:mahabat@turkmentv.gov.tm">mahabat@turkmentv.gov.tm</a>
               <span className="absolute top-0 left-0 w-[5px] h-full bg-white"></span>
             </p>

@@ -1,11 +1,15 @@
-"use client";
+'use client';
 
-import Image from "next/image";
-import { useState } from "react";
-import Confetti from "react-confetti";
-import { useWindowSize } from "react-use";
+import Image from 'next/image';
+import { Dispatch, SetStateAction, useState } from 'react';
+import Confetti from 'react-confetti';
+import { useWindowSize } from 'react-use';
 
-const SpinWheel: React.FC = () => {
+interface IProps {
+  setWinners: Dispatch<SetStateAction<number[]>>;
+}
+
+const SpinWheel = ({ setWinners }: IProps) => {
   const [isSpinning, setIsSpinning] = useState(false);
   const [isCountingDown, setIsCountingDown] = useState(false);
   const [countdown, setCountdown] = useState(5);
@@ -45,6 +49,7 @@ const SpinWheel: React.FC = () => {
     setTimeout(() => {
       setIsSpinning(false);
       setRotation((prev) => prev % 360); // Normalize the rotation
+      setWinners((prev) => [...prev, 1]);
       triggerConfetti(); // Show confetti after spinning
     }, 5000); // Spin duration
   };
@@ -63,15 +68,16 @@ const SpinWheel: React.FC = () => {
             width={width}
             height={height}
             recycle={false}
-            numberOfPieces={2000}
+            numberOfPieces={1000}
             tweenDuration={10000}
             run={true}
             colors={[
-              "linear-gradient(45deg, #5D5D72, #8589DE)",
-              "linear-gradient(45deg, #E1E0FF, #575992)",
-              "#8589DE",
-              "#575992",
-              "#E1E0FF",
+              'linear-gradient(45deg, #5D5D72, #8589DE)',
+              'linear-gradient(45deg, #E1E0FF, #575992)',
+              '#8589DE',
+              '#575992',
+              '#E1E0FF',
+              '#BA1A1A',
             ]}
           />
         </div>
@@ -79,7 +85,7 @@ const SpinWheel: React.FC = () => {
       <div className="relative rounded-full w-[554px] h-[554px]">
         {/* Wheel triangle */}
         <Image
-          src={"/wheel-triangle.svg"}
+          src={'/wheel-triangle.svg'}
           alt="wheel"
           height={34}
           width={35}
@@ -90,13 +96,12 @@ const SpinWheel: React.FC = () => {
         <div
           style={{
             transform: `rotate(${rotation}deg)`,
-            transition: isSpinning ? "transform 5s ease-out" : "",
+            transition: isSpinning ? 'transform 5s ease-out' : '',
           }}
-          className="p-3 bg-[#5D5D72] rounded-full overflow-hidden"
-        >
+          className="p-3 bg-[#5D5D72] rounded-full overflow-hidden">
           <div className="p-[15px] bg-[#8589DE] rounded-full ">
             <Image
-              src={"/wheel-circle-inner.png"}
+              src={'/wheel-circle-inner.png'}
               alt="wheel"
               height={530}
               width={530}
@@ -119,15 +124,14 @@ const SpinWheel: React.FC = () => {
         disabled={isSpinning || isCountingDown}
         className={`mt-6 px-6 py-3 rounded-full text-white font-bold ${
           isSpinning || isCountingDown
-            ? "bg-gray-400 cursor-not-allowed"
-            : "bg-blue-500 hover:bg-blue-700"
-        }`}
-      >
+            ? 'bg-gray-400 cursor-not-allowed'
+            : 'bg-blue-500 hover:bg-blue-700'
+        }`}>
         {isCountingDown
           ? `Starting in ${countdown}...`
           : isSpinning
-          ? "Spinning..."
-          : "Spin the Wheel"}
+          ? 'Spinning...'
+          : 'Spin the Wheel'}
       </button>
     </div>
   );
