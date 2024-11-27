@@ -57,6 +57,8 @@ const page = ({ params }: IParams) => {
 
   const mobile = useMediaQuery('(max-width: 768px)');
 
+  console.log(quizFinished);
+
   if (data) {
     if (!data.data) {
       return (
@@ -132,7 +134,7 @@ const page = ({ params }: IParams) => {
                   />
                 ) : null}
 
-                {data?.data.id && quizFinished && (
+                {data?.data.id && (
                   <QuizWinnerTable
                     smsNumber={data.data.sms_number}
                     quizId={data?.data.id}
