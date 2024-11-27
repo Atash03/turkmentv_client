@@ -57,8 +57,6 @@ const page = ({ params }: IParams) => {
 
   const mobile = useMediaQuery('(max-width: 768px)');
 
-  console.log(quizFinished);
-
   if (data) {
     if (!data.data) {
       return (

@@ -34,8 +34,6 @@ const QuizQuestionList = ({
     //     : setQuizFinished(true),
     // );
 
-    console.log('quizFinished', quizFinished);
-
     if (paramsId && !quizFinished) {
       const interval = setInterval(() => {
         Queries.getQuiz(paramsId).then((res) => {
