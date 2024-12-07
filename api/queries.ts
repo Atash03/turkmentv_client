@@ -231,4 +231,19 @@ export class Queries {
       },
     ).then((res) => res.json().then((res) => res as MessagesByTvAdmin));
   }
+
+  // Lottery ================================================================================
+  public static async getLottery(): Promise<IAllVotes> {
+    return await fetch(`${baseUrl.QUIZ_SRC}${routes.lotteryActive}`, {
+      next: { revalidate: 3600 },
+    }).then((res) => res.json().then((res) => res as IAllVotes));
+  }
+
+  public static async getLotteryById(lottery_id: string): Promise<IVote> {
+    return await fetch(`${baseUrl.QUIZ_SRC}${routes.lotteryId(lottery_id)}`, {
+      next: { revalidate: 3600 },
+    }).then((res) => res.json().then((res) => res as IVote));
+  }
+
+  // ============================================================================================
 }

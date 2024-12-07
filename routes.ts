@@ -19,6 +19,11 @@ export default {
   vote: (vote_id: string) => `/voting/${vote_id}`,
   // ======================================================================
 
+  // Lottery ================================================================
+  lotteryActive: '/lottery/active',
+  lotteryId: (lottery_id: string) => `/lottery/${lottery_id}`,
+  // ======================================================================
+
   addPost: '/mahabat/order',
   news: '/pagination/new/posts',
   lastVideos: '/materials?per_page=30',

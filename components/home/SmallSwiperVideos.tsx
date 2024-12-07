@@ -36,7 +36,7 @@ const SmallSwiperVideos = () => {
   }
 
   return (
-    <div className="small-swiper ">
+    <div className="small-swiper">
       <Swiper
         className="h-full"
         modules={[Navigation, Pagination, Scrollbar, A11y, Autoplay]}
@@ -51,7 +51,7 @@ const SmallSwiperVideos = () => {
         }}>
         {/* PAY ATTENTION [data] is wrapped in an array */}
         <SwiperSlide>
-          <LinkBlock href="/treasury" content="Hazyna" color="#c56540" />
+          <LinkBlock href="/vote/36" content="Hazyna" color="#c56540" />
         </SwiperSlide>
         {data?.data
           ? chooseRandomItems(data.data).map((item, index) => (
