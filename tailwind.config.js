@@ -82,6 +82,7 @@ export const theme = {
       // Outline
       lightOutline: '#777680',
       lightOutlineVariant: '#C7C5D0',
+      lightPrimaryOutline: '#D8D6FF',
     },
     fontSize: {
       // Display

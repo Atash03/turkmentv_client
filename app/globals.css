@@ -86,7 +86,7 @@ html {
 
 .container {
   max-width: 1316px;
-  padding: 0 30px;
+  padding: 0 16px;
   width: 100%;
   margin: 0 auto;
   /* overflow-x: hidden; */
@@ -228,9 +228,18 @@ big {
   @apply -tracking-[1%] text-[24px] leading-[32px];
 }
 
+.font-heading-5-medium {
+  @apply font-medium -tracking-[1%] text-[24px] leading-[32px];
+}
+
+.font-base-regular {
+  @apply font-normal -tracking-[1%] text-[16px] leading-[24px];
+}
+
 .font-base-medium {
   @apply font-medium -tracking-[1%] text-[16px] leading-[24px];
 }
+
 .font-small-regular {
   @apply -tracking-[1%] text-[14px] leading-[20px];
 }

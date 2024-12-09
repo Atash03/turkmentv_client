@@ -55,8 +55,10 @@ const page = ({ params }: IParams) => {
                 <ul className="list-disc flex flex-col gap-4 pl-[16px]">
                   {Array(1)
                     .fill(' ')
-                    .map((item) => (
-                      <li className="font-small-regular">SMS = 1 manat</li>
+                    .map((item, i) => (
+                      <li className="font-small-regular" key={i}>
+                        SMS = 1 manat
+                      </li>
                     ))}
                 </ul>
               </div>

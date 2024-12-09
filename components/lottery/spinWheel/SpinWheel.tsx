@@ -82,14 +82,14 @@ const SpinWheel = ({ setWinners }: IProps) => {
           />
         </div>
       )}
-      <div className="relative rounded-full w-[554px] h-[554px]">
+      <div className="relative rounded-full max-w-[554px] max-h-[554px] w-full h-full">
         {/* Wheel triangle */}
         <Image
           src={'/wheel-triangle.svg'}
           alt="wheel"
           height={34}
           width={35}
-          className="absolute z-10 left-[50%] -translate-x-[50%] top-7"
+          className="absolute z-10 left-[50%] -translate-x-[50%] lg:top-7 top-[17px]"
         />
 
         {/* Wheel */}
@@ -98,8 +98,8 @@ const SpinWheel = ({ setWinners }: IProps) => {
             transform: `rotate(${rotation}deg)`,
             transition: isSpinning ? 'transform 5s ease-out' : '',
           }}
-          className="p-3 bg-[#5D5D72] rounded-full overflow-hidden">
-          <div className="p-[15px] bg-[#8589DE] rounded-full ">
+          className="lg:p-3 p-2 bg-[#5D5D72] rounded-full overflow-hidden">
+          <div className="lg:p-[15px] p-[10px] bg-[#8589DE] rounded-full ">
             <Image
               src={'/wheel-circle-inner.png'}
               alt="wheel"
@@ -111,8 +111,8 @@ const SpinWheel = ({ setWinners }: IProps) => {
         </div>
 
         {/* Countdown */}
-        <div className="absolute top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] w-[105px] h-[105px] rounded-full z-10 bg-white flex items-center justify-center ">
-          <span className="text-[#79536A] font-roboto text-[60px] leading-[70px] tracking-[-1%]">
+        <div className="absolute top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] lg:w-[105px] lg:h-[105px] h-[75px] w-[75px] rounded-full z-10 bg-white flex items-center justify-center ">
+          <span className="text-[#79536A] font-roboto lg:text-[60px] text-[45px]  leading-[70px] tracking-[-1%]">
             {countdown}
           </span>
         </div>

@@ -6,6 +6,7 @@ import { CategoriesModel } from '@/models/categories.model';
 import { ChannelsModel } from '@/models/channels.model';
 import { HomeModel } from '@/models/home.model';
 import { LiveDescriptionModel } from '@/models/liveDescription.model';
+import { ILottery } from '@/models/lottery/lottery.model';
 import { MarqueeModel } from '@/models/marquee.model';
 import { NewsModel, NewsType } from '@/models/news.model';
 import { NewsItemModel } from '@/models/newsItem.model';
@@ -233,16 +234,16 @@ export class Queries {
   }
 
   // Lottery ================================================================================
-  public static async getLottery(): Promise<IAllVotes> {
+  public static async getLottery(): Promise<ILottery> {
     return await fetch(`${baseUrl.QUIZ_SRC}${routes.lotteryActive}`, {
       next: { revalidate: 3600 },
-    }).then((res) => res.json().then((res) => res as IAllVotes));
+    }).then((res) => res.json().then((res) => res as ILottery));
   }
 
-  public static async getLotteryById(lottery_id: string): Promise<IVote> {
+  public static async getLotteryById(lottery_id: string): Promise<ILottery> {
     return await fetch(`${baseUrl.QUIZ_SRC}${routes.lotteryId(lottery_id)}`, {
       next: { revalidate: 3600 },
-    }).then((res) => res.json().then((res) => res as IVote));
+    }).then((res) => res.json().then((res) => res as ILottery));
   }
 
   // ============================================================================================
