@@ -83,6 +83,12 @@ export const theme = {
       lightOutline: '#777680',
       lightOutlineVariant: '#C7C5D0',
       lightPrimaryOutline: '#D8D6FF',
+      // Allert
+      lightInfoAllertContainer: '#E3F2FD',
+      lightOnInfoAllertContainer: '#1E3A5F',
+      lightOnWarningAllertContainer: '#F57C00',
+      lightWarningAllertContainer: '#FFF8E1',
+      lightWarningAllertContainerOutline: '#F9EDC8',
     },
     fontSize: {
       // Display

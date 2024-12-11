@@ -244,6 +244,10 @@ big {
   @apply -tracking-[1%] text-[14px] leading-[20px];
 }
 
+.font-xsmall-regular {
+  @apply -tracking-[1%] text-[12px] leading-[16px];
+}
+
 .text-countdown {
   @apply font-roboto text-[60px] leading-[70px] -tracking-[1%];
 }
