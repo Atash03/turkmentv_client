@@ -5,7 +5,7 @@ import SpinWheel from './spinWheel/SpinWheel';
 import { useState } from 'react';
 
 const LotteryWinnersSection = () => {
-  const [winners, setWinners] = useState<number[]>([]);
+  const [winners, setWinners] = useState<number[]>([1, 2, 3, 4, 5, 5, 5, 5]);
 
   return (
     <section>
