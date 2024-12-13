@@ -35,7 +35,7 @@ const page = () => {
   }
 
   return (
-    <div className="flex flex-col gap-[128px] font-roboto md:pt-[64px] sm:pt-[48px] pt-[40px] pb-[128px] text-lightOnSurface">
+    <div className="flex flex-col md:gap-[128px] gap-[80px] font-roboto md:pt-[64px] sm:pt-[48px] pt-[40px] pb-[128px] text-lightOnSurface">
       {data && (
         <section className="">
           <div className="container">
@@ -82,10 +82,10 @@ const page = () => {
                 </div>
               )}
 
-              <div className="bg-lightSurfaceContainer flex flex-col gap-6">
+              <div className="bg-lightSurfaceContainer flex flex-col">
                 <LotteryCountDown
-                  startDate={'2024-12-9 16:15:00'}
-                  endDate={'2024-12-10 16:00:00'}
+                  startDate={'2024-12-14 16:15:00'}
+                  endDate={'2024-12-15 16:00:00'}
                   lotteryStatus={lotteryStatus}
                   setLotteryStatus={setLotteryStatus}
                 />
@@ -99,15 +99,15 @@ const page = () => {
       <section className="flex flex-col gap-[40px]">
         {lotteryStatus === 'not-started' && (
           <LotteryCountDown
-            startDate={'2024-12-9 16:15:00'}
-            endDate={'2024-12-10 16:00:00'}
+            startDate={'2024-12-14 16:15:00'}
+            endDate={'2024-12-15 16:00:00'}
             lotteryStatus={lotteryStatus}
             setLotteryStatus={setLotteryStatus}
           />
         )}
         <LotteryCountDownAllert
-          startDate={'2024-12-9 16:15:00'}
-          endDate={'2024-12-10 16:00:00'}
+          startDate={'2024-12-14 16:15:00'}
+          endDate={'2024-12-15 16:00:00'}
           lotteryStatus={lotteryStatus}
           setLotteryStatus={setLotteryStatus}
         />

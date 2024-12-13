@@ -19,7 +19,7 @@ const LotteryForm = () => {
         </div>
       </div>
 
-      <button className="p-[10px] w-full flex items-center justify-center text-lightPrimary font-small-medium rounded-full outline-none border border-lightOutline hover:bg-[#57599214] transition-all ease-in-out duration-300">
+      <button className="p-[10px] w-full flex items-center justify-center text-lightPrimary md:font-small-medium text-[14px] leading-[20px] rounded-full outline-none border border-lightOutline hover:bg-[#57599214] transition-all ease-in-out duration-300">
         Tassyklamak
       </button>
     </div>

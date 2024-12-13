@@ -10,12 +10,12 @@ const LotteryWinnersSection = () => {
   return (
     <section>
       <div className="container">
-        <div className="flex gap-6 bg-lightSurfaceContainer rounded-[12px]">
+        <div className="flex gap-6 bg-lightSurfaceContainer rounded-[12px] flex-1">
           {/* Winners */}
           <LotteryWinnersList winners={winners} />
 
           {/* Sping the wheel */}
-          <div className="flex justify-center items-center w-full h-full px-8 py-[29px]">
+          <div className="flex justify-center items-center md:w-full h-full md:px-8 md:py-[29px] p-6">
             <SpinWheel setWinners={setWinners} />
           </div>
         </div>

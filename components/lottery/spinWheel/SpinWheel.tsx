@@ -82,14 +82,14 @@ const SpinWheel = ({ setWinners }: IProps) => {
           />
         </div>
       )}
-      <div className="relative rounded-full max-w-[554px] max-h-[554px] w-full h-full">
+      <div className="relative rounded-full md:max-w-[554px] md:max-h-[554px] w-[276px] h-[276px] md:w-full md:h-full">
         {/* Wheel triangle */}
         <Image
           src={'/wheel-triangle.svg'}
           alt="wheel"
           height={34}
           width={35}
-          className="absolute z-10 left-[50%] -translate-x-[50%] lg:top-7 top-[17px]"
+          className="absolute z-10 left-[50%] -translate-x-[50%] lg:top-7 top-[17px] md:w-[34px] md:h-[34px] w-[17px] h-[17px]"
         />
 
         {/* Wheel */}
@@ -111,15 +111,15 @@ const SpinWheel = ({ setWinners }: IProps) => {
         </div>
 
         {/* Countdown */}
-        <div className="absolute top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] lg:w-[105px] lg:h-[105px] h-[75px] w-[75px] rounded-full z-10 bg-white flex items-center justify-center ">
-          <span className="text-[#79536A] font-roboto lg:text-[60px] text-[45px]  leading-[70px] tracking-[-1%]">
+        <div className="absolute top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] lg:w-[105px] lg:h-[105px] md:h-[75px] md:w-[75px] w-[50px] h-[50px] rounded-full z-10 bg-white flex items-center justify-center ">
+          <span className="text-[#79536A] font-roboto lg:text-[60px] md:text-[45px] text-[28px]  leading-[70px] tracking-[-1%]">
             {countdown}
           </span>
         </div>
       </div>
 
       {/* Spin Button */}
-      <button
+      {/* <button
         onClick={handleSpinClick}
         disabled={isSpinning || isCountingDown}
         className={`mt-6 px-6 py-3 rounded-full text-white font-bold ${
@@ -132,7 +132,7 @@ const SpinWheel = ({ setWinners }: IProps) => {
           : isSpinning
           ? 'Spinning...'
           : 'Spin the Wheel'}
-      </button>
+      </button> */}
     </div>
   );
 };
