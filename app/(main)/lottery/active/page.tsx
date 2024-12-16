@@ -82,10 +82,10 @@ const page = () => {
                 </div>
               )}
 
-              <div className="bg-lightSurfaceContainer flex flex-col">
+              <div className="bg-lightSurfaceContainer flex flex-col rounded-[12px]">
                 <LotteryCountDown
-                  startDate={'2024-12-14 16:15:00'}
-                  endDate={'2024-12-15 16:00:00'}
+                  startDate={'2024-12-16 18:09:00'}
+                  endDate={'2024-12-25 16:00:00'}
                   lotteryStatus={lotteryStatus}
                   setLotteryStatus={setLotteryStatus}
                 />
@@ -100,16 +100,16 @@ const page = () => {
         {lotteryStatus === 'not-started' && (
           <div className="container">
             <LotteryCountDown
-              startDate={'2024-12-14 16:15:00'}
-              endDate={'2024-12-15 16:00:00'}
+              startDate={'2024-12-16 18:09:00'}
+              endDate={'2024-12-25 16:00:00'}
               lotteryStatus={lotteryStatus}
               setLotteryStatus={setLotteryStatus}
             />
           </div>
         )}
         <LotteryCountDownAllert
-          startDate={'2024-12-14 16:15:00'}
-          endDate={'2024-12-15 16:00:00'}
+          startDate={'2024-12-16 18:09:00'}
+          endDate={'2024-12-25 16:00:00'}
           lotteryStatus={lotteryStatus}
           setLotteryStatus={setLotteryStatus}
         />

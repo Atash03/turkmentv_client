@@ -119,7 +119,7 @@ const SpinWheel = ({ setWinners }: IProps) => {
       </div>
 
       {/* Spin Button */}
-      {/* <button
+      <button
         onClick={handleSpinClick}
         disabled={isSpinning || isCountingDown}
         className={`mt-6 px-6 py-3 rounded-full text-white font-bold ${
@@ -132,7 +132,7 @@ const SpinWheel = ({ setWinners }: IProps) => {
           : isSpinning
           ? 'Spinning...'
           : 'Spin the Wheel'}
-      </button> */}
+      </button>
     </div>
   );
 };
