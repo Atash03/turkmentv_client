@@ -252,6 +252,10 @@ big {
   @apply font-roboto text-[60px] leading-[70px] -tracking-[1%];
 }
 
+.numeric-display-1 {
+  @apply text-[80px] leading-[88px] -tracking-[1%] text-center font-normal font-roboto;
+}
+
 .wheel-circle {
   background: url('/wheel-circle.svg');
   background-position: center;

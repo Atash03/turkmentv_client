@@ -3,6 +3,7 @@
 import { Queries } from '@/api/queries';
 import Loader from '@/components/Loader';
 import LotteryWinnersSection from '@/components/lottery/LotteryWinnersSection';
+import RollingCounter from '@/components/lottery/RollingCounter/RollingCounter';
 import LotteryCountDown from '@/components/lottery/countDown/LotteryCountDown';
 import LotteryCountDownAllert from '@/components/lottery/countDown/countDownAllert/LotteryCountDownAllert';
 import LotteryForm from '@/components/lottery/form/LotteryForm';
@@ -26,16 +27,18 @@ const page = () => {
       .finally(() => setIsLoading(false));
   }, []);
 
-  if (isLoading) {
-    return (
-      <div className="w-full h-screen flex justify-center items-center">
-        <Loader />
-      </div>
-    );
-  }
+  // if (isLoading) {
+  //   return (
+  //     <div className="w-full h-screen flex justify-center items-center">
+  //       <Loader />
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="flex flex-col md:gap-[128px] gap-[80px] font-roboto md:pt-[64px] sm:pt-[48px] pt-[40px] pb-[128px] text-lightOnSurface">
+      <RollingCounter numberString="8134523561" />
+
       {data && (
         <section className="">
           <div className="container">
