@@ -4,6 +4,7 @@ import { Queries } from '@/api/queries';
 import Loader from '@/components/Loader';
 import LotteryWinnersSection from '@/components/lottery/LotteryWinnersSection';
 import RollingCounter from '@/components/lottery/RollingCounter/RollingCounter';
+import RollingCounterWorking from '@/components/lottery/RollingCounter/RollingCounterWorking';
 import LotteryCountDown from '@/components/lottery/countDown/LotteryCountDown';
 import LotteryCountDownAllert from '@/components/lottery/countDown/countDownAllert/LotteryCountDownAllert';
 import LotteryForm from '@/components/lottery/form/LotteryForm';
@@ -18,14 +19,23 @@ const page = () => {
   const [lotteryStatus, setLotteryStatus] = useState<'not-started' | 'started' | 'ended'>(
     'not-started',
   );
+  const [currentNumber, setCurrentNumber] = useState('22-22-22-22-22');
 
-  useEffect(() => {
-    Queries.getLottery()
-      .then((res) => {
-        setData(res);
-      })
-      .finally(() => setIsLoading(false));
-  }, []);
+  // useEffect(() => {
+  //   Queries.getLottery()
+  //     .then((res) => {
+  //       setData(res);
+  //     })
+  //     .finally(() => setIsLoading(false));
+  // }, []);
+
+  // useEffect(() => {
+  //   const timer = setTimeout(() => {
+  //     setCurrentNumber('81-34-52-35-61');
+  //   }, 10000); // 15 seconds
+
+  //   return () => clearTimeout(timer); // Cleanup on unmount
+  // }, []);
 
   // if (isLoading) {
   //   return (
@@ -37,7 +47,8 @@ const page = () => {
 
   return (
     <div className="flex flex-col md:gap-[128px] gap-[80px] font-roboto md:pt-[64px] sm:pt-[48px] pt-[40px] pb-[128px] text-lightOnSurface">
-      <RollingCounter numberString="8134523561" />
+      {/* <RollingCounter numberString={currentNumber} /> */}
+      <RollingCounterWorking numberString={currentNumber} />
 
       {data && (
         <section className="">
