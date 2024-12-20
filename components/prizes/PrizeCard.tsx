@@ -80,33 +80,33 @@ const PrizeCard = ({
   return (
     <div
       className={cn(
-        'bg-lightSurfaceContainerHigher flex md:flex-row flex-col rounded-[12px] overflow-hidden w-full',
+        'bg-lightSurfaceContainerHigher flex md:flex-row flex-col rounded-[12px] overflow-hidden w-full ',
         className,
         {
           'opacity-50': variant === 'disabled',
         },
       )}>
-      <div className="flex-1 overflow-hidden md:h-full h-[186px]">
+      <div className="flex-1 overflow-hidden md:h-[248px] h-[186px] w-full">
         <Image
           width={416}
           height={248}
           src={image ? image : '/gift-placeholder.png'}
           alt="prize"
-          className="h-full w-full"
+          className="h-full w-full object-cover"
         />
       </div>
-      <div className="flex-1 p-[16px] flex flex-col gap-[16px]">
-        <h2 className="text-heading5 leading-heading5 -tracking-[-1%] font-medium text-lightOnSurface">
+      <div className="flex-1 p-[16px] flex flex-col gap-[16px] w-full">
+        <h2 className="text-heading5 leading-heading5 -tracking-[-1%] font-medium text-lightOnSurface w-full">
           {title}
         </h2>
-        <p className="text-textSmall leading-textSmall -tracking-[-1%] text-lightOnSurfaceVariant">
+        <p className="text-textSmall leading-textSmall -tracking-[-1%] text-lightOnSurfaceVariant w-full">
           {description}
         </p>
 
         {variant === 'default' ? (
           <>
             {/* DialogTrigger to open the dialog */}
-            <div>
+            <div className="w-full">
               <Dialog open={dialogOpen} onOpenChange={handleDialogClose}>
                 <DialogTrigger asChild>
                   <button
