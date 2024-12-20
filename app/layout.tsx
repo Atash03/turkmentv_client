@@ -49,6 +49,9 @@ export default function RootLayout({ children }: IProps) {
       className={`${aeroport.variable} ${mw.variable} ${roboto.variable} ${mw_sans.variable} ${alexandria.variable}`}>
       <head>
         <link rel="icon" href="/logo.png" sizes="any" />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no;"></meta>
       </head>
       <body className="relative overflow-x-hidden">
         <QueryProvider>{children}</QueryProvider>
