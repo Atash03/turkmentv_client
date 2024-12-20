@@ -1,72 +1,40 @@
 'use client';
 import { motion } from 'framer-motion';
-import { useCallback, useMemo, useState, useEffect } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
-interface RollingCounterProps {
+interface RollingCounterWorkingProps {
   numberString: string;
 }
 
-const ROLLS = 2;
+// Move constants outside component
+const ROLLS = 5;
 const DIGIT_HEIGHT = 104;
 const INITIAL_OFFSET = 38;
 const EXTRA_NUMBERS_AFTER = 5;
 const EXTRA_NUMBERS_BEFORE = 2;
 
-const getNumbers = (targetValue: number, previousValue?: number) => {
+// Memoize number generation function
+const getNumbers = (targetValue: number) => {
   const numbers = [];
 
-  if (previousValue === undefined) {
-    // Initial load
-    for (let i = 0; i < ROLLS; i++) {
-      for (let n = 0; n < 10; n++) {
-        numbers.push(n);
-      }
+  // Add complete rolls
+  for (let i = 0; i < ROLLS; i++) {
+    for (let n = 0; n < 10; n++) {
+      numbers.push(n);
     }
+  }
 
-    // Add sequence before target
-    for (let n = EXTRA_NUMBERS_BEFORE; n > 0; n--) {
-      numbers.push((targetValue - n + 10) % 10);
-    }
+  // Add sequence before target
+  for (let n = EXTRA_NUMBERS_BEFORE; n > 0; n--) {
+    numbers.push((targetValue - n + 10) % 10);
+  }
 
-    numbers.push(targetValue);
+  // Add target
+  numbers.push(targetValue);
 
-    // Add extra numbers after target
-    for (let n = 1; n <= EXTRA_NUMBERS_AFTER; n++) {
-      numbers.push((targetValue + n) % 10);
-    }
-  } else {
-    // Keep the previous sequence
-    for (let i = 0; i < ROLLS; i++) {
-      for (let n = 0; n < 10; n++) {
-        numbers.push(n);
-      }
-    }
-
-    // Add sequence before previous value
-    for (let n = EXTRA_NUMBERS_BEFORE; n > 0; n--) {
-      numbers.push((previousValue - n + 10) % 10);
-    }
-
-    numbers.push(previousValue);
-
-    // Add complete rolls between previous and target
-    for (let i = 0; i < ROLLS; i++) {
-      for (let n = 0; n < 10; n++) {
-        numbers.push(n);
-      }
-    }
-
-    // Add sequence before target
-    for (let n = EXTRA_NUMBERS_BEFORE; n > 0; n--) {
-      numbers.push((targetValue - n + 10) % 10);
-    }
-
-    numbers.push(targetValue);
-
-    // Add extra numbers after target
-    for (let n = 1; n <= EXTRA_NUMBERS_AFTER; n++) {
-      numbers.push((targetValue + n) % 10);
-    }
+  // Add extra numbers after target
+  for (let n = 1; n <= EXTRA_NUMBERS_AFTER; n++) {
+    numbers.push((targetValue + n) % 10);
   }
 
   return numbers;
@@ -78,31 +46,28 @@ const RollingDigit = ({
   onAnimationComplete,
   isStopped,
   showHyphen,
-  previousValue,
 }: {
   targetValue: number;
   index: number;
   onAnimationComplete: () => void;
   isStopped: boolean;
   showHyphen: boolean;
-  previousValue?: number;
 }) => {
-  const numbers = useMemo(
-    () => getNumbers(targetValue, previousValue),
-    [targetValue, previousValue],
-  );
+  const numbers = useMemo(() => getNumbers(targetValue), [targetValue]);
+
+  const targetIndex = ROLLS * 10 + EXTRA_NUMBERS_BEFORE;
 
   return (
     <div className="flex items-center">
       <div className="overflow-hidden h-[180px] w-[77px] relative">
         <motion.div
-          initial={false} // Don't reset to initial state
+          initial={{ y: INITIAL_OFFSET }}
           animate={{
-            y: -(numbers.length - EXTRA_NUMBERS_AFTER - 1) * DIGIT_HEIGHT + INITIAL_OFFSET,
+            y: -(targetIndex * DIGIT_HEIGHT) + INITIAL_OFFSET,
           }}
           transition={{
-            duration: 2,
-            delay: index * 0.2,
+            duration: 5,
+            delay: index * 4,
             ease: 'easeInOut',
           }}
           onAnimationComplete={onAnimationComplete}
@@ -123,19 +88,9 @@ const RollingDigit = ({
   );
 };
 
-const RollingCounter: React.FC<RollingCounterProps> = ({ numberString }) => {
+const RollingCounterWorking: React.FC<RollingCounterWorkingProps> = ({ numberString }) => {
   const [isInitialLoading, setIsInitialLoading] = useState(true);
   const [isStopped, setIsStopped] = useState<boolean[]>([]);
-  const [previousNumbers, setPreviousNumbers] = useState<number[]>([]);
-  const [isNewNumber, setIsNewNumber] = useState(false);
-
-  useEffect(() => {
-    if (!isInitialLoading) {
-      setPreviousNumbers(numbers);
-      setIsStopped(new Array(numberString.replace(/-/g, '').length).fill(false));
-      setIsNewNumber(true);
-    }
-  }, [numberString, isInitialLoading]);
 
   const numbers = useMemo(() => {
     if (!numberString) return [];
@@ -175,7 +130,6 @@ const RollingCounter: React.FC<RollingCounterProps> = ({ numberString }) => {
         <RollingDigit
           key={`${index}-${num}`}
           targetValue={num}
-          previousValue={previousNumbers[index]}
           index={index}
           onAnimationComplete={() => handleAnimationComplete(index)}
           isStopped={isStopped[index]}
@@ -186,4 +140,4 @@ const RollingCounter: React.FC<RollingCounterProps> = ({ numberString }) => {
   );
 };
 
-export default RollingCounter;
+export default RollingCounterWorking;
