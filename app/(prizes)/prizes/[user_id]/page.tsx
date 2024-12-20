@@ -50,8 +50,8 @@ const PrizesPage = ({ params }: { params: { user_id: string } }) => {
   }
 
   return (
-    <div className="flex flex-col gap-[32px] md:gap-[64px] items-center">
-      <header className="flex flex-col items-center gap-[24px]">
+    <div className="flex flex-col gap-[32px] md:gap-[64px] items-center w-full overflow-x-hidden">
+      <header className="flex flex-col items-center gap-[24px] w-full">
         <div className="flex flex-col gap-[8px] max-w-[639px] w-full">
           <h1 className="text-lightOnSurface text-heading1 leading-heading1 md:text-display1 md:leading-display1 tracking-[-1%] text-center font-medium">
             {data.data.title}
