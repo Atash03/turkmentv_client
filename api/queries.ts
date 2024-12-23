@@ -1,39 +1,39 @@
-import baseUrl from '@/baseUrl';
-import { AddPostModel } from '@/models/add.post.model';
-import { IAllVotes } from '@/models/allVotes.model';
-import { BannerModel } from '@/models/banner.model';
-import { CategoriesModel } from '@/models/categories.model';
-import { ChannelsModel } from '@/models/channels.model';
-import { HomeModel } from '@/models/home.model';
-import { LiveDescriptionModel } from '@/models/liveDescription.model';
-import { ILottery } from '@/models/lottery/lottery.model';
-import { MarqueeModel } from '@/models/marquee.model';
-import { NewsModel, NewsType } from '@/models/news.model';
-import { NewsItemModel } from '@/models/newsItem.model';
-import { PageItemModel } from '@/models/pageItem.model';
-import { PlansModel } from '@/models/plans.model';
-import { PropertiesModel } from '@/models/properties.model';
-import { IQuizQuestionsHistory } from '@/models/quizQuestionHistory.model';
-import { IQuizQuestions } from '@/models/quizQuestions.model';
-import { IQuizQuestionsWinners } from '@/models/quizQuestionsWinners.model';
-import { MessagesByTvAdmin } from '@/models/sms/messagesByTvAdmis.model';
-import { IMyTvAdmins } from '@/models/sms/my.tv.admins.model';
-import { VideoModel } from '@/models/video.model';
-import { VideosModel } from '@/models/videos.model';
-import { IVote } from '@/models/vote.model';
-import routes from '@/routes';
-import { CloudFog } from 'lucide-react';
+import baseUrl from "@/baseUrl";
+import { AddPostModel } from "@/models/add.post.model";
+import { IAllVotes } from "@/models/allVotes.model";
+import { BannerModel } from "@/models/banner.model";
+import { CategoriesModel } from "@/models/categories.model";
+import { ChannelsModel } from "@/models/channels.model";
+import { HomeModel } from "@/models/home.model";
+import { LiveDescriptionModel } from "@/models/liveDescription.model";
+import { ILotteryResponse } from "@/models/lottery/lottery.model";
+import { MarqueeModel } from "@/models/marquee.model";
+import { NewsModel, NewsType } from "@/models/news.model";
+import { NewsItemModel } from "@/models/newsItem.model";
+import { PageItemModel } from "@/models/pageItem.model";
+import { PlansModel } from "@/models/plans.model";
+import { PropertiesModel } from "@/models/properties.model";
+import { IQuizQuestionsHistory } from "@/models/quizQuestionHistory.model";
+import { IQuizQuestions } from "@/models/quizQuestions.model";
+import { IQuizQuestionsWinners } from "@/models/quizQuestionsWinners.model";
+import { MessagesByTvAdmin } from "@/models/sms/messagesByTvAdmis.model";
+import { IMyTvAdmins } from "@/models/sms/my.tv.admins.model";
+import { VideoModel } from "@/models/video.model";
+import { VideosModel } from "@/models/videos.model";
+import { IVote } from "@/models/vote.model";
+import routes from "@/routes";
+import { CloudFog } from "lucide-react";
 
 export class Queries {
   public static async getNews(
     page: number,
-    { perPage = 8 }: { perPage?: number },
+    { perPage = 8 }: { perPage?: number }
   ): Promise<NewsModel> {
     return await fetch(
       `${baseUrl.NEWS_SRC}${routes.news}?locale=tm&count=${perPage}&page=${page}`,
       {
         next: { revalidate: 3600 },
-      },
+      }
     ).then((res) => res.json().then((res) => res as NewsModel));
   }
 
@@ -50,9 +50,12 @@ export class Queries {
   }
 
   public static async getHomeBannerSingle3(id: string): Promise<NewsType> {
-    return await fetch(`https://turkmentv.gov.tm/v2/api/slider?type=small3/${id}`, {
-      next: { revalidate: 3600 },
-    }).then((res) => res.json().then((res) => res as NewsType));
+    return await fetch(
+      `https://turkmentv.gov.tm/v2/api/slider?type=small3/${id}`,
+      {
+        next: { revalidate: 3600 },
+      }
+    ).then((res) => res.json().then((res) => res as NewsType));
   }
 
   public static async getNewsItem(id: string): Promise<NewsItemModel> {
@@ -86,8 +89,8 @@ export class Queries {
   }
 
   public static async getVideo(id: number): Promise<VideoModel> {
-    return await fetch(`${baseUrl.MATERIALS_SRC}${routes.video(id)}`).then((res) =>
-      res.json().then((res) => res as VideoModel),
+    return await fetch(`${baseUrl.MATERIALS_SRC}${routes.video(id)}`).then(
+      (res) => res.json().then((res) => res as VideoModel)
     );
   }
 
@@ -125,9 +128,12 @@ export class Queries {
   }
 
   public static async getMarquee(): Promise<MarqueeModel> {
-    return await fetch(`${baseUrl.MATERIALS_SRC}${routes.marquee}?on_morquee=1`, {
-      next: { revalidate: 3600 },
-    }).then((res) => res.json().then((res) => res as MarqueeModel));
+    return await fetch(
+      `${baseUrl.MATERIALS_SRC}${routes.marquee}?on_morquee=1`,
+      {
+        next: { revalidate: 3600 },
+      }
+    ).then((res) => res.json().then((res) => res as MarqueeModel));
   }
 
   public static async getBanner(): Promise<BannerModel> {
@@ -136,10 +142,15 @@ export class Queries {
     }).then((res) => res.json().then((res) => res as BannerModel));
   }
 
-  public static async getLiveDescription(channel: number): Promise<LiveDescriptionModel> {
-    return await fetch(`${baseUrl.MATERIALS_SRC}${routes.channelItem(channel)}`, {
-      next: { revalidate: 3600 },
-    }).then((res) => res.json().then((res) => res as LiveDescriptionModel));
+  public static async getLiveDescription(
+    channel: number
+  ): Promise<LiveDescriptionModel> {
+    return await fetch(
+      `${baseUrl.MATERIALS_SRC}${routes.channelItem(channel)}`,
+      {
+        next: { revalidate: 3600 },
+      }
+    ).then((res) => res.json().then((res) => res as LiveDescriptionModel));
   }
 
   public static async getProperties(): Promise<PropertiesModel> {
@@ -149,17 +160,20 @@ export class Queries {
   }
 
   public static async getPlans(property_id: number): Promise<PlansModel> {
-    return await fetch(`${baseUrl.API_SRC}${routes.plans(String(property_id))}`, {
-      next: { revalidate: 3600 },
-    }).then((res) => res.json().then((res) => res as PlansModel));
+    return await fetch(
+      `${baseUrl.API_SRC}${routes.plans(String(property_id))}`,
+      {
+        next: { revalidate: 3600 },
+      }
+    ).then((res) => res.json().then((res) => res as PlansModel));
   }
 
   public static async postAdvert(data: AddPostModel): Promise<Response> {
     return await fetch(`${baseUrl.API_SRC}${routes.addPost}`, {
-      headers: { 'Content-Type': 'application/json' },
-      cache: 'no-cache',
+      headers: { "Content-Type": "application/json" },
+      cache: "no-cache",
       body: JSON.stringify(data),
-      method: 'POST',
+      method: "POST",
     });
   }
 
@@ -176,16 +190,26 @@ export class Queries {
     }).then((res) => res.json().then((res) => res as IQuizQuestions));
   }
 
-  public static async getQuizHistory(id: number): Promise<IQuizQuestionsHistory> {
-    return await fetch(`${baseUrl.QUIZ_SRC}${routes.getQuizQuestionHistory(id)}`, {
-      next: { revalidate: 3600 },
-    }).then((res) => res.json().then((res) => res as any));
+  public static async getQuizHistory(
+    id: number
+  ): Promise<IQuizQuestionsHistory> {
+    return await fetch(
+      `${baseUrl.QUIZ_SRC}${routes.getQuizQuestionHistory(id)}`,
+      {
+        next: { revalidate: 3600 },
+      }
+    ).then((res) => res.json().then((res) => res as any));
   }
 
-  public static async getQuizWinners(id: number): Promise<IQuizQuestionsWinners> {
-    return await fetch(`${baseUrl.QUIZ_SRC}${routes.getQuizQuestionsWinners(id)}`, {
-      next: { revalidate: 3600 },
-    }).then((res) => res.json().then((res) => res as IQuizQuestionsWinners));
+  public static async getQuizWinners(
+    id: number
+  ): Promise<IQuizQuestionsWinners> {
+    return await fetch(
+      `${baseUrl.QUIZ_SRC}${routes.getQuizQuestionsWinners(id)}`,
+      {
+        next: { revalidate: 3600 },
+      }
+    ).then((res) => res.json().then((res) => res as IQuizQuestionsWinners));
   }
 
   // ======================================================================================
@@ -207,7 +231,7 @@ export class Queries {
 
   // Sms ========================================================================================
   public static async getAdmins(): Promise<IMyTvAdmins> {
-    const token = localStorage.getItem('access_token');
+    const token = localStorage.getItem("access_token");
 
     return await fetch(`${baseUrl.SMS_SRC}${routes.myTvAdmins}`, {
       headers: { Authorization: `Bearer ${token}` },
@@ -219,31 +243,43 @@ export class Queries {
     current_page: number,
     dateValue: string,
     activeSort: string,
-    searchFetch: string,
+    searchFetch: string
   ): Promise<MessagesByTvAdmin> {
-    const token = localStorage.getItem('access_token');
+    const token = localStorage.getItem("access_token");
 
     return await fetch(
-      `${baseUrl.SMS_SRC}${routes.messagesByTvAdmin(id)}?per_page=60&page=${current_page}${
-        dateValue ? '&filter_by_date=' + dateValue.toString() : ''
-      }${searchFetch ? '&search=' + searchFetch : ''}&order=${activeSort}`,
+      `${baseUrl.SMS_SRC}${routes.messagesByTvAdmin(
+        id
+      )}?per_page=60&page=${current_page}${
+        dateValue ? "&filter_by_date=" + dateValue.toString() : ""
+      }${searchFetch ? "&search=" + searchFetch : ""}&order=${activeSort}`,
       {
         headers: { Authorization: `Bearer ${token}` },
-      },
+      }
     ).then((res) => res.json().then((res) => res as MessagesByTvAdmin));
   }
 
   // Lottery ================================================================================
-  public static async getLottery(): Promise<ILottery> {
-    return await fetch(`${baseUrl.QUIZ_SRC}${routes.lotteryActive}`, {
-      next: { revalidate: 3600 },
-    }).then((res) => res.json().then((res) => res as ILottery));
-  }
 
-  public static async getLotteryById(lottery_id: string): Promise<ILottery> {
-    return await fetch(`${baseUrl.QUIZ_SRC}${routes.lotteryId(lottery_id)}`, {
-      next: { revalidate: 3600 },
-    }).then((res) => res.json().then((res) => res as ILottery));
+  public static async authenticateLottery(
+    phone: string,
+    code: string
+  ): Promise<ILotteryResponse> {
+    return await fetch(`${baseUrl.QUIZ_SRC}${routes.lotteryActive}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        phone: phone,
+        key: code,
+      }),
+    }).then((res) => {
+      if (!res.ok) {
+        throw new Error("Authentication failed");
+      }
+      return res.json();
+    });
   }
 
   // ============================================================================================

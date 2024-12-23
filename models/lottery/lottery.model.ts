@@ -1,8 +1,12 @@
-export interface ILottery {
-  data: Data;
+export interface ILotteryWinner {
+  no: number;
+  client: string;
+  dt: string;
+  winner_no: number;
+  ticket: string;
 }
 
-export interface Data {
+export interface ILotteryData {
   id: number;
   title: string;
   description: string;
@@ -10,12 +14,10 @@ export interface Data {
   start_time: string;
   end_time: string;
   sms_code: string;
-  winners: Winner[];
+  winners: ILotteryWinner[];
 }
 
-export interface Winner {
-  no: number;
-  client: string;
-  dt: string;
-  winner_no: number;
+export interface ILotteryResponse {
+  data: ILotteryData;
+  user_lottery_numbers: string[];
 }
