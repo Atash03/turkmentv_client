@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import LotteryWinnersList from "./winners/LotteryWinnersList";
-import SpinWheel from "./spinWheel/SpinWheel";
-import { useState, useEffect } from "react";
-import RollingCounterWorking from "./RollingCounter/RollingCounterWorking";
-import { useLotteryAuth } from "@/store/useLotteryAuth";
-import { LotteryWinnerData } from "@/typings/lottery/lottery.types";
+import LotteryWinnersList from './winners/LotteryWinnersList';
+import SpinWheel from './spinWheel/SpinWheel';
+import { useState, useEffect } from 'react';
+import { useLotteryAuth } from '@/store/useLotteryAuth';
+import { LotteryWinnerData } from '@/typings/lottery/lottery.types';
+import RollingCounter from './RollingCounter/RollingCounter';
 
 const LotteryWinnersSection = () => {
   const [winners, setWinners] = useState<LotteryWinnerData[]>([]);
@@ -17,13 +17,13 @@ const LotteryWinnersSection = () => {
       setWinners(lotteryData.data.winners);
     }
 
-    const wsUrl = "https://sms.turkmentv.gov.tm/api/ws/lottery";
+    const wsUrl = 'https://sms.turkmentv.gov.tm/api/ws/lottery';
     const ws = new WebSocket(wsUrl);
 
     ws.onmessage = (event) => {
-      console.log("WebSocket message received:", event.data);
+      console.log('WebSocket message received:', event.data);
       const newWinner = JSON.parse(event.data);
-      console.log("Parsed WebSocket data:", newWinner);
+      console.log('Parsed WebSocket data:', newWinner);
       setWinners((prev) => [...prev, newWinner]);
     };
 
@@ -45,8 +45,6 @@ const LotteryWinnersSection = () => {
               {/* <SpinWheel setWinners={setWinners} /> */}
             </div>
           </div>
-
-          <RollingCounterWorking numberString={"81-34-52-35-61"} />
         </div>
       </div>
     </section>

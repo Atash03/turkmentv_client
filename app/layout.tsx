@@ -9,6 +9,7 @@ import { Alexandria } from 'next/font/google';
 import 'swiper/swiper-bundle.css';
 import './globals.css';
 import QueryProvider from '@/providers/QueryProvider';
+import { HtmlContext } from 'next/dist/shared/lib/html-context.shared-runtime';
 // FONTS
 const aeroport = localFont({
   src: '../fonts/Aeroport.otf',
