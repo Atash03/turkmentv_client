@@ -9,14 +9,26 @@ interface RollingCounterProps {
 // Move constants outside component
 const ROLLS = 2;
 const DIGIT_HEIGHT = 104;
-const INITIAL_OFFSET = 38;
+const EXTRA_NUMBERS_BEFORE = 2;
 const EXTRA_NUMBERS_AFTER = 5;
+const CONTAINER_HEIGHT = 180;
+const INITIAL_OFFSET = (CONTAINER_HEIGHT - DIGIT_HEIGHT) / 2 - DIGIT_HEIGHT * 2;
 
 // Memoize number generation function
 const getNumbers = (targetValue: number) => {
   const numbers = [];
 
-  // Add complete rolls
+  // Add extra numbers before
+  for (let n = 10 - EXTRA_NUMBERS_BEFORE; n < 10; n++) {
+    numbers.push(n);
+  }
+
+  // Start with zeros
+  for (let n = 0; n <= targetValue; n++) {
+    numbers.push(n);
+  }
+
+  // Add complete rolls after the initial sequence
   for (let i = 0; i < ROLLS; i++) {
     for (let n = 0; n < 10; n++) {
       numbers.push(n);
@@ -42,12 +54,14 @@ const RollingDigit = ({
   onAnimationComplete,
   isStopped,
   showHyphen,
+  totalDigits,
 }: {
   targetValue: number;
   index: number;
   onAnimationComplete: () => void;
   isStopped: boolean;
   showHyphen: boolean;
+  totalDigits: number;
 }) => {
   const numbers = useMemo(() => getNumbers(targetValue), [targetValue]);
 
@@ -57,11 +71,11 @@ const RollingDigit = ({
         <motion.div
           initial={{ y: INITIAL_OFFSET }}
           animate={{
-            y: -((ROLLS * 10 + targetValue + 1) * DIGIT_HEIGHT) + INITIAL_OFFSET + DIGIT_HEIGHT,
+            y: -((ROLLS * 10 + targetValue + 1) * DIGIT_HEIGHT) + INITIAL_OFFSET,
           }}
           transition={{
             duration: 2,
-            delay: index * 0.2,
+            delay: (totalDigits - 1 - index) * 0.2,
             ease: 'easeInOut',
           }}
           onAnimationComplete={onAnimationComplete}
@@ -129,6 +143,7 @@ const RollingCounter: React.FC<RollingCounterProps> = ({ numberString }) => {
           onAnimationComplete={() => handleAnimationComplete(index)}
           isStopped={isStopped[index]}
           showHyphen={(index + 1) % 2 === 0 && index !== numbers.length - 1}
+          totalDigits={numbers.length}
         />
       ))}
     </div>
