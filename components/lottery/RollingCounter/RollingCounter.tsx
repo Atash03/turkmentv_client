@@ -1,6 +1,6 @@
 'use client';
 import { motion } from 'framer-motion';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState, useRef } from 'react';
 
 interface RollingCounterProps {
   numberString: string;
@@ -55,6 +55,7 @@ const RollingDigit = ({
   isStopped,
   showHyphen,
   totalDigits,
+  isRollingBack,
 }: {
   targetValue: number;
   index: number;
@@ -62,6 +63,7 @@ const RollingDigit = ({
   isStopped: boolean;
   showHyphen: boolean;
   totalDigits: number;
+  isRollingBack: boolean;
 }) => {
   const numbers = useMemo(() => getNumbers(targetValue), [targetValue]);
 
@@ -71,11 +73,13 @@ const RollingDigit = ({
         <motion.div
           initial={{ y: INITIAL_OFFSET }}
           animate={{
-            y: -((ROLLS * 10 + targetValue + 1) * DIGIT_HEIGHT) + INITIAL_OFFSET,
+            y: isRollingBack
+              ? INITIAL_OFFSET
+              : -(numbers.length - EXTRA_NUMBERS_AFTER - 3) * DIGIT_HEIGHT + INITIAL_OFFSET,
           }}
           transition={{
-            duration: 2,
-            delay: (totalDigits - 1 - index) * 0.2,
+            duration: isRollingBack ? 2 : 2,
+            delay: isRollingBack ? index * 0.2 : (totalDigits - 1 - index) * 0.2,
             ease: 'easeInOut',
           }}
           onAnimationComplete={onAnimationComplete}
@@ -84,7 +88,7 @@ const RollingDigit = ({
             <div
               key={`${index}-${i}`}
               className={`h-[${DIGIT_HEIGHT}px] w-[77px] flex items-center justify-center numeric-display-1 transition-colors duration-500 ${
-                isStopped && num === targetValue ? 'text-white' : 'text-[#B0B1CD]'
+                isStopped && !isRollingBack && num === targetValue ? 'text-white' : 'text-[#B0B1CD]'
               }`}>
               {num}
             </div>
@@ -98,18 +102,19 @@ const RollingDigit = ({
 
 const RollingCounter: React.FC<RollingCounterProps> = ({ numberString }) => {
   const [isStopped, setIsStopped] = useState<boolean[]>([]);
+  const [isRollingBack, setIsRollingBack] = useState(false);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [currentNumbers, setCurrentNumbers] = useState<number[]>([]);
+  const prevNumberStringRef = useRef(numberString);
 
   const { numbers, isInitialLoading } = useMemo(() => {
     if (!numberString) {
       return { numbers: [], isInitialLoading: true };
     }
 
-    const parsed = numberString
-      .replace(/-/g, '')
-      .split('')
-      .map((char) => parseInt(char, 10));
-
-    setIsStopped(new Array(parsed.length).fill(false));
+    const parsed = numberString.split('-').flatMap((pair) => {
+      return pair.split('').map((char) => parseInt(char, 10));
+    });
 
     return {
       numbers: parsed,
@@ -117,13 +122,45 @@ const RollingCounter: React.FC<RollingCounterProps> = ({ numberString }) => {
     };
   }, [numberString]);
 
-  const handleAnimationComplete = useCallback((index: number) => {
-    setIsStopped((prev) => {
-      const newState = [...prev];
-      newState[index] = true;
-      return newState;
-    });
-  }, []);
+  // Initialize currentNumbers
+  useEffect(() => {
+    if (!currentNumbers.length && numbers.length) {
+      setCurrentNumbers(numbers);
+    }
+  }, [numbers, currentNumbers.length]);
+
+  // Handle number changes
+  useEffect(() => {
+    if (prevNumberStringRef.current !== numberString && !isRollingBack) {
+      setIsTransitioning(true);
+      setIsRollingBack(true);
+      setIsStopped(new Array(numbers.length).fill(false));
+
+      setTimeout(() => {
+        setIsRollingBack(false);
+        setCurrentNumbers(numbers);
+        prevNumberStringRef.current = numberString;
+      }, 2000);
+    }
+  }, [numberString, numbers, isRollingBack]);
+
+  const handleAnimationComplete = useCallback(
+    (index: number) => {
+      if (!isRollingBack) {
+        setIsStopped((prev) => {
+          const newState = [...prev];
+          newState[index] = true;
+
+          if (newState.every((stopped) => stopped)) {
+            setIsTransitioning(false);
+          }
+
+          return newState;
+        });
+      }
+    },
+    [isRollingBack],
+  );
 
   if (isInitialLoading) {
     return (
@@ -135,15 +172,16 @@ const RollingCounter: React.FC<RollingCounterProps> = ({ numberString }) => {
 
   return (
     <div className="flex items-center justify-center bg-lightPrimary text-white py-4 px-6 rounded-full">
-      {numbers.map((num, index) => (
+      {currentNumbers.map((num, index) => (
         <RollingDigit
-          key={`${index}-${num}`}
+          key={`${index}`} // Simplified key to prevent re-renders
           targetValue={num}
           index={index}
           onAnimationComplete={() => handleAnimationComplete(index)}
-          isStopped={isStopped[index]}
+          isStopped={isStopped[index] && !isTransitioning}
           showHyphen={(index + 1) % 2 === 0 && index !== numbers.length - 1}
           totalDigits={numbers.length}
+          isRollingBack={isRollingBack}
         />
       ))}
     </div>
