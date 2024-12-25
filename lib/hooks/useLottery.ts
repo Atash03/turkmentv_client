@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
-import { LotteryStatus } from "@/typings/lottery/lottery.types";
+import { useState, useEffect } from 'react';
+import { LotteryStatus } from '@/typings/lottery/lottery.types';
 
 export const useLottery = (startDate: string, endDate: string) => {
-  const [status, setStatus] = useState<LotteryStatus>("not-started");
-  const [currentNumber, setCurrentNumber] = useState("22-22-22-22-22");
+  const [status, setStatus] = useState<LotteryStatus>('not-started');
+  const [currentNumber, setCurrentNumber] = useState('22-22-22-22-22');
 
   useEffect(() => {
     const calculateStatus = () => {
@@ -11,9 +11,9 @@ export const useLottery = (startDate: string, endDate: string) => {
       const start = new Date(startDate);
       const end = new Date(endDate);
 
-      if (now < start) return "not-started";
-      if (now > end) return "ended";
-      return "started";
+      if (now < start) return 'not-started';
+      if (now > end) return 'ended';
+      return 'started';
     };
 
     setStatus(calculateStatus());
@@ -25,9 +25,9 @@ export const useLottery = (startDate: string, endDate: string) => {
   }, [startDate, endDate]);
 
   useEffect(() => {
-    if (status === "started") {
+    if (status === 'started') {
       const timer = setTimeout(() => {
-        setCurrentNumber("81-34-52-35-61");
+        setCurrentNumber('81-34-52-35-61');
       }, 10000);
 
       return () => clearTimeout(timer);
@@ -36,6 +36,7 @@ export const useLottery = (startDate: string, endDate: string) => {
 
   return {
     status,
+    setStatus,
     currentNumber,
   };
 };

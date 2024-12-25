@@ -9,17 +9,17 @@ import LotteryCounter from '@/components/lottery/RollingCounter/RollingCounter';
 
 import LotteryWinnersSection from '@/components/lottery/LotteryWinnersSection';
 import LotteryRulesSection from '@/components/lottery/rules/LotteryRulesSection';
-import RollingCounter from '@/components/lottery/RollingCounter/RollingCounter';
+import LotteryCountDown from '@/components/lottery/countDown/LotteryCountDown';
+import { useState } from 'react';
+import LotteryCountDownAllert from '@/components/lottery/countDown/countDownAllert/LotteryCountDownAllert';
 
 const LotteryPage = () => {
   const { lotteryData } = useLotteryAuth();
-  const { status, currentNumber } = useLottery(LOTTERY_CONFIG.START_DATE, LOTTERY_CONFIG.END_DATE);
+  const [status, setStatus] = useState<'not-started' | 'started' | 'ended'>('not-started');
 
   return (
     <ProtectedRoute>
       <div className="flex flex-col md:gap-[128px] gap-[80px] font-roboto md:pt-[64px] sm:pt-[48px] pt-[40px] pb-[128px] text-lightOnSurface">
-        <RollingCounter numberString={'00-00-00-00-00'} />
-
         {lotteryData && (
           <LotteryHeader
             title={lotteryData.data.title}
@@ -28,6 +28,28 @@ const LotteryPage = () => {
             smsCode={lotteryData.data.sms_code}
           />
         )}
+
+        {lotteryData ? (
+          status === 'not-started' ? (
+            <div className="container">
+              <LotteryCountDown
+                lotteryStatus={status}
+                setLotteryStatus={setStatus}
+                endDate={lotteryData?.data.end_time}
+                startDate={lotteryData?.data.start_time}
+              />
+            </div>
+          ) : (
+            <div className="container">
+              <LotteryCountDownAllert
+                lotteryStatus={status}
+                setLotteryStatus={setStatus}
+                endDate={lotteryData?.data.end_time}
+                startDate={lotteryData?.data.start_time}
+              />
+            </div>
+          )
+        ) : null}
 
         <LotteryRulesSection />
 

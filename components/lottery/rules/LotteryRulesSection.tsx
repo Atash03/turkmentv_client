@@ -1,4 +1,4 @@
-import { useLotteryAuth } from "@/store/useLotteryAuth";
+import { useLotteryAuth } from '@/store/useLotteryAuth';
 
 const LotteryRulesSection = () => {
   const { lotteryData } = useLotteryAuth();
@@ -17,7 +17,7 @@ const LotteryRulesSection = () => {
               </h3>
               <ul className="list-disc flex flex-col md:gap-4 gap-2 pl-[16px]">
                 {Array(5)
-                  .fill(" ")
+                  .fill(' ')
                   .map((item, i) => (
                     <li className="font-small-regular" key={i}>
                       Ilkinji we dogry jogap beren sanawda ilkinji ýeri eýelýär
@@ -27,17 +27,13 @@ const LotteryRulesSection = () => {
             </div>
 
             <div className="flex flex-col md:gap-4 gap-2 bg-lightSurfaceContainer py-4 md:px-8 px-6 rounded-[12px] w-full">
-              <h3 className="md:font-heading-5-regular text-[20px] leading-[24px]">
-                Üns beriň:
-              </h3>
+              <h3 className="md:font-heading-5-regular text-[20px] leading-[24px]">Üns beriň:</h3>
               <ul className="list-disc flex flex-col md:gap-4 gap-2 pl-[16px]">
-                {Array(1)
-                  .fill(" ")
-                  .map((item, i) => (
-                    <li className="font-small-regular" key={i}>
-                      SMS = 1 manat
-                    </li>
-                  ))}
+                {lotteryData?.user_lottery_numbers.map((item, i) => (
+                  <li className="font-small-regular" key={i}>
+                    {item}
+                  </li>
+                ))}
               </ul>
             </div>
           </div>

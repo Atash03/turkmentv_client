@@ -1,22 +1,17 @@
-import { LotteryWinnerData } from "@/typings/lottery/lottery.types";
-import LotteryWinner from "./LotteryWinner";
+import { LotteryWinnerData } from '@/typings/lottery/lottery.types';
+import LotteryWinner from './LotteryWinner';
 
 const LotteryWinnersList = ({ winners }: { winners: LotteryWinnerData[] }) => {
   return (
-    <div className="w-full md:p-8 p-6">
-      <div className="flex flex-col w-full gap-4 md:max-h-[548px] sm:max-h-[276px] max-h-[438px] h-full overflow-y-auto pr-2">
-        <div className="flex flex-col gap-2 md:pb-4 pb-3 border-b border-lightOutlineVariant">
-          <h4 className="font-heading-3-regular">Results</h4>
-          <p className="font-base-medium">
-            The results after each stage will be shown here.
-          </p>
-        </div>
-
-        <div className="flex flex-col w-full gap-4">
-          {winners.map((_, index) => (
-            <LotteryWinner number="8 XX XX-XX-XX" index={index} />
-          ))}
-        </div>
+    <div className="flex flex-col gap-4 w-full max-w-[1028px]">
+      <div className="flex flex-col gap-2 w-full md:pb-4 pb-3  border-b border-[#CECCFF]">
+        <h4 className="font-heading-3-regular">Results</h4>
+        <p className="font-base-medium">The results after each stage will be shown here.</p>
+      </div>
+      <div className="grid grid-cols-3 gap-x-2 gap-y-4 w-full">
+        {winners.map((item, index) => (
+          <LotteryWinner key={item.ticket} phone={item.client} ticket={item.ticket} index={index} />
+        ))}
       </div>
     </div>
   );

@@ -171,7 +171,7 @@ const RollingCounter: React.FC<RollingCounterProps> = ({ numberString }) => {
   }
 
   return (
-    <div className="flex items-center justify-center bg-lightPrimary text-white py-4 px-6 rounded-full">
+    <div className="flex items-center max-w-[1132px] justify-center bg-lightPrimary text-white py-4 px-6 rounded-full">
       {currentNumbers.map((num, index) => (
         <RollingDigit
           key={`${index}`} // Simplified key to prevent re-renders

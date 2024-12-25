@@ -89,6 +89,10 @@ export const theme = {
       lightOnWarningAllertContainer: '#F57C00',
       lightWarningAllertContainer: '#FFF8E1',
       lightWarningAllertContainerOutline: '#F9EDC8',
+
+      // RollerCounter
+      rollerCounterGradient:
+        'linear-gradient(180deg, #454673 0%, #575992 10.5%, #575992 90%, #454673 100%)',
     },
     fontSize: {
       // Display

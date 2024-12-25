@@ -232,6 +232,10 @@ big {
   @apply font-medium -tracking-[1%] text-[24px] leading-[32px];
 }
 
+.font-heading-6-regular {
+  @apply -tracking-[1%] text-[20px] leading-[28px];
+}
+
 .font-base-regular {
   @apply font-normal -tracking-[1%] text-[16px] leading-[24px];
 }
@@ -261,6 +265,31 @@ big {
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
+}
+
+.rolling-number {
+  font-size: 80px;
+  letter-spacing: -1%;
+  padding: 0px 16px;
+
+  @apply text-lightOnPrimary;
+}
+
+.index-module_slot__DpPgW {
+  overflow: visible !important;
+  /* height: auto !important; */
+}
+
+/* .index-module_num__j6XH3 {
+  height: fit-content !important;
+} */
+
+.slot-seperator {
+  content: url('/dash.svg');
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  margin: 0 20px;
 }
 
 .confetti-piece {
