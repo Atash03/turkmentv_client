@@ -280,6 +280,24 @@ big {
   /* height: auto !important; */
 }
 
+.lottery-scrollbar {
+  &::-webkit-scrollbar {
+    width: 12px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #c0c1ff;
+    border-radius: 8px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #a0a3fb;
+    border-radius: 8px;
+    width: 8px;
+    border: 3px solid #c0c1ff;
+  }
+}
+
 /* .index-module_num__j6XH3 {
   height: fit-content !important;
 } */

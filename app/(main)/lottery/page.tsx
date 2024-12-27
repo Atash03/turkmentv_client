@@ -1,16 +1,13 @@
 'use client';
 
+import { useState } from 'react';
 import { useLotteryAuth } from '@/store/useLotteryAuth';
 import ProtectedRoute from '@/components/lottery/auth/ProtectedRoute';
-import { useLottery } from '@/lib/hooks/useLottery';
-import { LOTTERY_CONFIG } from '@/constants/lottery';
 import LotteryHeader from '@/components/lottery/LotteryHeader';
-import LotteryCounter from '@/components/lottery/RollingCounter/RollingCounter';
 
 import LotteryWinnersSection from '@/components/lottery/LotteryWinnersSection';
 import LotteryRulesSection from '@/components/lottery/rules/LotteryRulesSection';
 import LotteryCountDown from '@/components/lottery/countDown/LotteryCountDown';
-import { useState } from 'react';
 import LotteryCountDownAllert from '@/components/lottery/countDown/countDownAllert/LotteryCountDownAllert';
 
 const LotteryPage = () => {

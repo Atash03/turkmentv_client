@@ -1,9 +1,8 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { useLotteryAuth } from "@/store/useLotteryAuth";
-import Loader from "@/components/Loader";
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useLotteryAuth } from '@/store/useLotteryAuth';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -12,32 +11,15 @@ interface ProtectedRouteProps {
 const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   const router = useRouter();
   const { isAuthenticated } = useLotteryAuth();
-  const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
-    setIsHydrated(true);
-  }, []);
-
-  useEffect(() => {
-    if (isHydrated && !isAuthenticated) {
-      router.replace("/lottery/auth");
+    if (!isAuthenticated) {
+      router.replace('/lottery/auth');
     }
-  }, [isHydrated, isAuthenticated, router]);
-
-  if (!isHydrated) {
-    return (
-      <div className="w-full h-screen flex justify-center items-center">
-        <Loader />
-      </div>
-    );
-  }
+  }, [isAuthenticated, router]);
 
   if (!isAuthenticated) {
-    return (
-      <div className="w-full h-screen flex justify-center items-center">
-        <Loader />
-      </div>
-    );
+    return null;
   }
 
   return <>{children}</>;

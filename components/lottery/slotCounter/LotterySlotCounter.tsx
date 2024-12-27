@@ -3,7 +3,12 @@ import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 import SlotCounter from 'react-slot-counter';
 
-const LotterySlotCounter = ({ numberString }: { numberString: string }) => {
+interface LotterySlotCounterProps {
+  numberString: string;
+  isAnimating: boolean;
+}
+
+const LotterySlotCounter = ({ numberString, isAnimating }: LotterySlotCounterProps) => {
   const [formattedNumber, setFormattedNumber] = useState(numberString);
 
   useEffect(() => {

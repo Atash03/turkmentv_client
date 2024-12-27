@@ -10,6 +10,7 @@ import { useWindowSize } from 'react-use';
 
 const WEBSOCKET_URL = 'wss://sms.turkmentv.gov.tm/ws/lottery?dst=0506';
 const PING_INTERVAL = 25000;
+const SLOT_COUNTER_DURATION = 20000;
 
 const LotteryWinnersSection = () => {
   // UI States
@@ -19,11 +20,15 @@ const LotteryWinnersSection = () => {
   const [wsStatus, setWsStatus] = useState<'connecting' | 'connected' | 'error'>('connecting');
   const { width, height } = useWindowSize();
   const { lotteryData } = useLotteryAuth();
+  const [isSlotCounterAnimating, setIsSlotCounterAnimating] = useState(false);
+  const [pendingWinner, setPendingWinner] = useState<LotteryWinnerDataSimplified | null>(null);
 
   // Refs
   const wsRef = useRef<WebSocket | null>(null);
   const pingIntervalRef = useRef<NodeJS.Timeout>();
   const mountedRef = useRef(false);
+
+  console.log(isConfettiActive, 'isConfettiActive');
 
   // Initialize winners from lottery data
   useEffect(() => {
@@ -40,18 +45,9 @@ const LotteryWinnersSection = () => {
 
   // Handle WebSocket connection
   useEffect(() => {
-    // Set mounted flag
     mountedRef.current = true;
 
     const setupWebSocket = () => {
-      // Don't create a new connection if one already exists
-      if (
-        wsRef.current?.readyState === WebSocket.OPEN ||
-        wsRef.current?.readyState === WebSocket.CONNECTING
-      ) {
-        return;
-      }
-
       try {
         const socket = new WebSocket(WEBSOCKET_URL);
         wsRef.current = socket;
@@ -61,7 +57,6 @@ const LotteryWinnersSection = () => {
           console.log('WebSocket Connected');
           setWsStatus('connected');
 
-          // Setup ping interval
           pingIntervalRef.current = setInterval(() => {
             if (socket.readyState === WebSocket.OPEN) {
               socket.send(JSON.stringify({ type: 'ping' }));
@@ -69,28 +64,56 @@ const LotteryWinnersSection = () => {
           }, PING_INTERVAL);
         });
 
-        socket.addEventListener('message', (event) => {
+        socket.addEventListener('message', async (event) => {
           if (!mountedRef.current) return;
           console.log('Message received:', event.data);
 
           try {
             const newWinner = JSON.parse(event.data);
             const winnerData = {
-              client: newWinner.client,
+              client: newWinner.phone,
               winner_no: newWinner.winner_no,
               ticket: newWinner.ticket,
             };
 
-            setWinners((prev) => [...prev, winnerData]);
-            setCurrentNumber(newWinner.ticket);
+            // Start the sequence
+            setIsSlotCounterAnimating(true);
+            setPendingWinner(winnerData);
+            setCurrentNumber(winnerData.ticket);
+
+            // Wait for slot counter animation
+            await new Promise((resolve) => setTimeout(resolve, SLOT_COUNTER_DURATION));
+
             setIsConfettiActive(true);
-            setTimeout(() => {
-              if (mountedRef.current) {
-                setIsConfettiActive(false);
-              }
-            }, 5000);
+            setWinners((prev) => [...prev, winnerData]);
+
+            // Hide confetti after 5 seconds
+            // setTimeout(() => {
+            //   if (mountedRef.current) {
+            //     setIsConfettiActive(false);
+            //     setIsSlotCounterAnimating(false);
+            //     setPendingWinner(null);
+            //   }
+            // }, 5000);
+
+            // Show confetti and add winner simultaneously
+            if (mountedRef.current) {
+              setIsConfettiActive(true);
+              setWinners((prev) => [...prev, winnerData]);
+
+              // Hide confetti after 5 seconds
+              setTimeout(() => {
+                if (mountedRef.current) {
+                  setIsConfettiActive(false);
+                  setIsSlotCounterAnimating(false);
+                  setPendingWinner(null);
+                }
+              }, 5000);
+            }
           } catch (error) {
             console.error('Error processing message:', error);
+            setIsSlotCounterAnimating(false);
+            setPendingWinner(null);
           }
         });
 
@@ -115,23 +138,19 @@ const LotteryWinnersSection = () => {
       }
     };
 
-    // Delay the initial connection
-    const initTimeout = setTimeout(setupWebSocket, 100);
+    // Initial connection
+    setupWebSocket();
 
-    // Cleanup function
     return () => {
       mountedRef.current = false;
-      clearTimeout(initTimeout);
-
       if (pingIntervalRef.current) {
         clearInterval(pingIntervalRef.current);
       }
-
       if (wsRef.current) {
         wsRef.current.close();
       }
     };
-  }, []); // Empty dependency array
+  }, []);
 
   return (
     <section>
@@ -165,7 +184,7 @@ const LotteryWinnersSection = () => {
       <div className="container">
         <div className="flex flex-col items-center">
           <div className="-mb-[90px] z-10">
-            <LotterySlotCounter numberString={currentNumber} />
+            <LotterySlotCounter numberString={currentNumber} isAnimating={isSlotCounterAnimating} />
           </div>
           <div className="flex gap-6 bg-lightPrimaryContainer rounded-[12px] flex-1 w-full items-center justify-center pt-[122px] pb-[62px]">
             <LotteryWinnersList winners={winners} />
