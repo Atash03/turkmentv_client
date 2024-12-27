@@ -3,13 +3,13 @@
 import { motion } from 'framer-motion';
 
 interface IProps {
-  index: number;
   phone: string;
   ticket: string;
   isNew: boolean;
+  winnerNumber: number;
 }
 
-const LotteryWinner = ({ index, phone, ticket, isNew }: IProps) => {
+const LotteryWinner = ({ phone, ticket, isNew, winnerNumber }: IProps) => {
   return (
     <motion.div
       layout
@@ -19,7 +19,7 @@ const LotteryWinner = ({ index, phone, ticket, isNew }: IProps) => {
       transition={{ duration: 0.5 }}
       className="flex flex-col gap-2 md:pb-4 pb-3 border-b w-full border-[#CECCFF]">
       <h4 className="md:font-heading-6-regular text-[20px] leading-[28px]">
-        The winner of the {index + 1} stage:
+        The winner of the {winnerNumber} stage:
       </h4>
       <div className="flex items-center gap-4">
         <p className="font-base-medium">{phone}</p>

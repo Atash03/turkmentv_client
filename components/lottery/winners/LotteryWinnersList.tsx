@@ -19,7 +19,7 @@ const LotteryWinnersList = ({ winners }: { winners: LotteryWinnerDataSimplified[
               key={v4()}
               phone={item.client}
               ticket={item.ticket}
-              index={index}
+              winnerNumber={item.winner_no}
               isNew={index === winners.length - 1}
             />
           ))}
