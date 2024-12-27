@@ -1,67 +1,137 @@
 'use client';
 
-import LotteryWinnersList from './winners/LotteryWinnersList';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useLotteryAuth } from '@/store/useLotteryAuth';
-import { LotteryWinnerData } from '@/typings/lottery/lottery.types';
+import { LotteryWinnerDataSimplified } from '@/typings/lottery/lottery.types';
+import LotteryWinnersList from './winners/LotteryWinnersList';
 import LotterySlotCounter from './slotCounter/LotterySlotCounter';
-import Confetti from 'react-confetti/dist/types/Confetti';
 import ReactConfetti from 'react-confetti';
 import { useWindowSize } from 'react-use';
 
+const WEBSOCKET_URL = 'wss://sms.turkmentv.gov.tm/ws/lottery?dst=0506';
+const PING_INTERVAL = 25000;
+
 const LotteryWinnersSection = () => {
-  const [winners, setWinners] = useState<LotteryWinnerData[]>([]);
+  // UI States
+  const [winners, setWinners] = useState<LotteryWinnerDataSimplified[]>([]);
   const [currentNumber, setCurrentNumber] = useState<string>('00-00-00-00-00');
-  const [wsStatus, setWsStatus] = useState<'connecting' | 'connected' | 'error'>('connecting');
-
   const [isConfettiActive, setIsConfettiActive] = useState(false);
-
+  const [wsStatus, setWsStatus] = useState<'connecting' | 'connected' | 'error'>('connecting');
   const { width, height } = useWindowSize();
-
   const { lotteryData } = useLotteryAuth();
 
+  // Refs
+  const wsRef = useRef<WebSocket | null>(null);
+  const pingIntervalRef = useRef<NodeJS.Timeout>();
+  const mountedRef = useRef(false);
+
+  // Initialize winners from lottery data
   useEffect(() => {
     if (lotteryData?.data.winners) {
-      setWinners(lotteryData.data.winners);
+      const simplifiedWinners = lotteryData.data.winners.map((winner) => ({
+        client: winner.client,
+        winner_no: winner.winner_no,
+        ticket: winner.ticket,
+      }));
+      setWinners(simplifiedWinners);
       setCurrentNumber(lotteryData.data.winners.at(-1)?.ticket || '00-00-00-00-00');
     }
-
-    const wsUrl = 'https://sms.turkmentv.gov.tm/api/ws/lottery';
-    const ws = new WebSocket(wsUrl);
-
-    ws.onopen = () => {
-      console.log('WebSocket connected');
-      setWsStatus('connected');
-    };
-
-    ws.onclose = () => {
-      console.log('WebSocket disconnected');
-      setWsStatus('error');
-    };
-
-    ws.onerror = (error) => {
-      console.error('WebSocket error:', error);
-      setWsStatus('error');
-    };
-
-    ws.onmessage = (event) => {
-      console.log('WebSocket message received:', event.data);
-      const newWinner = JSON.parse(event.data);
-      console.log('Parsed WebSocket data:', newWinner);
-      setWinners((prev) => [...prev, newWinner]);
-
-      setTimeout(() => {
-        setIsConfettiActive(true);
-        setTimeout(() => {
-          setIsConfettiActive(false);
-        }, 5000);
-      }, 10000);
-    };
-
-    return () => {
-      ws.close();
-    };
   }, [lotteryData]);
+
+  // Handle WebSocket connection
+  useEffect(() => {
+    // Set mounted flag
+    mountedRef.current = true;
+
+    const setupWebSocket = () => {
+      // Don't create a new connection if one already exists
+      if (
+        wsRef.current?.readyState === WebSocket.OPEN ||
+        wsRef.current?.readyState === WebSocket.CONNECTING
+      ) {
+        return;
+      }
+
+      try {
+        const socket = new WebSocket(WEBSOCKET_URL);
+        wsRef.current = socket;
+
+        socket.addEventListener('open', () => {
+          if (!mountedRef.current) return;
+          console.log('WebSocket Connected');
+          setWsStatus('connected');
+
+          // Setup ping interval
+          pingIntervalRef.current = setInterval(() => {
+            if (socket.readyState === WebSocket.OPEN) {
+              socket.send(JSON.stringify({ type: 'ping' }));
+            }
+          }, PING_INTERVAL);
+        });
+
+        socket.addEventListener('message', (event) => {
+          if (!mountedRef.current) return;
+          console.log('Message received:', event.data);
+
+          try {
+            const newWinner = JSON.parse(event.data);
+            const winnerData = {
+              client: newWinner.client,
+              winner_no: newWinner.winner_no,
+              ticket: newWinner.ticket,
+            };
+
+            setWinners((prev) => [...prev, winnerData]);
+            setCurrentNumber(newWinner.ticket);
+            setIsConfettiActive(true);
+            setTimeout(() => {
+              if (mountedRef.current) {
+                setIsConfettiActive(false);
+              }
+            }, 5000);
+          } catch (error) {
+            console.error('Error processing message:', error);
+          }
+        });
+
+        socket.addEventListener('error', (error) => {
+          if (!mountedRef.current) return;
+          console.error('WebSocket Error:', error);
+          setWsStatus('error');
+        });
+
+        socket.addEventListener('close', () => {
+          if (!mountedRef.current) return;
+          console.log('WebSocket Closed');
+          setWsStatus('error');
+
+          if (pingIntervalRef.current) {
+            clearInterval(pingIntervalRef.current);
+          }
+        });
+      } catch (error) {
+        console.error('Error creating WebSocket:', error);
+        setWsStatus('error');
+      }
+    };
+
+    // Delay the initial connection
+    const initTimeout = setTimeout(setupWebSocket, 100);
+
+    // Cleanup function
+    return () => {
+      mountedRef.current = false;
+      clearTimeout(initTimeout);
+
+      if (pingIntervalRef.current) {
+        clearInterval(pingIntervalRef.current);
+      }
+
+      if (wsRef.current) {
+        wsRef.current.close();
+      }
+    };
+  }, []); // Empty dependency array
 
   return (
     <section>
@@ -93,12 +163,11 @@ const LotteryWinnersSection = () => {
       )}
 
       <div className="container">
-        <div className="flex flex-col  items-center">
+        <div className="flex flex-col items-center">
           <div className="-mb-[90px] z-10">
             <LotterySlotCounter numberString={currentNumber} />
           </div>
           <div className="flex gap-6 bg-lightPrimaryContainer rounded-[12px] flex-1 w-full items-center justify-center pt-[122px] pb-[62px]">
-            {/* Winners */}
             <LotteryWinnersList winners={winners} />
           </div>
         </div>

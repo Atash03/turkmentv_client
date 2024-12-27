@@ -22,4 +22,10 @@ export interface LotteryResponse {
   user_lottery_numbers: string[];
 }
 
-export type LotteryStatus = "not-started" | "started" | "ended";
+export interface LotteryWinnerDataSimplified {
+  client: string;
+  winner_no: number;
+  ticket: string;
+}
+
+export type LotteryStatus = 'not-started' | 'started' | 'ended';

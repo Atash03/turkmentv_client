@@ -1,7 +1,7 @@
-import { LotteryWinnerData } from '@/typings/lottery/lottery.types';
+import { LotteryWinnerData, LotteryWinnerDataSimplified } from '@/typings/lottery/lottery.types';
 import LotteryWinner from './LotteryWinner';
 
-const LotteryWinnersList = ({ winners }: { winners: LotteryWinnerData[] }) => {
+const LotteryWinnersList = ({ winners }: { winners: LotteryWinnerDataSimplified[] }) => {
   return (
     <div className="flex flex-col gap-4 w-full max-w-[1028px]">
       <div className="flex flex-col gap-2 w-full md:pb-4 pb-3  border-b border-[#CECCFF]">
