@@ -24,6 +24,8 @@ const LotteryCountDown: React.FC<LotteryCountDownProps> = ({
     seconds: 0,
   });
 
+  console.log(lotteryStatus);
+
   useEffect(() => {
     const timer = setInterval(() => {
       if (lotteryStatus === "not-started") {
@@ -57,8 +59,8 @@ const LotteryCountDown: React.FC<LotteryCountDownProps> = ({
   console.log(lotteryStatus);
 
   return (
-    <div className="bg-lightPrimaryContainer sm:p-6 p-2 flex flex-col w-full md:gap-2 rounded-[12px] text-lightOnPrimaryContainer">
-      <h3 className="text-center md:font-heading-1-regular text-[32px] leading-[40px] text-lightOnSurface">
+    <div className="bg-lightPrimaryContainer sm:p-6 py-3 flex flex-col w-full md:gap-2 rounded-[12px] sm:gap-3 gap-0 text-lightOnPrimaryContainer">
+      <h3 className="text-center md:font-heading-1-regular sm:text-[32px] sm:leading-[40px] text-[20px] leading-[28px] text-lightOnSurface">
         {lotteryStatus === "started"
           ? "Bije dowam edýär"
           : lotteryStatus === "ended"
@@ -68,7 +70,7 @@ const LotteryCountDown: React.FC<LotteryCountDownProps> = ({
       {/* LotteryCountDown */}
       {lotteryStatus === "not-started" && (
         <div className="flex items-center sm:gap-6 gap-2 justify-between">
-          <div className="flex flex-col items-center justify-center flex-1 p-6">
+          <div className="flex flex-col items-center justify-center flex-1 sm:p-6 p-4 sm:pb-3">
             <h3 className="md:text-[80px] sm:text-[56px] text-[28px] md:leading-[88px] sm:leading-[64px] leading-[36px] -tracking-[1%]">
               {timeLeft.hours}
             </h3>
@@ -77,12 +79,13 @@ const LotteryCountDown: React.FC<LotteryCountDownProps> = ({
             </h4>
           </div>
 
-          <div className="flex flex-col gap-3">
-            <div className="w-3 h-3 rounded-full bg-lightOnSurfaceVariant"></div>
-            <div className="w-3 h-3 rounded-full bg-lightOnSurfaceVariant"></div>
+          {/* Dots */}
+          <div className="flex flex-col sm:gap-3 gap-2">
+            <div className="sm:w-3 sm:h-3 w-1 h-1 rounded-full bg-lightOnSurfaceVariant"></div>
+            <div className="sm:w-3 sm:h-3 w-1 h-1 rounded-full bg-lightOnSurfaceVariant"></div>
           </div>
 
-          <div className="flex flex-col items-center justify-center flex-1 sm:p-6 p-4 pb-3">
+          <div className="flex flex-col items-center justify-center flex-1 sm:p-6 p-4 sm:pb-3">
             <h3 className="md:text-[80px] sm:text-[56px] text-[28px] md:leading-[88px] sm:leading-[64px] leading-[36px] -tracking-[1%]">
               {timeLeft.minutes}
             </h3>
@@ -91,12 +94,13 @@ const LotteryCountDown: React.FC<LotteryCountDownProps> = ({
             </h4>
           </div>
 
-          <div className="flex flex-col gap-3">
-            <div className="w-3 h-3 rounded-full bg-lightOnSurfaceVariant"></div>
-            <div className="w-3 h-3 rounded-full bg-lightOnSurfaceVariant"></div>
+          {/* Dots */}
+          <div className="flex flex-col sm:gap-3 gap-2">
+            <div className="sm:w-3 sm:h-3 w-1 h-1 rounded-full bg-lightOnSurfaceVariant"></div>
+            <div className="sm:w-3 sm:h-3 w-1 h-1 rounded-full bg-lightOnSurfaceVariant"></div>
           </div>
 
-          <div className="flex flex-col items-center justify-center flex-1 p-6">
+          <div className="flex flex-col items-center justify-center flex-1 sm:p-6 p-4 sm:pb-3">
             <h3 className="md:text-[80px] sm:text-[56px] text-[28px] md:leading-[88px] sm:leading-[64px] leading-[36px] -tracking-[1%]">
               {timeLeft.seconds}
             </h3>

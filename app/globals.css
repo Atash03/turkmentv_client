@@ -93,7 +93,8 @@ html {
 }
 
 .text-stroke {
-  text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;
+  text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white,
+    1px 1px 0 white;
 }
 
 .big-swiper .swiper-pagination-bullet {
@@ -121,20 +122,20 @@ html {
 
 .small-swiper .swiper-button-next:after {
   color: white;
-  content: url('/arrow-right-small.svg');
+  content: url("/arrow-right-small.svg");
 }
 .small-swiper .swiper-button-prev:after {
   color: white;
-  content: url('/arrow-left-small.svg');
+  content: url("/arrow-left-small.svg");
 }
 
 .big-swiper .swiper-button-next:after {
   color: white;
-  content: url('/arrow-right-big.svg');
+  content: url("/arrow-right-big.svg");
 }
 .big-swiper .swiper-button-prev:after {
   color: white;
-  content: url('/arrow-left-big.svg');
+  content: url("/arrow-left-big.svg");
 }
 
 video {
@@ -187,15 +188,15 @@ big {
     @apply bg-[#E6E6FA] rounded-xl py-3 px-4 placeholder:text-[#BCBCD6] outline-none;
   }
 
-  .calendar [aria-label='Go to next month'] {
+  .calendar [aria-label="Go to next month"] {
     @apply shadow-sm transition-all;
   }
 
-  .calendar [aria-label='Go to previous month'] {
+  .calendar [aria-label="Go to previous month"] {
     @apply shadow-sm transition-all;
   }
 
-  .day-styles [name='day'] {
+  .day-styles [name="day"] {
     @apply p-4 text-textDarkt leading-[140%] bg-purple-600 rounded-full;
   }
 
@@ -261,18 +262,10 @@ big {
 }
 
 .wheel-circle {
-  background: url('/wheel-circle.svg');
+  background: url("/wheel-circle.svg");
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
-}
-
-.rolling-number {
-  font-size: 80px;
-  letter-spacing: -1%;
-  padding: 0px 16px;
-
-  @apply text-lightOnPrimary;
 }
 
 .index-module_slot__DpPgW {
@@ -303,11 +296,53 @@ big {
 } */
 
 .slot-seperator {
-  content: url('/dash.svg');
+  content: url("/dash.svg");
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
-  margin: 0 20px;
+  @apply md:mx-5;
+}
+
+.rolling-number {
+  @apply text-lightOnPrimary md:text-[80px] md:leading-[88px] -tracking-[1%] md:px-4;
+}
+
+@media (max-width: 1025px) {
+  .rolling-number {
+    @apply text-[48px] px-2;
+  }
+}
+
+@media (max-width: 1024px) {
+  .slot-seperator {
+    content: url("/dash-md.svg");
+    @apply mx-2;
+  }
+}
+
+@media (max-width: 1025px) {
+  .rolling-number {
+    @apply text-[48px] px-2;
+  }
+}
+
+@media (max-width: 426px) {
+  .rolling-number {
+    @apply text-[24px] px-1;
+  }
+}
+
+@media (max-width: 320px) {
+  .rolling-number {
+    @apply text-[16px] px-1;
+  }
+}
+
+@media (max-width: 426px) {
+  .slot-seperator {
+    content: url("/dash-sm.svg");
+    @apply mx-2;
+  }
 }
 
 .confetti-piece {
@@ -324,7 +359,8 @@ big {
     transform: translateX(0) translateY(0) rotate(0deg);
   }
   50% {
-    transform: translateX(calc(var(--end-x) / 2)) translateY(-30vh) rotate(180deg);
+    transform: translateX(calc(var(--end-x) / 2)) translateY(-30vh)
+      rotate(180deg);
   }
   100% {
     opacity: 0;

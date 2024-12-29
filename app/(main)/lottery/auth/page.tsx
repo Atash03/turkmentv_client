@@ -22,8 +22,10 @@ const LotteryAuthPage = () => {
   }, [logout]);
 
   return (
-    <div className="flex justify-center items-center min-h-[50vh] py-[200px]">
-      <LotteryAuthForm />
+    <div className="container">
+      <div className="flex justify-center items-center min-h-[50vh] py-[200px]">
+        <LotteryAuthForm />
+      </div>
     </div>
   );
 };
