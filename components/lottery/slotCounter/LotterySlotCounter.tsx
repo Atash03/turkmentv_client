@@ -62,7 +62,7 @@ const LotterySlotCounter = ({
       )}
 
       <div
-        className="flex items-center md:h-[180px] sm:h-[100px] h-[50px] md:max-w-[1132px] sm:max-w-[640px] max-w-[324px] w-full justify-center text-white md:py-4 md:px-6 rounded-full overflow-y-hidden overflow-x-visible relative border-4 border-lightPrimary"
+        className="flex items-center h-fit md:max-w-[1132px] sm:max-w-[640px] max-w-[324px] w-full justify-center text-white md:py-4 md:px-6 rounded-full overflow-y-hidden overflow-x-visible relative border-4 border-lightPrimary"
         style={{
           background:
             "linear-gradient(180deg, #454673 0%, #575992 10.5%, #575992 90%, #454673 100%)",

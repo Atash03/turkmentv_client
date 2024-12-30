@@ -16,8 +16,6 @@ const LotteryPage = () => {
     "not-started"
   );
 
-  console.log(status);
-
   return (
     <ProtectedRoute>
       <div className="flex flex-col md:gap-[128px] gap-[80px] font-roboto md:pt-[64px] sm:pt-[48px] pt-[40px] ms:pb-[128px] pb-[80px] text-lightOnSurface">

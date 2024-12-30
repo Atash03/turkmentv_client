@@ -56,8 +56,6 @@ const LotteryCountDown: React.FC<LotteryCountDownProps> = ({
     return () => clearInterval(timer); // Clean up interval on component unmount
   }, [startDate, endDate, lotteryStatus, setLotteryStatus]);
 
-  console.log(lotteryStatus);
-
   return (
     <div className="bg-lightPrimaryContainer sm:p-6 py-3 flex flex-col w-full md:gap-2 rounded-[12px] sm:gap-3 gap-0 text-lightOnPrimaryContainer">
       <h3 className="text-center md:font-heading-1-regular sm:text-[32px] sm:leading-[40px] text-[20px] leading-[28px] text-lightOnSurface">

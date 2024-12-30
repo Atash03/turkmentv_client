@@ -37,8 +37,6 @@ const LotteryWinnersSection = ({
   const pingIntervalRef = useRef<NodeJS.Timeout>();
   const mountedRef = useRef(false);
 
-  console.log(isConfettiActive, "isConfettiActive");
-
   // Initialize winners from lottery data
   useEffect(() => {
     if (lotteryData?.data.winners) {
@@ -196,13 +194,13 @@ const LotteryWinnersSection = ({
 
       <div className="container">
         <div className="flex flex-col items-center">
-          <div className="md:-mb-[90px] sm:-mb-[40px] -mb-[20px] z-10">
+          <div className="translate-y-1/2 z-10">
             <LotterySlotCounter
               numberString={currentNumber}
               isAnimating={isSlotCounterAnimating}
             />
           </div>
-          <div className="flex gap-6 bg-lightPrimaryContainer rounded-[12px] flex-1 w-full items-center justify-center md:pt-[122px] sm:pt-[90px] pt-[40px] sm:pb-[62px] pb-[32px] md:px-0 px-4">
+          <div className="flex gap-6 bg-lightPrimaryContainer rounded-[12px] flex-1 w-full items-center justify-center md:pt-[122px] sm:pt-[90px] pt-[40px] sm:pb-[62px] pb-[32px]  px-4">
             <LotteryWinnersList winners={winners} />
           </div>
         </div>
