@@ -10,9 +10,7 @@ const LotteryAuthPage = () => {
   const { isAuthenticated, logout } = useLotteryAuth();
 
   useEffect(() => {
-    console.log("Auth page - Authentication state:", isAuthenticated);
     if (isAuthenticated) {
-      console.log("Auth page - Redirecting to lottery...");
       router.push("/lottery");
     }
   }, [isAuthenticated, router]);
