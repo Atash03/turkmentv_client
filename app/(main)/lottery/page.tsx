@@ -1,20 +1,18 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useLotteryAuth } from "@/store/useLotteryAuth";
-import ProtectedRoute from "@/components/lottery/auth/ProtectedRoute";
-import LotteryHeader from "@/components/lottery/LotteryHeader";
+import { useState } from 'react';
+import { useLotteryAuth } from '@/store/useLotteryAuth';
+import ProtectedRoute from '@/components/lottery/auth/ProtectedRoute';
+import LotteryHeader from '@/components/lottery/LotteryHeader';
 
-import LotteryWinnersSection from "@/components/lottery/LotteryWinnersSection";
-import LotteryRulesSection from "@/components/lottery/rules/LotteryRulesSection";
-import LotteryCountDown from "@/components/lottery/countDown/LotteryCountDown";
-import LotteryCountDownAllert from "@/components/lottery/countDown/countDownAllert/LotteryCountDownAllert";
+import LotteryWinnersSection from '@/components/lottery/LotteryWinnersSection';
+import LotteryRulesSection from '@/components/lottery/rules/LotteryRulesSection';
+import LotteryCountDown from '@/components/lottery/countDown/LotteryCountDown';
+import LotteryCountDownAllert from '@/components/lottery/countDown/countDownAllert/LotteryCountDownAllert';
 
 const LotteryPage = () => {
   const { lotteryData } = useLotteryAuth();
-  const [status, setStatus] = useState<"not-started" | "started" | "ended">(
-    "not-started"
-  );
+  const [status, setStatus] = useState<'not-started' | 'started' | 'ended'>('not-started');
 
   return (
     <ProtectedRoute>
@@ -28,7 +26,7 @@ const LotteryPage = () => {
               smsCode={lotteryData.data.sms_code}
             />
 
-            {status === "not-started" ? (
+            {status === 'not-started' ? (
               <div className="container">
                 <LotteryCountDown
                   lotteryStatus={status}
@@ -43,8 +41,8 @@ const LotteryPage = () => {
 
         <LotteryRulesSection />
 
-        {lotteryData && (status === "ended" || status === "started") && (
-          <div className="flex flex-col sm:gap-[100px] gap-[40px]">
+        {lotteryData && (status === 'ended' || status === 'started') && (
+          <div className="flex flex-col gap-[0px]">
             <LotteryCountDownAllert
               lotteryStatus={status}
               setLotteryStatus={setStatus}
