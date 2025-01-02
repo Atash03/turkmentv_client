@@ -9,6 +9,7 @@ import LotteryWinnersSection from '@/components/lottery/LotteryWinnersSection';
 import LotteryRulesSection from '@/components/lottery/rules/LotteryRulesSection';
 import LotteryCountDown from '@/components/lottery/countDown/LotteryCountDown';
 import LotteryCountDownAllert from '@/components/lottery/countDown/countDownAllert/LotteryCountDownAllert';
+import { LotteryWinnerDataSimplified } from '@/typings/lottery/lottery.types';
 
 const LotteryPage = () => {
   const { lotteryData } = useLotteryAuth();
@@ -42,15 +43,7 @@ const LotteryPage = () => {
         <LotteryRulesSection />
 
         {lotteryData && (status === 'ended' || status === 'started') && (
-          <div className="flex flex-col gap-[0px]">
-            <LotteryCountDownAllert
-              lotteryStatus={status}
-              setLotteryStatus={setStatus}
-              endDate={lotteryData.data.end_time}
-              startDate={lotteryData.data.start_time}
-            />
-            <LotteryWinnersSection lotteryStatus={status} />
-          </div>
+          <LotteryWinnersSection lotteryStatus={status} />
         )}
       </div>
     </ProtectedRoute>

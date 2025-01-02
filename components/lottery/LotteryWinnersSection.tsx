@@ -1,41 +1,39 @@
-"use client";
+'use client';
 
-import { useState, useEffect, useRef } from "react";
-import { useLotteryAuth } from "@/store/useLotteryAuth";
-import { LotteryWinnerDataSimplified } from "@/typings/lottery/lottery.types";
-import LotteryWinnersList from "./winners/LotteryWinnersList";
-import LotterySlotCounter from "./slotCounter/LotterySlotCounter";
-import ReactConfetti from "react-confetti";
-import { useWindowSize } from "react-use";
-import LotteryCountDownAllert from "./countDown/countDownAllert/LotteryCountDownAllert";
+import { useState, useEffect, useRef } from 'react';
+import { useLotteryAuth } from '@/store/useLotteryAuth';
+import { LotteryWinnerDataSimplified } from '@/typings/lottery/lottery.types';
+import LotteryWinnersList from './winners/LotteryWinnersList';
+import LotterySlotCounter from './slotCounter/LotterySlotCounter';
+import ReactConfetti from 'react-confetti';
+import { useWindowSize } from 'react-use';
+import LotteryCountDownAllert from './countDown/countDownAllert/LotteryCountDownAllert';
+import { motion } from 'framer-motion';
+import AnimatedText from '@/components/common/AnimatedText';
 
-const WEBSOCKET_URL = "wss://sms.turkmentv.gov.tm/ws/lottery?dst=0506";
+const WEBSOCKET_URL = 'wss://sms.turkmentv.gov.tm/ws/lottery?dst=0506';
 const PING_INTERVAL = 25000;
 const SLOT_COUNTER_DURATION = 20000;
 
-const LotteryWinnersSection = ({
-  lotteryStatus,
-}: {
-  lotteryStatus: string;
-}) => {
+const LotteryWinnersSection = ({ lotteryStatus }: { lotteryStatus: string }) => {
   // UI States
   const [winners, setWinners] = useState<LotteryWinnerDataSimplified[]>([]);
-  const [currentNumber, setCurrentNumber] = useState<string>("00-00-00-00-00");
+  const [currentNumber, setCurrentNumber] = useState<string>('00-00-00-00-00');
   const [isConfettiActive, setIsConfettiActive] = useState(false);
 
-  const [wsStatus, setWsStatus] = useState<
-    "connecting" | "connected" | "error"
-  >("connecting");
+  const [wsStatus, setWsStatus] = useState<'connecting' | 'connected' | 'error'>('connecting');
   const { width, height } = useWindowSize();
   const { lotteryData } = useLotteryAuth();
   const [isSlotCounterAnimating, setIsSlotCounterAnimating] = useState(false);
-  const [pendingWinner, setPendingWinner] =
-    useState<LotteryWinnerDataSimplified | null>(null);
+  const [pendingWinner, setPendingWinner] = useState<LotteryWinnerDataSimplified | null>(null);
 
   // Refs
   const wsRef = useRef<WebSocket | null>(null);
   const pingIntervalRef = useRef<NodeJS.Timeout>();
   const mountedRef = useRef(false);
+
+  // Add new state for display text
+  const [displayText, setDisplayText] = useState<string>('...');
 
   // Initialize winners from lottery data
   useEffect(() => {
@@ -46,9 +44,7 @@ const LotteryWinnersSection = ({
         ticket: winner.ticket,
       }));
       setWinners(simplifiedWinners);
-      setCurrentNumber(
-        lotteryData.data.winners.at(-1)?.ticket || "00-00-00-00-00"
-      );
+      setCurrentNumber(lotteryData.data.winners.at(-1)?.ticket || '00-00-00-00-00');
     }
   }, [lotteryData]);
 
@@ -61,21 +57,21 @@ const LotteryWinnersSection = ({
         const socket = new WebSocket(WEBSOCKET_URL);
         wsRef.current = socket;
 
-        socket.addEventListener("open", () => {
+        socket.addEventListener('open', () => {
           if (!mountedRef.current) return;
-          console.log("WebSocket Connected");
-          setWsStatus("connected");
+          console.log('WebSocket Connected');
+          setWsStatus('connected');
 
           pingIntervalRef.current = setInterval(() => {
             if (socket.readyState === WebSocket.OPEN) {
-              socket.send(JSON.stringify({ type: "ping" }));
+              socket.send(JSON.stringify({ type: 'ping' }));
             }
           }, PING_INTERVAL);
         });
 
-        socket.addEventListener("message", async (event) => {
+        socket.addEventListener('message', async (event) => {
           if (!mountedRef.current) return;
-          console.log("Message received:", event.data);
+          console.log('Message received:', event.data);
 
           try {
             const newWinner = JSON.parse(event.data);
@@ -85,67 +81,58 @@ const LotteryWinnersSection = ({
               ticket: newWinner.ticket,
             };
 
+            // Set initial animation text
+            setDisplayText(`${winnerData.winner_no}-nji ýeňiji saýlanýar`);
+
             // Start the sequence
             setIsSlotCounterAnimating(true);
             setPendingWinner(winnerData);
             setCurrentNumber(winnerData.ticket);
 
             // Wait for slot counter animation
-            await new Promise((resolve) =>
-              setTimeout(resolve, SLOT_COUNTER_DURATION)
-            );
+            await new Promise((resolve) => setTimeout(resolve, SLOT_COUNTER_DURATION));
+
+            // Update text to show winner's phone
+            setDisplayText(winnerData.client);
 
             setIsConfettiActive(true);
             setWinners((prev) => [...prev, winnerData]);
 
-            // Hide confetti after 5 seconds
-            // setTimeout(() => {
-            //   if (mountedRef.current) {
-            //     setIsConfettiActive(false);
-            //     setIsSlotCounterAnimating(false);
-            //     setPendingWinner(null);
-            //   }
-            // }, 5000);
-
-            // Show confetti and add winner simultaneously
-            if (mountedRef.current) {
-              setIsConfettiActive(true);
-              setWinners((prev) => [...prev, winnerData]);
-
-              // Hide confetti after 5 seconds
-              setTimeout(() => {
-                if (mountedRef.current) {
-                  setIsConfettiActive(false);
-                  setIsSlotCounterAnimating(false);
-                  setPendingWinner(null);
-                }
-              }, 5000);
-            }
+            // Reset everything after 5 seconds
+            setTimeout(() => {
+              if (mountedRef.current) {
+                setIsConfettiActive(false);
+                setIsSlotCounterAnimating(false);
+                setPendingWinner(null);
+                setDisplayText('...'); // Reset text
+              }
+            }, 5000);
           } catch (error) {
-            console.error("Error processing message:", error);
+            console.error('Error processing message:', error);
             setIsSlotCounterAnimating(false);
             setPendingWinner(null);
+            setDisplayText('...'); // Reset text on error
           }
         });
 
-        socket.addEventListener("error", (error) => {
+        socket.addEventListener('error', (error) => {
           if (!mountedRef.current) return;
-          console.error("WebSocket Error:", error);
-          setWsStatus("error");
+          console.error('WebSocket Error:', error);
+          setWsStatus('error');
         });
 
-        socket.addEventListener("close", () => {
+        socket.addEventListener('close', () => {
           if (!mountedRef.current) return;
-          console.log("WebSocket Closed");
-          setWsStatus("error");
+          console.log('WebSocket Closed');
+          setWsStatus('error');
 
           if (pingIntervalRef.current) {
             clearInterval(pingIntervalRef.current);
           }
         });
       } catch (error) {
-        console.error("Error creating WebSocket:", error);
-        setWsStatus("error");
+        console.error('Error creating WebSocket:', error);
+        setWsStatus('error');
       }
     };
 
@@ -165,7 +152,7 @@ const LotteryWinnersSection = ({
 
   return (
     <section>
-      {wsStatus === "error" && (
+      {wsStatus === 'error' && (
         <div className="text-red-500 text-center mb-2">
           Connection error. Please refresh the page.
         </div>
@@ -181,26 +168,29 @@ const LotteryWinnersSection = ({
             tweenDuration={10000}
             run={true}
             colors={[
-              "linear-gradient(45deg, #5D5D72, #8589DE)",
-              "linear-gradient(45deg, #E1E0FF, #575992)",
-              "#8589DE",
-              "#575992",
-              "#E1E0FF",
-              "#BA1A1A",
+              'linear-gradient(45deg, #5D5D72, #8589DE)',
+              'linear-gradient(45deg, #E1E0FF, #575992)',
+              '#8589DE',
+              '#575992',
+              '#E1E0FF',
+              '#BA1A1A',
             ]}
           />
         </div>
       )}
 
       <div className="container">
-        <div className="flex flex-col items-center">
+        <div
+          className="flex flex-col items-center rounded-[32px] pt-[40px]"
+          style={{ background: 'linear-gradient(180deg, #F0ECF4 0%, #E1E0FF 43.5%)' }}>
+          <AnimatedText
+            text={displayText}
+            className="text-center text-[100px] leading-[108px] text-[#E65E19]"
+          />
           <div className="translate-y-1/2 z-10">
-            <LotterySlotCounter
-              numberString={currentNumber}
-              isAnimating={isSlotCounterAnimating}
-            />
+            <LotterySlotCounter numberString={currentNumber} isAnimating={isSlotCounterAnimating} />
           </div>
-          <div className="flex gap-6 bg-lightPrimaryContainer rounded-[12px] flex-1 w-full items-center justify-center md:pt-[122px] sm:pt-[90px] pt-[40px] sm:pb-[62px] pb-[32px]  px-4">
+          <div className="flex gap-6  rounded-[12px] flex-1 w-full items-center justify-center md:pt-[122px] sm:pt-[90px] pt-[40px] sm:pb-[62px] pb-[32px]  px-4">
             <LotteryWinnersList winners={winners} />
           </div>
         </div>

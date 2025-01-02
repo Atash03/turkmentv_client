@@ -1,24 +1,8 @@
-"use client";
+'use client';
 
-import LotteryAuthForm from "@/components/lottery/auth/LotteryAuthForm";
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { useLotteryAuth } from "@/store/useLotteryAuth";
+import LotteryAuthForm from '@/components/lottery/auth/LotteryAuthForm';
 
 const LotteryAuthPage = () => {
-  const router = useRouter();
-  const { isAuthenticated, logout } = useLotteryAuth();
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      router.push("/lottery");
-    }
-  }, [isAuthenticated, router]);
-
-  useEffect(() => {
-    logout();
-  }, [logout]);
-
   return (
     <div className="container">
       <div className="flex justify-center items-center min-h-[50vh] py-[200px]">

@@ -1,16 +1,9 @@
-import {
-  LotteryWinnerData,
-  LotteryWinnerDataSimplified,
-} from "@/typings/lottery/lottery.types";
-import LotteryWinner from "./LotteryWinner";
-import { motion, AnimatePresence } from "framer-motion";
-import { v4 } from "uuid";
+import { LotteryWinnerData, LotteryWinnerDataSimplified } from '@/typings/lottery/lottery.types';
+import LotteryWinner from './LotteryWinner';
+import { motion, AnimatePresence } from 'framer-motion';
+import { v4 } from 'uuid';
 
-const LotteryWinnersList = ({
-  winners,
-}: {
-  winners: LotteryWinnerDataSimplified[];
-}) => {
+const LotteryWinnersList = ({ winners }: { winners: LotteryWinnerDataSimplified[] }) => {
   return (
     <div className="flex flex-col gap-4 w-full max-w-[1028px]">
       <div className="flex flex-col gap-2 w-full pb-4 border-b border-[#CECCFF]">
@@ -21,9 +14,8 @@ const LotteryWinnersList = ({
       </div>
       <motion.div
         layout
-        className="grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-x-2 gap-y-4 w-full h-[244px] overflow-y-auto lottery-scrollbar"
-      >
-        <AnimatePresence mode="popLayout">
+        className="grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-x-2 gap-y-4 w-full ">
+        <AnimatePresence mode="wait">
           {winners.map((item, index) => (
             <LotteryWinner
               key={v4()}
