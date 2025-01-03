@@ -84,6 +84,7 @@ const LotterySlotCounter = ({ numberString, isAnimating }: LotterySlotCounterPro
             speed={2}
             delay={2}
             startFromLastDigit
+            animateUnchanged
             animateOnVisible={false}
             autoAnimationStart={false}
           />

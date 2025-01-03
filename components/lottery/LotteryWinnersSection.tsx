@@ -188,32 +188,35 @@ const LotteryWinnersSection = ({ lotteryStatus }: { lotteryStatus: string }) => 
 
       <div className="container">
         <div
-          className="flex flex-col items-center rounded-[32px] gap-[40px] pt-[40px]"
+          className="flex flex-col items-center rounded-[32px] gap-[40px]"
           style={{ background: 'linear-gradient(180deg, #F0ECF4 0%, #E1E0FF 43.5%)' }}>
-          {winnerSelectingStatus === 'not-selected' || winnerSelectingStatus === 'is-selecting' ? (
-            <AnimatedText
-              text={displayText}
-              className="text-center flex items-center justify-center text-[100px] leading-[108px] text-[#E65E19]"
-            />
-          ) : (
-            <div className="flex flex-col items-center justify-center">
+          <div className="flex items-center justify-center w-full min-h-[240px]">
+            {winnerSelectingStatus === 'not-selected' ||
+            winnerSelectingStatus === 'is-selecting' ? (
               <AnimatedText
                 text={displayText}
-                className="text-center text-[56px] leading-[64px] text-[#E65E19]"
+                className="text-center flex items-center justify-center text-[100px] leading-[108px] text-[#E65E19]"
               />
-              {winnerText && (
+            ) : (
+              <div className="flex flex-col items-center justify-center">
                 <AnimatedText
-                  text={winnerText}
-                  className="text-center text-[80px] leading-[88px] text-[#E65E19]"
+                  text={displayText}
+                  className="text-center text-[56px] leading-[64px] text-[#E65E19]"
                 />
-              )}
-            </div>
-          )}
+                {winnerText && (
+                  <AnimatedText
+                    text={winnerText}
+                    className="text-center text-[80px] leading-[88px] text-[#E65E19]"
+                  />
+                )}
+              </div>
+            )}
+          </div>
 
           <div className="z-10">
             <LotterySlotCounter numberString={currentNumber} isAnimating={isSlotCounterAnimating} />
           </div>
-          <div className="flex gap-6  rounded-[12px] flex-1 w-full items-center justify-center sm:pb-[62px] pb-[32px] px-4">
+          <div className="flex gap-6 rounded-[12px] flex-1 w-full items-center justify-center sm:pb-[62px] pb-[32px] px-4">
             <LotteryWinnersList winners={winners} />
           </div>
         </div>
