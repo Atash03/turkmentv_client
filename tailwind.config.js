@@ -204,6 +204,7 @@ export const theme = {
 
     animation: {
       buble: 'buble 7s infinite',
+      dotsFlash: 'dotsFlash 1.5s infinite',
     },
 
     keyframes: {
@@ -219,6 +220,17 @@ export const theme = {
         },
         '100%': {
           transform: 'scale(1) translate(0%, 0%)',
+        },
+      },
+      dotsFlash: {
+        '0%': {
+          opacity: '1',
+        },
+        '50%': {
+          opacity: '0',
+        },
+        '100%': {
+          opacity: '1',
         },
       },
     },

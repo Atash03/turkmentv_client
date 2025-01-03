@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 
 interface AnimatedTextProps {
@@ -37,7 +38,9 @@ const AnimatedText = ({
               delay: i * wordDelay,
               ease: 'easeOut',
             }}
-            className={`inline-block mx-2 ${wordClassName}`}>
+            className={cn(`inline-block mx-2`, wordClassName, {
+              'animate-dotsFlash': text === '...',
+            })}>
             {word}
           </motion.span>
         ))}

@@ -93,8 +93,7 @@ html {
 }
 
 .text-stroke {
-  text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white,
-    1px 1px 0 white;
+  text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;
 }
 
 .big-swiper .swiper-pagination-bullet {
@@ -122,20 +121,20 @@ html {
 
 .small-swiper .swiper-button-next:after {
   color: white;
-  content: url("/arrow-right-small.svg");
+  content: url('/arrow-right-small.svg');
 }
 .small-swiper .swiper-button-prev:after {
   color: white;
-  content: url("/arrow-left-small.svg");
+  content: url('/arrow-left-small.svg');
 }
 
 .big-swiper .swiper-button-next:after {
   color: white;
-  content: url("/arrow-right-big.svg");
+  content: url('/arrow-right-big.svg');
 }
 .big-swiper .swiper-button-prev:after {
   color: white;
-  content: url("/arrow-left-big.svg");
+  content: url('/arrow-left-big.svg');
 }
 
 video {
@@ -188,15 +187,15 @@ big {
     @apply bg-[#E6E6FA] rounded-xl py-3 px-4 placeholder:text-[#BCBCD6] outline-none;
   }
 
-  .calendar [aria-label="Go to next month"] {
+  .calendar [aria-label='Go to next month'] {
     @apply shadow-sm transition-all;
   }
 
-  .calendar [aria-label="Go to previous month"] {
+  .calendar [aria-label='Go to previous month'] {
     @apply shadow-sm transition-all;
   }
 
-  .day-styles [name="day"] {
+  .day-styles [name='day'] {
     @apply p-4 text-textDarkt leading-[140%] bg-purple-600 rounded-full;
   }
 
@@ -262,7 +261,7 @@ big {
 }
 
 .wheel-circle {
-  background: url("/wheel-circle.svg");
+  background: url('/wheel-circle.svg');
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
@@ -296,7 +295,7 @@ big {
 } */
 
 .slot-seperator {
-  content: url("/dash.svg");
+  content: url('/dash.svg');
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
@@ -315,7 +314,7 @@ big {
 
 @media (max-width: 1024px) {
   .slot-seperator {
-    content: url("/dash-md.svg");
+    content: url('/dash-md.svg');
     @apply mx-2;
   }
 }
@@ -340,7 +339,7 @@ big {
 
 @media (max-width: 426px) {
   .slot-seperator {
-    content: url("/dash-sm.svg");
+    content: url('/dash-sm.svg');
     @apply mx-2;
   }
 }
@@ -353,14 +352,27 @@ big {
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Add depth */
 }
 
+.span.flash {
+  animation: flash 1s infinite;
+}
+
+@keyframes dots-flash {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
 @keyframes confetti-move {
   0% {
     opacity: 1;
     transform: translateX(0) translateY(0) rotate(0deg);
   }
   50% {
-    transform: translateX(calc(var(--end-x) / 2)) translateY(-30vh)
-      rotate(180deg);
+    transform: translateX(calc(var(--end-x) / 2)) translateY(-30vh) rotate(180deg);
   }
   100% {
     opacity: 0;

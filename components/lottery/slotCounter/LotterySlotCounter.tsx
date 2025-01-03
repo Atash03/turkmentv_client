@@ -77,13 +77,14 @@ const LotterySlotCounter = ({ numberString, isAnimating }: LotterySlotCounterPro
           <SlotCounter
             value={formattedNumber}
             startValue={formattedNumber}
+            startValueOnce
             charClassName="rolling-number"
             separatorClassName="slot-seperator"
             duration={2}
             speed={2}
-            startFromLastDigit
             delay={2}
-            animateUnchanged={false}
+            startFromLastDigit
+            animateOnVisible={false}
             autoAnimationStart={false}
           />
         </div>

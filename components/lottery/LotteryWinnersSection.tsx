@@ -25,6 +25,9 @@ const LotteryWinnersSection = ({ lotteryStatus }: { lotteryStatus: string }) => 
   const { width, height } = useWindowSize();
   const { lotteryData } = useLotteryAuth();
   const [isSlotCounterAnimating, setIsSlotCounterAnimating] = useState(false);
+  const [winnerSelectingStatus, setWinnerSelectingStatus] = useState<
+    'not-selected' | 'is-selecting' | 'selected'
+  >('not-selected');
   const [pendingWinner, setPendingWinner] = useState<LotteryWinnerDataSimplified | null>(null);
 
   // Refs
@@ -34,6 +37,7 @@ const LotteryWinnersSection = ({ lotteryStatus }: { lotteryStatus: string }) => 
 
   // Add new state for display text
   const [displayText, setDisplayText] = useState<string>('...');
+  const [winnerText, setWinnerText] = useState<string>('');
 
   // Initialize winners from lottery data
   useEffect(() => {
@@ -85,7 +89,7 @@ const LotteryWinnersSection = ({ lotteryStatus }: { lotteryStatus: string }) => 
             setDisplayText(`${winnerData.winner_no}-nji ýeňiji saýlanýar`);
 
             // Start the sequence
-            setIsSlotCounterAnimating(true);
+            setWinnerSelectingStatus('is-selecting');
             setPendingWinner(winnerData);
             setCurrentNumber(winnerData.ticket);
 
@@ -93,7 +97,9 @@ const LotteryWinnersSection = ({ lotteryStatus }: { lotteryStatus: string }) => 
             await new Promise((resolve) => setTimeout(resolve, SLOT_COUNTER_DURATION));
 
             // Update text to show winner's phone
-            setDisplayText(winnerData.client);
+            setDisplayText('The winner is');
+            setWinnerText(winnerData.client);
+            setWinnerSelectingStatus('selected');
 
             setIsConfettiActive(true);
             setWinners((prev) => [...prev, winnerData]);
@@ -102,9 +108,11 @@ const LotteryWinnersSection = ({ lotteryStatus }: { lotteryStatus: string }) => 
             setTimeout(() => {
               if (mountedRef.current) {
                 setIsConfettiActive(false);
-                setIsSlotCounterAnimating(false);
+                // setIsSlotCounterAnimating(false);
+                setWinnerSelectingStatus('not-selected');
                 setPendingWinner(null);
                 setDisplayText('...'); // Reset text
+                setWinnerText('');
               }
             }, 5000);
           } catch (error) {
@@ -157,7 +165,6 @@ const LotteryWinnersSection = ({ lotteryStatus }: { lotteryStatus: string }) => 
           Connection error. Please refresh the page.
         </div>
       )}
-
       {isConfettiActive && (
         <div className="fixed top-0 left-0 z-50">
           <ReactConfetti
@@ -181,16 +188,32 @@ const LotteryWinnersSection = ({ lotteryStatus }: { lotteryStatus: string }) => 
 
       <div className="container">
         <div
-          className="flex flex-col items-center rounded-[32px] pt-[40px]"
+          className="flex flex-col items-center rounded-[32px] gap-[40px] pt-[40px]"
           style={{ background: 'linear-gradient(180deg, #F0ECF4 0%, #E1E0FF 43.5%)' }}>
-          <AnimatedText
-            text={displayText}
-            className="text-center text-[100px] leading-[108px] text-[#E65E19]"
-          />
-          <div className="translate-y-1/2 z-10">
+          {winnerSelectingStatus === 'not-selected' || winnerSelectingStatus === 'is-selecting' ? (
+            <AnimatedText
+              text={displayText}
+              className="text-center flex items-center justify-center text-[100px] leading-[108px] text-[#E65E19]"
+            />
+          ) : (
+            <div className="flex flex-col items-center justify-center">
+              <AnimatedText
+                text={displayText}
+                className="text-center text-[56px] leading-[64px] text-[#E65E19]"
+              />
+              {winnerText && (
+                <AnimatedText
+                  text={winnerText}
+                  className="text-center text-[80px] leading-[88px] text-[#E65E19]"
+                />
+              )}
+            </div>
+          )}
+
+          <div className="z-10">
             <LotterySlotCounter numberString={currentNumber} isAnimating={isSlotCounterAnimating} />
           </div>
-          <div className="flex gap-6  rounded-[12px] flex-1 w-full items-center justify-center md:pt-[122px] sm:pt-[90px] pt-[40px] sm:pb-[62px] pb-[32px]  px-4">
+          <div className="flex gap-6  rounded-[12px] flex-1 w-full items-center justify-center sm:pb-[62px] pb-[32px] px-4">
             <LotteryWinnersList winners={winners} />
           </div>
         </div>
