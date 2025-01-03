@@ -26,13 +26,13 @@ const AnimatedText = ({
         className={className}
         initial={{ y: initialY, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        exit={{ y: initialY, opacity: 0 }}>
+        exit={{ y: '100%', opacity: 0 }}>
         {words.map((word, i) => (
           <motion.span
             key={i}
             initial={{ y: initialY, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            exit={{ y: initialY, opacity: 0 }}
+            exit={{ y: '100%', opacity: 0 }}
             transition={{
               duration,
               delay: i * wordDelay,
