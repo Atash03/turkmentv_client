@@ -38,6 +38,7 @@ const LotteryWinnersSection = ({ lotteryStatus }: { lotteryStatus: string }) => 
   const pingIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const mountedRef = useRef(false);
+  let reconnectAttempts: number;
 
   // Initialize winners from lottery data
   useEffect(() => {
@@ -52,56 +53,58 @@ const LotteryWinnersSection = ({ lotteryStatus }: { lotteryStatus: string }) => 
     }
   }, [lotteryData]);
 
-  // WebSocket Setup
   useEffect(() => {
     mountedRef.current = true;
 
     const setupWebSocket = () => {
-      if (wsRef.current) return; // Prevent duplicate connections
+      if (wsRef.current) return;
 
       try {
         const socket = new WebSocket(WEBSOCKET_URL);
         wsRef.current = socket;
 
         socket.addEventListener('open', () => {
-          console.log('WebSocket Connected');
+          console.log('✅ WebSocket Connected');
           setWsStatus('connected');
-
-          pingIntervalRef.current = setInterval(() => {
-            if (socket.readyState === WebSocket.OPEN) {
-              socket.send(JSON.stringify({ type: 'ping' }));
-            }
-          }, PING_INTERVAL);
+          reconnectAttempts = 0; // Reset reconnect attempts
         });
 
         socket.addEventListener('message', handleWebSocketMessage);
 
-        socket.addEventListener('error', () => {
-          console.error('WebSocket Error');
+        socket.addEventListener('error', (error) => {
+          console.error('❌ WebSocket Error:', error);
           setWsStatus('error');
-          reconnectWebSocket();
         });
 
-        socket.addEventListener('close', () => {
-          console.log('WebSocket Closed');
+        socket.addEventListener('close', (event) => {
+          console.log('❌ WebSocket Closed:', event);
+          console.log(`Code: ${event.code}, Reason: ${event.reason}`);
+
           setWsStatus('error');
-          reconnectWebSocket();
+
+          // Only reconnect if closure is abnormal
+          if (event.code !== 1000) {
+            reconnectWebSocket();
+          }
         });
       } catch (error) {
-        console.error('Error creating WebSocket:', error);
+        console.error('❌ Error creating WebSocket:', error);
         setWsStatus('error');
         reconnectWebSocket();
       }
     };
 
     const reconnectWebSocket = () => {
-      if (reconnectTimeoutRef.current) return; // Prevent multiple reconnect attempts
+      if (!mountedRef.current) return;
+
+      const delay = Math.min(1000 * 2 ** reconnectAttempts, 30000); // Exponential backoff
+      reconnectAttempts += 1;
+
+      console.log(`Reconnecting in ${delay / 1000} seconds...`);
 
       reconnectTimeoutRef.current = setTimeout(() => {
-        console.log('Reconnecting WebSocket...');
         setupWebSocket();
-        reconnectTimeoutRef.current = null;
-      }, RECONNECT_INTERVAL);
+      }, delay);
     };
 
     setupWebSocket();
@@ -201,30 +204,28 @@ const LotteryWinnersSection = ({ lotteryStatus }: { lotteryStatus: string }) => 
         <div
           className="flex flex-col items-center rounded-[32px] gap-[40px]"
           style={{ background: 'linear-gradient(180deg, #F0ECF4 0%, #E1E0FF 43.5%)' }}>
-          <AnimatePresence mode="wait">
-            <div className="flex items-center justify-center w-full min-h-[240px]">
-              {winnerSelectingStatus === 'not-selected' ||
-              winnerSelectingStatus === 'is-selecting' ? (
+          <div className="flex items-center justify-center w-full min-h-[240px]">
+            {winnerSelectingStatus === 'not-selected' ||
+            winnerSelectingStatus === 'is-selecting' ? (
+              <AnimatedText
+                text={displayText}
+                className="text-center flex items-center justify-center text-[100px] leading-[108px] text-[#E65E19]"
+              />
+            ) : (
+              <div className="flex flex-col items-center justify-center">
                 <AnimatedText
                   text={displayText}
-                  className="text-center flex items-center justify-center text-[100px] leading-[108px] text-[#E65E19]"
+                  className="text-center text-[56px] leading-[64px] text-[#E65E19]"
                 />
-              ) : (
-                <div className="flex flex-col items-center justify-center">
+                {winnerText && (
                   <AnimatedText
-                    text={displayText}
-                    className="text-center text-[56px] leading-[64px] text-[#E65E19]"
+                    text={winnerText}
+                    className="text-center text-[80px] leading-[88px] text-[#E65E19]"
                   />
-                  {winnerText && (
-                    <AnimatedText
-                      text={winnerText}
-                      className="text-center text-[80px] leading-[88px] text-[#E65E19]"
-                    />
-                  )}
-                </div>
-              )}
-            </div>
-          </AnimatePresence>
+                )}
+              </div>
+            )}
+          </div>
           <div className="z-10">
             <LotterySlotCounter numberString={currentNumber} isAnimating={isSlotCounterAnimating} />
           </div>

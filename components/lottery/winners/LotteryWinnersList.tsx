@@ -15,17 +15,15 @@ const LotteryWinnersList = ({ winners }: { winners: LotteryWinnerDataSimplified[
       <motion.div
         layout
         className="grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-x-2 gap-y-4 w-full ">
-        <AnimatePresence mode="wait">
-          {winners.map((item, index) => (
-            <LotteryWinner
-              key={v4()}
-              phone={item.client}
-              ticket={item.ticket}
-              winnerNumber={item.winner_no}
-              isNew={index === winners.length - 1}
-            />
-          ))}
-        </AnimatePresence>
+        {winners.map((item, index) => (
+          <LotteryWinner
+            key={v4()}
+            phone={item.client}
+            ticket={item.ticket}
+            winnerNumber={item.winner_no}
+            isNew={index === winners.length - 1}
+          />
+        ))}
       </motion.div>
     </div>
   );
