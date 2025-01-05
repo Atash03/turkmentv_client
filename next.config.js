@@ -1,31 +1,32 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'standalone',
+  output: "standalone",
+  reactStrictMode: false,
 
   images: {
-    domains: ['turkmentv.gov.tm', 'smstv.gov.tm', 'turkmenistaninfo.gov.tm'],
+    domains: ["turkmentv.gov.tm", "smstv.gov.tm", "turkmenistaninfo.gov.tm"],
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'turkmentv.gov.tm',
-        port: '',
+        protocol: "https",
+        hostname: "turkmentv.gov.tm",
+        port: "",
         // pathname: '/account123/**',
       },
       {
-        protocol: 'https',
-        hostname: 'sms.turkmentv.gov.tm',
-        port: '',
+        protocol: "https",
+        hostname: "sms.turkmentv.gov.tm",
+        port: "",
         // pathname: '/account123/**',
       },
       {
-        protocol: 'https',
-        hostname: 'smstv.gov.tm',
-        port: '',
+        protocol: "https",
+        hostname: "smstv.gov.tm",
+        port: "",
       },
       {
-        protocol: 'https',
-        hostname: 'turkmenistaninfo.gov.tm',
-        port: '',
+        protocol: "https",
+        hostname: "turkmenistaninfo.gov.tm",
+        port: "",
       },
     ],
   },

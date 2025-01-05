@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useLotteryAuth } from "@/store/useLotteryAuth";
 import { LotteryWinnerDataSimplified } from "@/typings/lottery/lottery.types";
 import LotteryWinnersList from "./winners/LotteryWinnersList";
@@ -10,14 +10,12 @@ import { useWebsocketLottery } from "@/hooks/useWebSocketLottery";
 
 const WEBSOCKET_URL = "wss://sms.turkmentv.gov.tm/ws/lottery?dst=0506";
 const SLOT_COUNTER_DURATION = 20000;
-const RECONNECT_INTERVAL = 5000;
 
 const LotteryWinnersSection = ({
   lotteryStatus,
 }: {
   lotteryStatus: string;
 }) => {
-  // UI States
   const [winners, setWinners] = useState<LotteryWinnerDataSimplified[]>([]);
   const [currentNumber, setCurrentNumber] = useState<string>();
   const [isConfettiActive, setIsConfettiActive] = useState(false);
@@ -33,8 +31,7 @@ const LotteryWinnersSection = ({
   const [winnerText, setWinnerText] = useState<string>("");
 
   // WebSocket Hook
-  const { wsStatus } = useWebsocketLottery(WEBSOCKET_URL);
-  const wsRef = useRef<WebSocket | null>(null);
+  const { wsStatus, subscribeToMessages } = useWebsocketLottery(WEBSOCKET_URL);
 
   useEffect(() => {
     if (lotteryData?.data.winners) {
@@ -51,11 +48,7 @@ const LotteryWinnersSection = ({
   }, [lotteryData]);
 
   useEffect(() => {
-    const handleWebSocketMessage = async (event: MessageEvent) => {
-      if (!event?.data) return;
-
-      console.log("📩 Message received:", event.data);
-
+    const unsubscribe = subscribeToMessages((event) => {
       const newWinner = JSON.parse(event.data);
       if (
         !newWinner ||
@@ -66,8 +59,6 @@ const LotteryWinnersSection = ({
         console.error("❌ Invalid data format received");
         return;
       }
-
-      console.log("🎉 New winner selected:", newWinner);
 
       const winnerData = {
         client: newWinner.phone,
@@ -80,16 +71,13 @@ const LotteryWinnersSection = ({
       setPendingWinner(winnerData);
       setCurrentNumber(winnerData.ticket);
 
-      await new Promise((resolve) =>
-        setTimeout(resolve, SLOT_COUNTER_DURATION)
-      );
-
-      setDisplayText("The winner is");
-      setWinnerText(winnerData.client);
-      setWinnerSelectingStatus("selected");
-      setIsConfettiActive(true);
-
-      setWinners((prev) => [...prev, winnerData]);
+      setTimeout(() => {
+        setDisplayText("The winner is");
+        setWinnerText(winnerData.client);
+        setWinnerSelectingStatus("selected");
+        setIsConfettiActive(true);
+        setWinners((prev) => [...prev, winnerData]);
+      }, SLOT_COUNTER_DURATION);
 
       setTimeout(() => {
         setIsConfettiActive(false);
@@ -98,44 +86,12 @@ const LotteryWinnersSection = ({
         setDisplayText("...");
         setWinnerText("");
       }, 10000);
+    });
+
+    return () => {
+      unsubscribe();
     };
-
-    if (wsStatus === "connected" && !wsRef.current) {
-      console.log("✅ WebSocket connected");
-      wsRef.current = new WebSocket(WEBSOCKET_URL);
-      wsRef.current.addEventListener("message", handleWebSocketMessage);
-
-      wsRef.current.addEventListener("error", (error) => {
-        console.error("❌ WebSocket error:", error);
-      });
-
-      wsRef.current.addEventListener("close", (event) => {
-        console.log("❌ WebSocket closed:", event);
-      });
-
-      // Set up ping to keep connection alive
-      const pingInterval = setInterval(() => {
-        if (wsRef.current?.readyState === WebSocket.OPEN) {
-          console.log("📤 Sending ping");
-          wsRef.current.send(JSON.stringify({ type: "ping" }));
-        }
-      }, RECONNECT_INTERVAL);
-
-      // Cleanup on unmount
-      return () => {
-        console.log("🔌 Cleaning up WebSocket connection");
-        if (wsRef.current) {
-          wsRef.current.close();
-          wsRef.current = null;
-        }
-        clearInterval(pingInterval);
-      };
-    } else if (wsStatus === "connecting") {
-      console.log("🔄 WebSocket connecting...");
-    } else if (wsStatus === "error") {
-      console.log("❗ WebSocket error detected");
-    }
-  }, [wsStatus]);
+  }, [subscribeToMessages]);
 
   return (
     <section>
