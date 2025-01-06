@@ -4,6 +4,7 @@ import Image from 'next/image';
 import placeholder from '@/public/person placeholder.svg';
 import clsx from 'clsx';
 import { motion, usePresence, Variant, Transition } from 'framer-motion';
+import RollingCounter from 'react-slot-counter';
 
 interface IProps {
   number: number;
@@ -128,7 +129,13 @@ const ParticipantCard = ({
             </div>
             <div className="flex flex-col items-end gap-[8px]">
               <h4 className="text-[12px] sm:text-[48px] text-white leading-[100%] font-bold">
-                {votes ? votes : 0}
+                {/* {votes ? votes : 0} */}
+                <RollingCounter
+                  value={votes ? votes : 0}
+                  startValueOnce={true}
+                  animateOnVisible={false}
+                  autoAnimationStart={false}
+                />
               </h4>
               <h4 className="text-[12px] sm:text-[24px] text-white leading-[100%] font-bold">
                 ses
@@ -210,7 +217,13 @@ const ParticipantCard = ({
             </div>
             <div className="flex flex-col gap-[4px] items-end">
               <h4 className="text-[12px] sm:text-[32px] text-[#808080] font-bold leading-[100%] ">
-                {votes ? votes : 0}
+                {/* {votes ? votes : 0} */}
+                <RollingCounter
+                  value={votes ? votes : 0}
+                  startValueOnce={true}
+                  animateOnVisible={false}
+                  autoAnimationStart={false}
+                />
               </h4>
               <h4 className="text-[12px] sm:text-[16px] text-[#808080] font-bold leading-[100%] ">
                 ses

@@ -12,7 +12,8 @@ import Image from 'next/image';
 import { useMediaQuery } from 'usehooks-ts';
 import Countdown from './Countdown';
 import Link from 'next/link';
-import { AnimatePresence } from 'framer-motion';
+import { useWindowSize } from 'react-use';
+import Confetti from '../common/Confetti';
 
 interface IParams {
   vote_id?: string;
@@ -30,7 +31,7 @@ const ParticipantsList = ({ vote_id }: IParams) => {
   const [data, setData] = useState<IAllVotes>();
   const [participantsData, setParticipantsData] = useState<VotingItem[]>([]);
   const [voteStatus, setVoteStatus] = useState<string>();
-  const [eventStatus, setEventStatus] = useState<string>('Finished');
+  const [eventStatus, setEventStatus] = useState<string>('Not started');
   const [manualClose, setManualClose] = useState(false); // Track manual closure
 
   const [winnersCount, setWinnersCount] = useState<number>(0);
@@ -41,6 +42,7 @@ const ParticipantsList = ({ vote_id }: IParams) => {
   const [isConnected, setIsConnected] = useState(false);
 
   const mobile = useMediaQuery('(max-width: 768px)');
+  const { width, height } = useWindowSize();
 
   const { setVoteDescription } = useContext(VoteContext).voteDescriptionContext;
 
@@ -208,6 +210,8 @@ const ParticipantsList = ({ vote_id }: IParams) => {
     return (
       <div className="flex flex-col gap-[20px] sm:gap-[40px] w-full items-center">
         {data.data.description ? <PageBage title={data.data.description} /> : null}
+
+        {eventStatus === 'Finished' && <Confetti />}
 
         {data.data.banner ? (
           <div className="relative w-full md:min-h-[150px] md:h-auto h-[100px] ">
