@@ -3,7 +3,13 @@
 import ReactConfetti from 'react-confetti';
 import { useWindowSize } from 'react-use';
 
-const Confetti = () => {
+const Confetti = ({
+  infinite = true,
+  numberOfPieces = 200,
+}: {
+  infinite?: boolean;
+  numberOfPieces?: number;
+}) => {
   const { width, height } = useWindowSize();
   const colors = [
     'linear-gradient(45deg, #5D5D72, #8589DE)',
@@ -19,9 +25,9 @@ const Confetti = () => {
       <ReactConfetti
         width={width}
         height={height}
-        recycle={true}
-        numberOfPieces={200}
-        tweenDuration={10000}
+        recycle={infinite}
+        numberOfPieces={numberOfPieces}
+        tweenDuration={5000}
         run={true}
         colors={colors}
       />

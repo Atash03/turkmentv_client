@@ -7,7 +7,7 @@ const LotteryWinnersList = ({ winners }: { winners: LotteryWinnerDataSimplified[
   return (
     <div className="flex flex-col gap-4 w-full max-w-[1028px]">
       <div className="flex flex-col gap-2 w-full pb-4 border-b border-[#CECCFF]">
-        <h4 className="md:font-heading-3-regular text-[28px]">Results</h4>
+        <h4 className="md:font-heading-3-regular text-[28px]">Ýeňijiler</h4>
         <p className="md:font-base-medium text-[16px]">
           The results after each stage will be shown here.
         </p>
