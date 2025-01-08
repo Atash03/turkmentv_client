@@ -4,45 +4,47 @@ import { motion } from 'framer-motion';
 interface AnimatedTextProps {
   text: string;
   className?: string;
-  wordClassName?: string;
+  characterClassName?: string;
   initialY?: number;
-  duration?: number;
-  wordDelay?: number;
+  exitY?: number;
+  duration: number;
+  characterDelay?: number;
 }
 
 const AnimatedText = ({
   text,
   className = '',
-  wordClassName = '',
+  characterClassName = '',
   initialY = -100,
-  duration = 0.5,
-  wordDelay = 0.2,
+  exitY = 100,
+  duration,
+  characterDelay = 0,
 }: AnimatedTextProps) => {
-  const words = text.split(' ');
+  const characters = text.split('');
 
   return (
     <div className="overflow-hidden">
       <motion.p
-        className={className}
-        initial={{ y: initialY, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        exit={{ y: '100%', opacity: 0 }}>
-        {words.map((word, i) => (
-          <motion.span
+        className={cn(`flex `, className)}
+        initial={{ translateY: initialY, opacity: 0 }}
+        animate={{ translateY: 0, opacity: 1 }}
+        exit={{ translateY: exitY, opacity: 0 }}>
+        {characters.map((character, i) => (
+          <motion.div
             key={i}
-            initial={{ y: initialY, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: '100%', opacity: 0 }}
+            initial={{ translateY: initialY, opacity: 0 }}
+            animate={{ translateY: 0, opacity: 1 }}
+            exit={{ translateY: exitY, opacity: 0 }}
             transition={{
               duration,
-              delay: i * wordDelay,
+              delay: characterDelay + (i / 2) * duration,
               ease: 'easeOut',
             }}
-            className={cn(`inline-block mx-2`, wordClassName, {
+            className={cn(`block `, characterClassName, {
               'animate-dotsFlash': text === '...',
             })}>
-            {word}
-          </motion.span>
+            {character}
+          </motion.div>
         ))}
       </motion.p>
     </div>
