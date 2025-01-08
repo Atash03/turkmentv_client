@@ -6,10 +6,9 @@ import { useMediaQuery } from 'usehooks-ts';
 
 interface LotterySlotCounterProps {
   numberString: string;
-  isAnimating: boolean;
 }
 
-const LotterySlotCounter = ({ numberString, isAnimating }: LotterySlotCounterProps) => {
+const LotterySlotCounter = ({ numberString }: LotterySlotCounterProps) => {
   const [formattedNumber, setFormattedNumber] = useState(numberString);
 
   useEffect(() => {
@@ -80,9 +79,9 @@ const LotterySlotCounter = ({ numberString, isAnimating }: LotterySlotCounterPro
             startValueOnce
             charClassName="rolling-number"
             separatorClassName="slot-seperator"
-            duration={10}
+            duration={3}
             speed={6}
-            delay={10}
+            delay={3}
             startFromLastDigit
             animateUnchanged
             animateOnVisible={false}

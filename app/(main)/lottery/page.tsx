@@ -25,6 +25,7 @@ const LotteryPage = () => {
               description={lotteryData.data.description}
               image={lotteryData.data.image}
               smsCode={lotteryData.data.sms_code}
+              startDate={lotteryData.data.start_time}
             />
 
             {status === 'not-started' ? (

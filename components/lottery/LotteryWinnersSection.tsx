@@ -17,7 +17,6 @@ const LotteryWinnersSection = ({ lotteryStatus }: { lotteryStatus: string }) => 
   const [currentNumber, setCurrentNumber] = useState<string>();
   const [isConfettiActive, setIsConfettiActive] = useState(false);
 
-  const { width, height } = useWindowSize();
   const { lotteryData } = useLotteryAuth();
   const [winnerSelectingStatus, setWinnerSelectingStatus] = useState<
     'not-selected' | 'is-selecting' | 'selected'
@@ -28,8 +27,6 @@ const LotteryWinnersSection = ({ lotteryStatus }: { lotteryStatus: string }) => 
 
   // WebSocket Hook
   const { wsStatus, subscribeToMessages } = useWebsocketLottery(WEBSOCKET_URL);
-
-  console.log(winners);
 
   useEffect(() => {
     if (lotteryData) {
@@ -42,8 +39,9 @@ const LotteryWinnersSection = ({ lotteryStatus }: { lotteryStatus: string }) => 
         setWinners(simplifiedWinners);
         setCurrentNumber(lotteryData.data.winners.at(-1)?.ticket || '00-00-00-00-00');
         setWinnerSelectingStatus('selected');
-        setTopText('Ýeniji');
+        setTopText('Ýeňiji');
         setBottomText(lotteryData.data.winners.at(-1)?.client || '');
+        setIsConfettiActive(true);
       }
     }
   }, [lotteryData]);
@@ -62,6 +60,9 @@ const LotteryWinnersSection = ({ lotteryStatus }: { lotteryStatus: string }) => 
         ticket: newWinner.ticket,
       };
 
+      setTimeout(() => {
+        setIsConfettiActive(false);
+      }, 1000);
       setTopText(`${winnerData.winner_no}-nji(y) ýeňiji saýlanýar`);
       setBottomText('...');
       setWinnerSelectingStatus('is-selecting');
@@ -74,10 +75,6 @@ const LotteryWinnersSection = ({ lotteryStatus }: { lotteryStatus: string }) => 
         setWinnerSelectingStatus('selected');
         setIsConfettiActive(true);
         setWinners((prev) => [...prev, winnerData]);
-        setTimeout(() => {
-          setIsConfettiActive(false);
-          // setPendingWinner(null);
-        }, 5000);
       }, SLOT_COUNTER_DURATION + 500);
     });
 
@@ -91,7 +88,7 @@ const LotteryWinnersSection = ({ lotteryStatus }: { lotteryStatus: string }) => 
       {wsStatus === 'error' && (
         <div className="text-red-500 text-center mb-2">Websocket connection error.</div>
       )}
-      {isConfettiActive && <Confetti infinite={false} numberOfPieces={1000} />}
+      <Confetti showConfetti={isConfettiActive} numberOfPieces={300} />{' '}
       <div className="container">
         <div
           className="flex flex-col items-center rounded-[32px] gap-[40px]"
@@ -100,29 +97,47 @@ const LotteryWinnersSection = ({ lotteryStatus }: { lotteryStatus: string }) => 
           }}>
           <div className="flex items-center justify-center w-full min-h-[240px]">
             {winnerSelectingStatus === 'not-selected' ? (
+              // <TextMaskReveal
+              //   text={topText}
+              //   className="text-center flex items-center justify-center text-[100px] leading-[108px] text-[#E65E19]"
+              //   duration={0.5}
+              // />
               <AnimatedText
                 text={topText}
                 className="text-center flex items-center justify-center text-[100px] leading-[108px] text-[#E65E19]"
+                duration={0.4}
               />
             ) : (
               <div className="flex flex-col items-center justify-center">
+                {/* <TextMaskReveal
+                  text={topText}
+                  className="text-center text-[56px] leading-[64px] text-[#E65E19]"
+                  duration={0.4}
+                /> */}
                 <AnimatedText
                   text={topText}
                   className="text-center text-[56px] leading-[64px] text-[#E65E19]"
+                  duration={0.4}
                 />
                 {bottomText && (
+                  // <TextMaskReveal
+                  //   text={bottomText}
+                  //   className="text-center text-[80px] leading-[88px] text-[#E65E19]"
+                  //   duration={0.4}
+                  //   startDelay={3}
+                  // />
                   <AnimatedText
                     text={bottomText}
                     className="text-center text-[80px] leading-[88px] text-[#E65E19]"
+                    duration={0.4}
+                    characterDelay={1.3}
                   />
                 )}
               </div>
             )}
           </div>
           <div className="z-10">
-            {currentNumber && (
-              <LotterySlotCounter numberString={currentNumber} isAnimating={false} />
-            )}
+            {currentNumber && <LotterySlotCounter numberString={currentNumber} />}
           </div>
           <div className="flex gap-6 rounded-[12px] flex-1 w-full items-center justify-center sm:pb-[62px] pb-[32px] px-4">
             <LotteryWinnersList winners={winners} />

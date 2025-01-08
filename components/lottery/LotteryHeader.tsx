@@ -1,13 +1,15 @@
 import Image from 'next/image';
+import InfoDateAllert from '../common/InfoDateAllert';
 
 interface LotteryHeaderProps {
   title: string;
   description: string;
   image: string;
   smsCode: string;
+  startDate: string;
 }
 
-const LotteryHeader = ({ title, description, image, smsCode }: LotteryHeaderProps) => {
+const LotteryHeader = ({ title, description, image, smsCode, startDate }: LotteryHeaderProps) => {
   return (
     <section className="container">
       <div className="flex flex-col md:gap-[32px] gap-[24px]">
@@ -16,6 +18,7 @@ const LotteryHeader = ({ title, description, image, smsCode }: LotteryHeaderProp
             {title}
           </h1>
           <p className="text-center text-textLarge leading-textLarge">{description}</p>
+          <InfoDateAllert date={startDate} text="Senesi:" />
         </div>
         {image && (
           <div className="md:mb-8 sm:mb-[40px] mb-[16px]">

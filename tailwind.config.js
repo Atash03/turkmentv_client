@@ -85,6 +85,7 @@ export const theme = {
       lightPrimaryOutline: '#D8D6FF',
       // Allert
       lightInfoAllertContainer: '#E3F2FD',
+      lightInfoAllertContainerOutline: '#D4EBFC',
       lightOnInfoAllertContainer: '#1E3A5F',
       lightOnWarningAllertContainer: '#F57C00',
       lightWarningAllertContainer: '#FFF8E1',
