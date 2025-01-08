@@ -42,7 +42,11 @@ const LotteryAuthForm = () => {
     try {
       const response = await Queries.authenticateLottery(phone, code);
       setAuth(response, phone, code);
-      router.replace('/lottery');
+      if (response.errorMessage?.length) {
+        setError('Telefon belgisi ýa-da açar nädogry');
+      } else {
+        router.replace('/lottery');
+      }
     } catch (err) {
       console.error('Authentication error:', err);
       setError('Telefon belgisi ýa-da açar nädogry');

@@ -20,4 +20,5 @@ export interface ILotteryData {
 export interface ILotteryResponse {
   data: ILotteryData;
   user_lottery_numbers: string[];
+  errorMessage?: string;
 }
