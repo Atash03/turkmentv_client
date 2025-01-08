@@ -1,14 +1,15 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import ReactConfetti from 'react-confetti';
 import { useWindowSize } from 'react-use';
 
 const Confetti = ({
-  infinite = true,
   numberOfPieces = 200,
+  showConfetti,
 }: {
-  infinite?: boolean;
   numberOfPieces?: number;
+  showConfetti: boolean;
 }) => {
   const { width, height } = useWindowSize();
   const colors = [
@@ -25,10 +26,10 @@ const Confetti = ({
       <ReactConfetti
         width={width}
         height={height}
-        recycle={infinite}
+        recycle={showConfetti}
         numberOfPieces={numberOfPieces}
-        tweenDuration={5000}
-        run={true}
+        tweenDuration={500}
+        // run={true}
         colors={colors}
       />
     </div>
