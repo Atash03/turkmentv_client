@@ -17,8 +17,13 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
         try {
           // Try to authenticate with stored credentials
           const response = await Queries.authenticateLottery(phone, code);
-          setAuth(response, phone, code);
-          setIsLoading(false);
+
+          if (response.errorMessage) {
+            router.replace('/lottery/auth');
+          } else {
+            setAuth(response, phone, code);
+            setIsLoading(false);
+          }
           return; // Exit early if authentication successful
         } catch (err) {
           console.error('Authentication failed:', err);
