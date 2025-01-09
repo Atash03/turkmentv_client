@@ -329,6 +329,11 @@ big {
   .rolling-number {
     @apply text-[24px] px-1;
   }
+
+  .slot-seperator {
+    content: url('/dash-md.svg');
+    @apply !mx-1;
+  }
 }
 
 @media (max-width: 320px) {

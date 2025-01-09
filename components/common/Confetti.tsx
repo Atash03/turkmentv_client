@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import ReactConfetti from 'react-confetti';
 import { useWindowSize } from 'react-use';
+import { useMediaQuery } from 'usehooks-ts';
 
 const Confetti = ({
   numberOfPieces = 200,
@@ -21,13 +22,15 @@ const Confetti = ({
     '#FF3131',
   ];
 
+  const mobile = useMediaQuery('(max-width: 426px)');
+
   return (
     <div className="fixed top-0 left-0 z-50">
       <ReactConfetti
         width={width}
         height={height}
         recycle={showConfetti}
-        numberOfPieces={numberOfPieces}
+        numberOfPieces={mobile ? numberOfPieces / 3 : numberOfPieces}
         tweenDuration={500}
         // run={true}
         colors={colors}

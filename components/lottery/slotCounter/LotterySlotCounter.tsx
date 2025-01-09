@@ -27,7 +27,7 @@ const LotterySlotCounter = ({ numberString }: LotterySlotCounterProps) => {
           alt="roller-triangle"
           width={24}
           height={24}
-          className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 z-20"
+          className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2/3 z-20"
         />
       ) : (
         <Image
@@ -45,7 +45,7 @@ const LotterySlotCounter = ({ numberString }: LotterySlotCounterProps) => {
           alt="roller-triangle"
           width={24}
           height={24}
-          className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 z-20 rotate-180"
+          className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-2/3 z-20 rotate-180"
         />
       ) : (
         <Image
@@ -58,7 +58,7 @@ const LotterySlotCounter = ({ numberString }: LotterySlotCounterProps) => {
       )}
 
       <div
-        className="flex items-center h-fit md:max-w-[1132px] sm:max-w-[640px] max-w-[324px] w-full justify-center text-white md:py-4 md:px-6 rounded-full overflow-y-hidden overflow-x-visible relative border-4 border-lightPrimary"
+        className="flex items-center h-fit md:max-w-[1132px] sm:max-w-[640px] max-w-[400px] w-full justify-center text-white md:py-4 md:px-6 rounded-full overflow-y-hidden overflow-x-visible relative border-4 border-lightPrimary"
         style={{
           background:
             'linear-gradient(180deg, #454673 0%, #575992 10.5%, #575992 90%, #454673 100%)',

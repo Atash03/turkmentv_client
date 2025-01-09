@@ -8,9 +8,10 @@ import { useWindowSize } from 'react-use';
 import AnimatedText from '@/components/common/AnimatedText';
 import { useWebsocketLottery } from '@/hooks/useWebSocketLottery';
 import Confetti from '../common/Confetti';
+import { AnimatePresence, motion } from 'framer-motion';
 
 const WEBSOCKET_URL = 'wss://sms.turkmentv.gov.tm/ws/lottery?dst=0506';
-const SLOT_COUNTER_DURATION = 100000;
+const SLOT_COUNTER_DURATION = 30000;
 
 const LotteryWinnersSection = ({ lotteryStatus }: { lotteryStatus: string }) => {
   const [winners, setWinners] = useState<LotteryWinnerDataSimplified[]>([]);
@@ -39,7 +40,7 @@ const LotteryWinnersSection = ({ lotteryStatus }: { lotteryStatus: string }) => 
         setWinners(simplifiedWinners);
         setCurrentNumber(lotteryData.data.winners.at(-1)?.ticket || '00-00-00-00-00');
         setWinnerSelectingStatus('selected');
-        setTopText('Ýeňiji');
+        setTopText(`${lotteryData.data.winners.at(-1)?.winner_no}-nji(y) ýeňiji`);
         setBottomText(lotteryData.data.winners.at(-1)?.client || '');
         setIsConfettiActive(true);
       }
@@ -60,9 +61,7 @@ const LotteryWinnersSection = ({ lotteryStatus }: { lotteryStatus: string }) => 
         ticket: newWinner.ticket,
       };
 
-      setTimeout(() => {
-        setIsConfettiActive(false);
-      }, 1000);
+      setIsConfettiActive(false);
       setTopText(`${winnerData.winner_no}-nji(y) ýeňiji saýlanýar`);
       setBottomText('...');
       setWinnerSelectingStatus('is-selecting');
@@ -70,18 +69,37 @@ const LotteryWinnersSection = ({ lotteryStatus }: { lotteryStatus: string }) => 
       setCurrentNumber(winnerData.ticket);
 
       setTimeout(() => {
-        setTopText('Ýeniji');
+        setTopText(`${winnerData.winner_no}-nji(y) ýeňiji`);
         setBottomText(winnerData.client);
         setWinnerSelectingStatus('selected');
         setIsConfettiActive(true);
         setWinners((prev) => [...prev, winnerData]);
-      }, SLOT_COUNTER_DURATION + 500);
+      }, SLOT_COUNTER_DURATION);
     });
 
     return () => {
       unsubscribe();
     };
   }, [subscribeToMessages]);
+
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     setIsConfettiActive(false);
+  //     setTopText(`${1}-nji(y) ýeňiji saýlanýar`);
+  //     setBottomText('...');
+  //     setWinnerSelectingStatus('is-selecting');
+  //     // setPendingWinner(winnerData);
+  //     setCurrentNumber('55-44-33-22-11');
+
+  //     setTimeout(() => {
+  //       setTopText('Ýeniji');
+  //       setBottomText('99361245555');
+  //       setWinnerSelectingStatus('selected');
+  //       setIsConfettiActive(true);
+  //       // setWinners((prev) => [...prev, winnerData]);
+  //     }, SLOT_COUNTER_DURATION);
+  //   }, 10000);
+  // }, []);
 
   return (
     <section>
@@ -95,47 +113,62 @@ const LotteryWinnersSection = ({ lotteryStatus }: { lotteryStatus: string }) => 
           style={{
             background: 'linear-gradient(180deg, #F0ECF4 0%, #E1E0FF 43.5%)',
           }}>
-          <div className="flex items-center justify-center w-full min-h-[240px]">
-            {winnerSelectingStatus === 'not-selected' ? (
-              // <TextMaskReveal
-              //   text={topText}
-              //   className="text-center flex items-center justify-center text-[100px] leading-[108px] text-[#E65E19]"
-              //   duration={0.5}
-              // />
-              <AnimatedText
-                text={topText}
-                className="text-center flex items-center justify-center text-[100px] leading-[108px] text-[#E65E19]"
-                duration={0.4}
-              />
-            ) : (
-              <div className="flex flex-col items-center justify-center">
-                {/* <TextMaskReveal
+          <AnimatePresence>
+            <div className="flex items-center justify-center w-full sm:min-h-[240px] pt-6">
+              {winnerSelectingStatus === 'not-selected' ? (
+                // <TextMaskReveal
+                //   text={topText}
+                //   className="text-center flex items-center justify-center text-[100px] leading-[108px] text-[#E65E19]"
+                //   duration={0.5}
+                // />
+                <AnimatedText
+                  key={topText}
+                  text={topText}
+                  className="text-center flex items-center justify-center sm:text-[100px] text-[48px] leading-[120%] text-[#E65E19]"
+                  duration={0.4}
+                />
+              ) : (
+                <motion.div
+                  variants={{
+                    enter: {
+                      transition: { staggerChildren: 1, delayChildren: 0.5 },
+                    },
+                    exit: {
+                      transition: { staggerChildren: 0.05, staggerDirection: -1 },
+                    },
+                  }}
+                  className="flex flex-col items-center justify-center">
+                  {/* <TextMaskReveal
                   text={topText}
                   className="text-center text-[56px] leading-[64px] text-[#E65E19]"
                   duration={0.4}
                 /> */}
-                <AnimatedText
-                  text={topText}
-                  className="text-center text-[56px] leading-[64px] text-[#E65E19]"
-                  duration={0.4}
-                />
-                {bottomText && (
-                  // <TextMaskReveal
-                  //   text={bottomText}
-                  //   className="text-center text-[80px] leading-[88px] text-[#E65E19]"
-                  //   duration={0.4}
-                  //   startDelay={3}
-                  // />
                   <AnimatedText
-                    text={bottomText}
-                    className="text-center text-[80px] leading-[88px] text-[#E65E19]"
+                    key={topText}
+                    text={topText}
+                    className="text-center sm:text-[56px] text-[24px] w-full leading-[120%] text-[#E65E19]"
                     duration={0.4}
-                    characterDelay={1.3}
                   />
-                )}
-              </div>
-            )}
-          </div>
+                  {bottomText && (
+                    // <TextMaskReveal
+                    //   text={bottomText}
+                    //   className="text-center text-[80px] leading-[88px] text-[#E65E19]"
+                    //   duration={0.4}
+                    //   startDelay={3}
+                    // />
+                    <AnimatedText
+                      key={bottomText}
+                      text={bottomText}
+                      className="text-center sm:text-[80px] text-[32px] leading-[120%] text-[#E65E19]"
+                      duration={0.4}
+                      // characterDelay={2}
+                    />
+                  )}
+                </motion.div>
+              )}
+            </div>
+          </AnimatePresence>
+
           <div className="z-10">
             {currentNumber && <LotterySlotCounter numberString={currentNumber} />}
           </div>
