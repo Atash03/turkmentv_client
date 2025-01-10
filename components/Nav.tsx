@@ -147,6 +147,13 @@ const Nav = () => {
                       onClick={() => setDropDownOpened(false)}>
                       Sowgatlar
                     </Link>
+                    <Link
+                      href={'/lottery/auth'}
+                      className="block min-w-fit text-lg text-white transition-all font-roboto font-bold"
+                      style={path.includes('lottery') ? { color: '#FFAB48' } : {}}
+                      onClick={() => setDropDownOpened(false)}>
+                      Bije
+                    </Link>
                   </div>
                 </div>
               </li>
