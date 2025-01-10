@@ -11,6 +11,7 @@ import LotteryCountDown from '@/components/lottery/countDown/LotteryCountDown';
 import LotteryCountDownAllert from '@/components/lottery/countDown/countDownAllert/LotteryCountDownAllert';
 import { LotteryWinnerDataSimplified } from '@/typings/lottery/lottery.types';
 import { Queries } from '@/api/queries';
+import Link from 'next/link';
 
 const LotteryPage = () => {
   const { lotteryData, setAuth } = useLotteryAuth();
@@ -60,9 +61,20 @@ const LotteryPage = () => {
 
         <LotteryRulesSection />
 
-        {lotteryData && (status === 'ended' || status === 'started') && (
-          <LotteryWinnersSection lotteryStatus={status} />
-        )}
+        <div className="flex flex-col gap-10">
+          {lotteryData && (status === 'ended' || status === 'started') && (
+            <LotteryWinnersSection lotteryStatus={status} />
+          )}
+          <div className="w-full">
+            <div className="container">
+              <Link
+                href="/lottery/auth"
+                className="sm:text-textLarge sm:leading-textLarge text-[16px] rounded-full leading-[24px] sm:py-[12px] py-[8px] w-full flex justify-center items-center border-2 border-lightPrimary  hover:bg-lightPrimary font-medium text-lightPrimary hover:text-lightOnPrimary disabled:opacity-50 transition-all duration-300">
+                Täzeden girmek
+              </Link>
+            </div>
+          </div>
+        </div>
       </div>
     </ProtectedRoute>
   );
