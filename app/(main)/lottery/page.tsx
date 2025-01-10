@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useLotteryAuth } from '@/store/useLotteryAuth';
 import ProtectedRoute from '@/components/lottery/auth/ProtectedRoute';
 import LotteryHeader from '@/components/lottery/LotteryHeader';
@@ -10,10 +10,27 @@ import LotteryRulesSection from '@/components/lottery/rules/LotteryRulesSection'
 import LotteryCountDown from '@/components/lottery/countDown/LotteryCountDown';
 import LotteryCountDownAllert from '@/components/lottery/countDown/countDownAllert/LotteryCountDownAllert';
 import { LotteryWinnerDataSimplified } from '@/typings/lottery/lottery.types';
+import { Queries } from '@/api/queries';
 
 const LotteryPage = () => {
-  const { lotteryData } = useLotteryAuth();
+  const { lotteryData, setAuth } = useLotteryAuth();
   const [status, setStatus] = useState<'not-started' | 'started' | 'ended'>('not-started');
+
+  // ✅ Fetch fresh data on page load
+  useEffect(() => {
+    const phone = localStorage.getItem('lotteryPhone');
+    const code = localStorage.getItem('lotteryCode');
+
+    if (phone && code) {
+      Queries.authenticateLottery(phone, code)
+        .then((response) => {
+          setAuth(response, phone, code);
+        })
+        .catch((err) => {
+          console.error('Failed to fetch lottery data:', err);
+        });
+    }
+  }, [setAuth]);
 
   return (
     <ProtectedRoute>

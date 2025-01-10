@@ -7,37 +7,40 @@ import { Queries } from '@/api/queries';
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
-  const { isAuthenticated, phone, code, setAuth } = useLotteryAuth();
+  const { isAuthenticated, setAuth } = useLotteryAuth();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const checkAuth = async () => {
-      // First, check if we have credentials in localStorage
+      // ✅ Check credentials from localStorage
+      const phone = localStorage.getItem('lotteryPhone');
+      const code = localStorage.getItem('lotteryCode');
+
       if (phone && code) {
         try {
-          // Try to authenticate with stored credentials
+          // ✅ Authenticate using stored credentials
           const response = await Queries.authenticateLottery(phone, code);
 
           if (response.errorMessage) {
+            // If authentication fails, redirect to the auth page
             router.replace('/lottery/auth');
           } else {
+            // ✅ Set the authenticated state
             setAuth(response, phone, code);
             setIsLoading(false);
           }
-          return; // Exit early if authentication successful
         } catch (err) {
           console.error('Authentication failed:', err);
-          // Only redirect if API request fails
           router.replace('/lottery/auth');
         }
       } else {
-        // Only redirect if no credentials found
+        // Redirect to the auth page if no credentials are found
         router.replace('/lottery/auth');
       }
     };
 
     checkAuth();
-  }, []);
+  }, [router, setAuth]);
 
   // Show nothing while checking auth
   if (isLoading) {

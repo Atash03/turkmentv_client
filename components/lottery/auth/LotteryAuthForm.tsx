@@ -15,17 +15,29 @@ const LotteryAuthForm = () => {
 
   const validatePhone = (value: string) => {
     const phoneRegex = /^993\d{8}$/;
-    return phoneRegex.test(value);
+    const isValid = phoneRegex.test(value);
+
+    console.log('Phone Input:', value);
+    console.log('Regex Check Result:', isValid);
+
+    return isValid;
   };
 
   const validateCode = (value: string) => {
     const codeRegex = /^\d-\d{10}$/;
-    return codeRegex.test(value);
+    const isValid = codeRegex.test(value);
+
+    console.log('Code Input:', value);
+    console.log('Regex Check Result:', isValid);
+
+    return isValid;
   };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError(null);
+
+    console.log('Submitting Phone:', phone);
 
     if (!validatePhone(phone)) {
       setError('Telefon belgisi nädogry');
@@ -41,10 +53,14 @@ const LotteryAuthForm = () => {
 
     try {
       const response = await Queries.authenticateLottery(phone, code);
-      setAuth(response, phone, code);
-      if (response.errorMessage?.length) {
+
+      if (response.errorMessage) {
         setError('Telefon belgisi ýa-da açar nädogry');
       } else {
+        localStorage.setItem('lotteryPhone', phone);
+        localStorage.setItem('lotteryCode', code);
+
+        setAuth(response, phone, code);
         router.replace('/lottery');
       }
     } catch (err) {
@@ -56,9 +72,8 @@ const LotteryAuthForm = () => {
   };
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/\D/g, ''); // Remove non-digits
+    const value = e.target.value.replace(/\\D/g, '');
     if (value.length <= 11) {
-      // Limit to 11 digits (993 + 8 digits)
       setPhone(value);
     }
   };
@@ -66,7 +81,6 @@ const LotteryAuthForm = () => {
   const handleCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     if (value.length <= 12) {
-      // Limit to 12 characters (X-XXXXXXXXXX)
       setCode(value);
     }
   };
