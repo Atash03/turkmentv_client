@@ -35,27 +35,27 @@ const LotteryWinnersSection = ({
   // WebSocket Hook
   const { wsStatus, subscribeToMessages } = useWebsocketLottery(WEBSOCKET_URL);
 
-  // useEffect(() => {
-  //   if (lotteryData) {
-  //     if (lotteryData?.data.winners.length > 0) {
-  //       const simplifiedWinners = lotteryData.data.winners.map((winner) => ({
-  //         client: winner.client,
-  //         winner_no: winner.winner_no,
-  //         ticket: winner.ticket,
-  //       }));
-  //       setWinners(simplifiedWinners);
-  //       setCurrentNumber(
-  //         lotteryData.data.winners.at(-1)?.ticket || "00-00-00-00-00"
-  //       );
-  //       setWinnerSelectingStatus("selected");
-  //       setTopText(
-  //         `${lotteryData.data.winners.at(-1)?.winner_no}-nji(y) ýeňiji`
-  //       );
-  //       setBottomText(lotteryData.data.winners.at(-1)?.client || "");
-  //       setIsConfettiActive(true);
-  //     }
-  //   }
-  // }, [lotteryData]);
+  useEffect(() => {
+    if (lotteryData) {
+      if (lotteryData?.data.winners.length > 0) {
+        const simplifiedWinners = lotteryData.data.winners.map((winner) => ({
+          client: winner.client,
+          winner_no: winner.winner_no,
+          ticket: winner.ticket,
+        }));
+        setWinners(simplifiedWinners);
+        setCurrentNumber(
+          lotteryData.data.winners.at(-1)?.ticket || "00-00-00-00-00"
+        );
+        setWinnerSelectingStatus("selected");
+        setTopText(
+          `${lotteryData.data.winners.at(-1)?.winner_no}-nji(y) ýeňiji`
+        );
+        setBottomText(lotteryData.data.winners.at(-1)?.client || "");
+        setIsConfettiActive(true);
+      }
+    }
+  }, [lotteryData]);
 
   useEffect(() => {
     const unsubscribe = subscribeToMessages((event) => {
@@ -97,41 +97,41 @@ const LotteryWinnersSection = ({
     };
   }, [subscribeToMessages]);
 
-  useEffect(() => {
-    setTimeout(() => {
-      setIsConfettiActive(false);
-      setTopText(`${1}-nji(y) ýeňiji saýlanýar`);
-      setBottomText("...");
-      setWinnerSelectingStatus("is-selecting");
-      // setPendingWinner(winnerData);
-      setCurrentNumber("55-44-33-22-11");
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     setIsConfettiActive(false);
+  //     setTopText(`${1}-nji(y) ýeňiji saýlanýar`);
+  //     setBottomText("...");
+  //     setWinnerSelectingStatus("is-selecting");
+  //     // setPendingWinner(winnerData);
+  //     setCurrentNumber("55-44-33-22-11");
 
-      setTimeout(() => {
-        setTopText("Ýeniji");
-        setBottomText("99361245555");
-        setWinnerSelectingStatus("selected");
-        setIsConfettiActive(true);
-        // setWinners((prev) => [...prev, winnerData]);
-      }, SLOT_COUNTER_DURATION);
-    }, 10000);
+  //     setTimeout(() => {
+  //       setTopText("Ýeniji");
+  //       setBottomText("99361245555");
+  //       setWinnerSelectingStatus("selected");
+  //       setIsConfettiActive(true);
+  //       // setWinners((prev) => [...prev, winnerData]);
+  //     }, SLOT_COUNTER_DURATION);
+  //   }, 10000);
 
-    setTimeout(() => {
-      setIsConfettiActive(false);
-      setTopText(`${1}-nji(y) ýeňiji saýlanýar`);
-      setBottomText("...");
-      setWinnerSelectingStatus("is-selecting");
-      // setPendingWinner(winnerData);
-      setCurrentNumber("11-22-33-44-55");
+  //   setTimeout(() => {
+  //     setIsConfettiActive(false);
+  //     setTopText(`${1}-nji(y) ýeňiji saýlanýar`);
+  //     setBottomText("...");
+  //     setWinnerSelectingStatus("is-selecting");
+  //     // setPendingWinner(winnerData);
+  //     setCurrentNumber("11-22-33-44-55");
 
-      setTimeout(() => {
-        setTopText("Ýeniji");
-        setBottomText("99361245555");
-        setWinnerSelectingStatus("selected");
-        setIsConfettiActive(true);
-        // setWinners((prev) => [...prev, winnerData]);
-      }, SLOT_COUNTER_DURATION);
-    }, SLOT_COUNTER_DURATION + 20000);
-  }, []);
+  //     setTimeout(() => {
+  //       setTopText("Ýeniji");
+  //       setBottomText("99361245555");
+  //       setWinnerSelectingStatus("selected");
+  //       setIsConfettiActive(true);
+  //       // setWinners((prev) => [...prev, winnerData]);
+  //     }, SLOT_COUNTER_DURATION);
+  //   }, SLOT_COUNTER_DURATION + 20000);
+  // }, []);
 
   return (
     <section>
