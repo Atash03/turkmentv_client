@@ -24,7 +24,7 @@ const LotteryAuthForm = () => {
   };
 
   const validateCode = (value: string) => {
-    const codeRegex = /^\d-\d{10}$/;
+    const codeRegex = /^.+-\d{10}$/; // Any characters before "-", exactly 10 digits after
     const isValid = codeRegex.test(value);
 
     console.log('Code Input:', value);
@@ -80,9 +80,9 @@ const LotteryAuthForm = () => {
 
   const handleCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    if (value.length <= 12) {
-      setCode(value);
-    }
+    setCode(value);
+    // if (value.length <= 12) {
+    // }
   };
 
   return (
