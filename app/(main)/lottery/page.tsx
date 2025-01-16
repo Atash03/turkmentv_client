@@ -70,7 +70,7 @@ const LotteryPage = () => {
               <Link
                 href="/lottery/auth"
                 className="sm:text-textLarge sm:leading-textLarge text-[16px] rounded-full leading-[24px] sm:py-[12px] py-[8px] w-full flex justify-center items-center border-2 border-lightPrimary  hover:bg-lightPrimary font-medium text-lightPrimary hover:text-lightOnPrimary disabled:opacity-50 transition-all duration-300">
-                Täzeden girmek
+                Çykmak
               </Link>
             </div>
           </div>

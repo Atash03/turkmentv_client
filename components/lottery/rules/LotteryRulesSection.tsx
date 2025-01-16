@@ -1,5 +1,10 @@
 import { useLotteryAuth } from '@/store/useLotteryAuth';
 
+interface IProps {
+  title: string;
+  content: string;
+}
+
 const LotteryRulesSection = () => {
   const { lotteryData } = useLotteryAuth();
 
@@ -17,13 +22,11 @@ const LotteryRulesSection = () => {
                 Umumy düzgünler:
               </h3>
               <ul className="list-disc flex flex-col md:gap-4 gap-2 pl-[16px]">
-                {Array(5)
-                  .fill(' ')
-                  .map((item, i) => (
-                    <li className="font-small-regular" key={i}>
-                      Ilkinji we dogry jogap beren sanawda ilkinji ýeri eýelýär
-                    </li>
-                  ))}
+                {lotteryData?.data.rules?.map((item, i) => (
+                  <li className="font-small-regular" key={i}>
+                    {item.content}
+                  </li>
+                ))}
               </ul>
             </div>
 
