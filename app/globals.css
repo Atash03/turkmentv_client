@@ -312,16 +312,16 @@ big {
   }
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1025px) {
+  .rolling-number {
+    @apply text-[48px] px-2;
+  }
   .slot-seperator {
     content: url('/dash-md.svg');
     @apply mx-2;
   }
-}
-
-@media (max-width: 1025px) {
-  .rolling-number {
-    @apply text-[48px] px-2;
+  .lottery-winner-list {
+    grid-template-columns: 2;
   }
 }
 

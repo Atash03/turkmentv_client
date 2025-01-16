@@ -8,6 +8,9 @@ export const content = [
 export const darkMode = 'class';
 export const theme = {
   extend: {
+    screens: {
+      // sm: '800px',
+    },
     colors: {
       mblue: '#121268',
       mred: '#E20000',

@@ -21,7 +21,7 @@ const LotteryWinner = ({ phone, ticket, isNew, winnerNumber }: IProps) => {
       <h4 className="md:font-heading-6-regular text-[20px] leading-[28px]">
         {/* The winner of the {winnerNumber} stage: */}
         {winnerNumber}
-        {' - nji(y) ýeňiji'}
+        {' - nji ýeňiji'}
       </h4>
       <div className="flex items-center gap-4">
         <p className="md:font-base-medium font-base-regular">{phone}</p>
