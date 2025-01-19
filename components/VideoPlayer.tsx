@@ -1,11 +1,12 @@
-'use client';
-import { Queries } from '@/api/queries';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { useState, useEffect } from 'react';
-import ReactPlayer from 'react-player';
-import Loader from './Loader';
-import Image from 'next/image';
-import axios from 'axios';
+"use client";
+import { Queries } from "@/api/queries";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useState, useEffect } from "react";
+import ReactPlayer from "react-player";
+import Loader from "./Loader";
+import Image from "next/image";
+import axios from "axios";
+
 interface IProps {
   maxWidth?: string;
   maxHeight?: string;
@@ -15,31 +16,34 @@ interface IProps {
 const VideoPlayer = ({ maxHeight, maxWidth, video_id }: IProps) => {
   const [hasWindow, setHasWindow] = useState<boolean>(false);
   const [hasStartedPlaying, setHasStartedPlaying] = useState<boolean>(false);
+  const [canDownload, setCanDownload] = useState<boolean>(false); // State to store canDownload
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       setHasWindow(true);
     }
   }, []);
 
   const { data, isFetching, error } = useQuery({
-    queryKey: ['video', `video:${video_id}`],
-    queryFn: () => Queries.getVideo(video_id),
+    queryKey: ["video", `video:${video_id}`],
+    queryFn: async () => {
+      const response = await Queries.getVideo(video_id);
+      // setCanDownload(response.data.canDownload); // Set canDownload from API
+      return response;
+    },
   });
 
   async function addViews() {
-    return axios.post(`https://turkmentv.gov.tm/v2/api/material/${video_id}/views/increment`);
+    return axios.post(
+      `https://turkmentv.gov.tm/v2/api/material/${video_id}/views/increment`
+    );
   }
 
   const mutation = useMutation(() => addViews());
 
   const onPlayHandler = () => {
-    // Check if the video has not started playing before
     if (!hasStartedPlaying) {
-      // Send a POST request to the server
       mutation.mutate();
-
-      // Update the state to indicate that the video has started playing
       setHasStartedPlaying(true);
     }
   };
@@ -48,26 +52,38 @@ const VideoPlayer = ({ maxHeight, maxWidth, video_id }: IProps) => {
   if (error) return <h1>{JSON.stringify(error)}</h1>;
 
   return (
-    <div className="w-full h-full ">
+    <div className="w-full h-full">
       {hasWindow ? (
-        data?.data.content_url.endsWith('.mp4') ? (
+        data?.data.content_url.endsWith(".mp4") ? (
           <div className="lg:w-[700px] md:w-[550px] w-full h-[200px] sm:h-[250px] md:h-[350px] lg:h-[420px]">
             <video
               controls
+              controlsList={canDownload ? "" : "nodownload"} // Conditionally enable/disable download
               src={data!.data.video_stream_url}
               poster={data?.data.banner_url}
               playsInline
               itemType="video/mp4"
-              onPlay={() => onPlayHandler()}></video>
+              onPlay={() => onPlayHandler()}
+            ></video>
           </div>
         ) : (
           <div className="flex flex-col gap-4 h-fit">
             <div className="relative lg:w-[700px] md:w-[550px] w-full h-[200px] sm:h-[400px]  md:h-[420px]">
               {data?.data.banner_url ? (
-                <Image src={data?.data.banner_url} width={700} height={420} alt={'image'} />
+                <Image
+                  src={data?.data.banner_url}
+                  width={700}
+                  height={420}
+                  alt={"image"}
+                />
               ) : null}
             </div>
-            <audio controls className="w-full rounded bg-white" onPlay={() => onPlayHandler()}>
+            <audio
+              controls
+              controlsList={canDownload ? "" : "nodownload"} // Conditionally enable/disable download
+              className="w-full rounded bg-white"
+              onPlay={() => onPlayHandler()}
+            >
               <source src={data?.data.content_url} />
             </audio>
           </div>
