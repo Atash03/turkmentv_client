@@ -18,4 +18,5 @@ export interface Data {
   video_stream_url: string;
   likes: number;
   dislikes: number;
+  is_downloadable: 0 | 1;
 }
