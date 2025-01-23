@@ -10,7 +10,7 @@ import { useWebsocketLottery } from "@/hooks/useWebSocketLottery";
 import Confetti from "../common/Confetti";
 import { AnimatePresence, motion } from "framer-motion";
 
-const WEBSOCKET_URL = "wss://sms.turkmentv.gov.tm/ws/lottery?dst=0506";
+const WEBSOCKET_URL = "wss://sms.turkmentv.gov.tm/ws/lottery?dst=0507";
 const SLOT_COUNTER_DURATION = 30000;
 
 const LotteryWinnersSection = ({
