@@ -22,6 +22,7 @@ export const useWebsocketLottery = (url: string) => {
         if (!isMounted) return;
 
         console.log("✅ WebSocket connected");
+        console.log("WebSocket url", url);
         setWsStatus("connected");
         if (reconnectTimeoutRef.current)
           clearTimeout(reconnectTimeoutRef.current);

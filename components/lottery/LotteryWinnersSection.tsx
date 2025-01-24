@@ -10,7 +10,7 @@ import { useWebsocketLottery } from "@/hooks/useWebSocketLottery";
 import Confetti from "../common/Confetti";
 import { AnimatePresence, motion } from "framer-motion";
 
-const WEBSOCKET_URL = "wss://sms.turkmentv.gov.tm/ws/lottery?dst=0506";
+const WEBSOCKET_URL = "wss://sms.turkmentv.gov.tm/ws/lottery?dst=";
 const SLOT_COUNTER_DURATION = 30000;
 
 const LotteryWinnersSection = ({
@@ -36,7 +36,9 @@ const LotteryWinnersSection = ({
   >([]); // Queue for incoming WebSocket messages
   const [isProcessing, setIsProcessing] = useState<boolean>(false); // Track if a message is being processed
 
-  const { wsStatus, subscribeToMessages } = useWebsocketLottery(WEBSOCKET_URL);
+  const { wsStatus, subscribeToMessages } = useWebsocketLottery(
+    `${WEBSOCKET_URL}${lotteryData?.data.sms_number}`
+  );
 
   // Simulate WebSocket messages for testing
   const simulateMessage = () => {

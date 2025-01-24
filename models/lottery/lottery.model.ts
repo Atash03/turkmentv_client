@@ -7,7 +7,6 @@ export interface ILotteryWinner {
 }
 export interface ILotteryRule {
   title: string;
-  content: string;
 }
 
 export interface ILotteryData {
@@ -18,6 +17,7 @@ export interface ILotteryData {
   start_time: string;
   end_time: string;
   sms_code: string;
+  sms_number: string;
   winners: ILotteryWinner[];
   rules: ILotteryRule[] | null;
 }
