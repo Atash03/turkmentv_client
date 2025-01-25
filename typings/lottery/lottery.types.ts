@@ -23,9 +23,9 @@ export interface LotteryResponse {
 }
 
 export interface LotteryWinnerDataSimplified {
-  client: string;
+  phone: string;
   winner_no: number;
   ticket: string;
 }
 
-export type LotteryStatus = 'not-started' | 'started' | 'ended';
+export type LotteryStatus = "not-started" | "started" | "ended";

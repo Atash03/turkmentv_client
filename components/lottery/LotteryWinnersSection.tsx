@@ -3,8 +3,6 @@ import { useLotteryAuth } from "@/store/useLotteryAuth";
 import { LotteryWinnerDataSimplified } from "@/typings/lottery/lottery.types";
 import LotteryWinnersList from "./winners/LotteryWinnersList";
 import LotterySlotCounter from "./slotCounter/LotterySlotCounter";
-import ReactConfetti from "react-confetti";
-import { useWindowSize } from "react-use";
 import AnimatedText from "@/components/common/AnimatedText";
 import { useWebsocketLottery } from "@/hooks/useWebSocketLottery";
 import Confetti from "../common/Confetti";
@@ -40,11 +38,11 @@ const LotteryWinnersSection = ({
     `${WEBSOCKET_URL}${lotteryData?.data.sms_number}`
   );
 
-  // Simulate WebSocket messages for testing
+  // Simulate WebSocket message for testing
   const simulateMessage = () => {
     const dummyWinner: LotteryWinnerDataSimplified = {
-      client: `9936${Math.floor(10000000 + Math.random() * 90000000)}`,
-      winner_no: winners.length + 1,
+      phone: `9936${Math.floor(10000000 + Math.random() * 90000000)}`, // Generate random client number
+      winner_no: winners.length + 1, // Increment winner number
       ticket: `${Math.floor(Math.random() * 99)
         .toString()
         .padStart(2, "0")}-${Math.floor(Math.random() * 99)
@@ -55,17 +53,28 @@ const LotteryWinnersSection = ({
         .toString()
         .padStart(2, "0")}-${Math.floor(Math.random() * 99)
         .toString()
-        .padStart(2, "0")}`,
+        .padStart(2, "0")}`, // Generate random ticket
     };
 
+    console.log("📩 Simulated Message:", dummyWinner); // Log the simulated message
     setMessageQueue((prevQueue) => [...prevQueue, dummyWinner]);
   };
 
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     simulateMessage();
+  //   }, 20000); // Trigger every 10 seconds
+
+  //   return () => clearInterval(interval); // Clean up interval on unmount
+  // }, []);
+
   // Initialize winners from lottery data
   useEffect(() => {
+    console.log("🎟️ Lottery Data:", lotteryData);
+
     if (lotteryData && lotteryData.data.winners.length > 0) {
       const simplifiedWinners = lotteryData.data.winners.map((winner) => ({
-        client: winner.client,
+        phone: winner.client,
         winner_no: winner.winner_no,
         ticket: winner.ticket,
       }));
@@ -74,7 +83,7 @@ const LotteryWinnersSection = ({
       const lastWinner = simplifiedWinners[simplifiedWinners.length - 1];
       setWinnerSelectingStatus("selected");
       setTopText(`${lastWinner.winner_no}-nji ýeňiji`);
-      setBottomText(lastWinner.client);
+      setBottomText(lastWinner.phone);
       setIsConfettiActive(true);
     }
   }, [lotteryData]);
@@ -84,9 +93,13 @@ const LotteryWinnersSection = ({
     const unsubscribe = subscribeToMessages((event) => {
       try {
         const newWinner: LotteryWinnerDataSimplified = JSON.parse(event.data);
+        console.log("📩 WebSocket Message Received:", newWinner); // Log the parsed message
 
         // Add new message to the queue
-        setMessageQueue((prevQueue) => [...prevQueue, newWinner]);
+        setMessageQueue((prevQueue) => {
+          console.log("📥 Adding to Queue:", newWinner);
+          return [...prevQueue, newWinner];
+        });
       } catch (error) {
         console.error("Error parsing WebSocket message:", error);
       }
@@ -97,6 +110,8 @@ const LotteryWinnersSection = ({
 
   // Process queue when a new message is added
   useEffect(() => {
+    console.log("📋 Current Message Queue:", messageQueue);
+
     if (!isProcessing && messageQueue.length > 0) {
       processQueue();
     }
@@ -108,6 +123,8 @@ const LotteryWinnersSection = ({
 
     setIsProcessing(true); // Lock processing
     const message = messageQueue[0]; // Get the first message in the queue
+
+    console.log("⚙️ Processing Message:", message); // Debug Log 4: Log the message being processed
 
     try {
       await handleMessage(message); // Process the message
@@ -121,6 +138,7 @@ const LotteryWinnersSection = ({
 
   // Handle the logic for processing a single WebSocket message
   const handleMessage = async (winner: LotteryWinnerDataSimplified) => {
+    console.log("⬇️ Updating Top and Bottom Text:", winner); // Debug Log 5: Log winner data before setting states
     setIsConfettiActive(false);
     setTopText(`${winner.winner_no}-nji ýeňiji saýlanýar`);
     setBottomText("...");
@@ -133,7 +151,9 @@ const LotteryWinnersSection = ({
 
     // Finalize winner selection
     setTopText(`${winner.winner_no}-nji ýeňiji`);
-    setBottomText(winner.client);
+    setBottomText(winner.phone);
+    console.log("⬇️ Finalized Bottom Text:", winner.phone); // Debug Log 6: Log the final bottomText update
+
     setWinnerSelectingStatus("selected");
     setIsConfettiActive(true);
 
