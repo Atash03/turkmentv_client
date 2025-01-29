@@ -43,9 +43,9 @@ const LotteryPage = () => {
     }
   }, [setAuth]);
 
-  if (!lotteryData?.errorMessage) {
-    router.replace("/lottery/auth");
-  }
+  // if (!lotteryData?.errorMessage) {
+  //   router.replace("/lottery/auth");
+  // }
 
   return (
     <ProtectedRoute>
