@@ -1,34 +1,44 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { useLotteryAuth } from '@/store/useLotteryAuth';
-import ProtectedRoute from '@/components/lottery/auth/ProtectedRoute';
-import LotteryHeader from '@/components/lottery/LotteryHeader';
+import { useEffect, useState } from "react";
+import { useLotteryAuth } from "@/store/useLotteryAuth";
+import ProtectedRoute from "@/components/lottery/auth/ProtectedRoute";
+import LotteryHeader from "@/components/lottery/LotteryHeader";
 
-import LotteryWinnersSection from '@/components/lottery/LotteryWinnersSection';
-import LotteryRulesSection from '@/components/lottery/rules/LotteryRulesSection';
-import LotteryCountDown from '@/components/lottery/countDown/LotteryCountDown';
-import LotteryCountDownAllert from '@/components/lottery/countDown/countDownAllert/LotteryCountDownAllert';
-import { LotteryWinnerDataSimplified } from '@/typings/lottery/lottery.types';
-import { Queries } from '@/api/queries';
-import Link from 'next/link';
+import LotteryWinnersSection from "@/components/lottery/LotteryWinnersSection";
+import LotteryRulesSection from "@/components/lottery/rules/LotteryRulesSection";
+import LotteryCountDown from "@/components/lottery/countDown/LotteryCountDown";
+import { Queries } from "@/api/queries";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const LotteryPage = () => {
   const { lotteryData, setAuth } = useLotteryAuth();
-  const [status, setStatus] = useState<'not-started' | 'started' | 'ended'>('not-started');
+  const [status, setStatus] = useState<"not-started" | "started" | "ended">(
+    "not-started"
+  );
+  const router = useRouter();
 
   // ✅ Fetch fresh data on page load
   useEffect(() => {
-    const phone = localStorage.getItem('lotteryPhone');
-    const code = localStorage.getItem('lotteryCode');
+    const phone = localStorage.getItem("lotteryPhone");
+    const code = localStorage.getItem("lotteryCode");
 
     if (phone && code) {
       Queries.authenticateLottery(phone, code)
         .then((response) => {
-          setAuth(response, phone, code);
+          if (response.errorMessage) {
+            // If authentication fails, redirect to the auth page
+            router.replace("/lottery/auth");
+          } else {
+            // ✅ Set the authenticated state
+            setAuth(response, phone, code);
+          }
         })
         .catch((err) => {
-          console.error('Failed to fetch lottery data:', err);
+          console.error("Failed to fetch lottery data:", err);
+          console.error("Authentication failed:", err);
+          router.replace("/lottery/auth");
         });
     }
   }, [setAuth]);
@@ -46,7 +56,7 @@ const LotteryPage = () => {
               startDate={lotteryData.data.start_time}
             />
 
-            {status === 'not-started' ? (
+            {status === "not-started" ? (
               <div className="container">
                 <LotteryCountDown
                   lotteryStatus={status}
@@ -62,14 +72,15 @@ const LotteryPage = () => {
         <LotteryRulesSection />
 
         <div className="flex flex-col gap-10">
-          {lotteryData && (status === 'ended' || status === 'started') && (
+          {lotteryData && (status === "ended" || status === "started") && (
             <LotteryWinnersSection lotteryStatus={status} />
           )}
           <div className="w-full">
             <div className="container">
               <Link
                 href="/lottery/auth"
-                className="sm:text-textLarge sm:leading-textLarge text-[16px] rounded-full leading-[24px] sm:py-[12px] py-[8px] w-full flex justify-center items-center border-2 border-lightPrimary  hover:bg-lightPrimary font-medium text-lightPrimary hover:text-lightOnPrimary disabled:opacity-50 transition-all duration-300">
+                className="sm:text-textLarge sm:leading-textLarge text-[16px] rounded-full leading-[24px] sm:py-[12px] py-[8px] w-full flex justify-center items-center border-2 border-lightPrimary  hover:bg-lightPrimary font-medium text-lightPrimary hover:text-lightOnPrimary disabled:opacity-50 transition-all duration-300"
+              >
                 Çykmak
               </Link>
             </div>
