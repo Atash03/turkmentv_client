@@ -29,6 +29,7 @@ const LotteryPage = () => {
         .then((response) => {
           if (response.errorMessage) {
             // If authentication fails, redirect to the auth page
+            console.log("lotter/", response);
             router.replace("/lottery/auth");
           } else {
             // ✅ Set the authenticated state
