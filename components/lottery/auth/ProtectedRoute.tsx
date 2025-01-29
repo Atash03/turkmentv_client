@@ -23,6 +23,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 
           if (response.errorMessage) {
             // If authentication fails, redirect to the auth page
+            console.log("redirecting form protected route");
             router.replace("/lottery/auth");
           } else {
             // ✅ Set the authenticated state
