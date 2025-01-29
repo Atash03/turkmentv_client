@@ -116,7 +116,7 @@ const LotteryAuthForm = () => {
             value={code}
             onChange={handleCodeChange}
             className="px-[16px] py-[12px] bg-lightPrimaryContainer rounded-[12px] outline-none text-lightOnSurfaceVariant text-textSmall leading-textSmall"
-            placeholder="5-0105639808"
+            placeholder="C5-0105639808"
             required
             id="code"
           />
