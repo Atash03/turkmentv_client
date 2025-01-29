@@ -7,7 +7,7 @@ import { Queries } from "@/api/queries";
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
-  const { isAuthenticated, setAuth } = useLotteryAuth();
+  const { setAuth } = useLotteryAuth();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

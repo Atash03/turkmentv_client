@@ -11,41 +11,53 @@ import LotteryCountDown from "@/components/lottery/countDown/LotteryCountDown";
 import { Queries } from "@/api/queries";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import Loader from "@/components/Loader";
 
 const LotteryPage = () => {
   const { lotteryData, setAuth } = useLotteryAuth();
   const [status, setStatus] = useState<"not-started" | "started" | "ended">(
     "not-started"
   );
+  const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
-  // ✅ Fetch fresh data on page load
   useEffect(() => {
-    const phone = localStorage.getItem("lotteryPhone");
-    const code = localStorage.getItem("lotteryCode");
+    const checkAuth = async () => {
+      // ✅ Check credentials from localStorage
+      const phone = localStorage.getItem("lotteryPhone");
+      const code = localStorage.getItem("lotteryCode");
 
-    if (phone && code) {
-      Queries.authenticateLottery(phone, code)
-        .then((response) => {
+      if (phone && code) {
+        try {
+          // ✅ Authenticate using stored credentials
+          const response = await Queries.authenticateLottery(phone, code);
+
           if (response.errorMessage) {
             // If authentication fails, redirect to the auth page
             router.replace("/lottery/auth");
           } else {
             // ✅ Set the authenticated state
             setAuth(response, phone, code);
+            setIsLoading(false);
           }
-        })
-        .catch((err) => {
-          console.error("Failed to fetch lottery data:", err);
+        } catch (err) {
           console.error("Authentication failed:", err);
           router.replace("/lottery/auth");
-        });
-    }
-  }, [setAuth]);
+        }
+      } else {
+        // Redirect to the auth page if no credentials are found
+        router.replace("/lottery/auth");
+      }
+    };
 
-  // if (!lotteryData?.errorMessage) {
-  //   router.replace("/lottery/auth");
-  // }
+    checkAuth();
+  }, [router, setAuth]);
+
+  if (isLoading) {
+    <div className="flex w-full h-[90vh] justify-center items-center">
+      <Loader />
+    </div>;
+  }
 
   return (
     <ProtectedRoute>
