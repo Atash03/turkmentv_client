@@ -55,7 +55,6 @@ const QuizWinnerTable = ({ quizId, quizFinished, smsNumber }: IProps) => {
     });
   }, [quizId]);
 
-  // useEffect(() => {
   //   let socket: WebSocket | null = null;
   //   let reconnectTimeout: NodeJS.Timeout | null = null;
   //   let pingInterval: NodeJS.Timeout | null = null;
@@ -282,9 +281,9 @@ const QuizWinnerTable = ({ quizId, quizFinished, smsNumber }: IProps) => {
                                   ? 'text-fillRed'
                                   : 'text-textLight'
                               }`}>
-                              {matchingAnswer && matchingAnswer.serial_number_for_correct !== 0
+                              {matchingAnswer && matchingAnswer.score !== 0
                                 ? matchingAnswer.serial_number_for_correct
-                                : matchingAnswer && matchingAnswer?.serial_number_for_correct === 0
+                                : matchingAnswer && matchingAnswer?.score === 0
                                 ? 'X'
                                 : '0'}
                             </span>
