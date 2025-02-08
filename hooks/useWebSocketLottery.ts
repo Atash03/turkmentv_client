@@ -14,15 +14,12 @@ export const useWebsocketLottery = (url: string) => {
     const setupWebSocket = () => {
       if (!isMounted) return;
 
-      console.log("🔄 [WebSocket] Connecting...");
       const socket = new WebSocket(url);
       wsRef.current = socket;
 
       socket.onopen = () => {
         if (!isMounted) return;
 
-        console.log("✅ [WebSocket] Connected");
-        console.log("🔗 [WebSocket URL]:", url);
         setWsStatus("connected");
         if (reconnectTimeoutRef.current)
           clearTimeout(reconnectTimeoutRef.current);
@@ -31,21 +28,18 @@ export const useWebsocketLottery = (url: string) => {
       socket.onmessage = (event) => {
         if (!isMounted) return;
 
-        console.log("📩 [WebSocket] Message received:", event.data);
         messageListeners.current.forEach((listener) => listener(event));
       };
 
       socket.onerror = () => {
         if (!isMounted) return;
 
-        console.error("❌ [WebSocket] Error occurred");
         setWsStatus("error");
       };
 
       socket.onclose = () => {
         if (!isMounted) return;
 
-        console.log("❌ [WebSocket] Closed");
         setWsStatus("closed");
         reconnectWebSocket();
       };
@@ -54,7 +48,6 @@ export const useWebsocketLottery = (url: string) => {
     const reconnectWebSocket = () => {
       if (!isMounted) return;
 
-      console.log("🔄 [WebSocket] Reconnecting in 5 seconds...");
       reconnectTimeoutRef.current = setTimeout(() => {
         setupWebSocket();
       }, 5000);
@@ -63,7 +56,6 @@ export const useWebsocketLottery = (url: string) => {
     setupWebSocket();
 
     return () => {
-      console.log("🔌 [WebSocket] Cleaning up...");
       isMounted = false;
 
       if (wsRef.current) {
@@ -79,17 +71,14 @@ export const useWebsocketLottery = (url: string) => {
 
   const sendPing = useCallback(() => {
     if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
-      console.log("📤 [WebSocket] Sending ping");
       wsRef.current.send(JSON.stringify({ type: "ping" }));
     }
   }, []);
 
   const subscribeToMessages = useCallback(
     (listener: (event: MessageEvent) => void) => {
-      console.log("👂 [WebSocket] Subscribing to messages");
       messageListeners.current.push(listener);
       return () => {
-        console.log("❌ [WebSocket] Unsubscribing from messages");
         messageListeners.current = messageListeners.current.filter(
           (l) => l !== listener
         );

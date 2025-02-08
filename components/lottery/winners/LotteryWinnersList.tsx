@@ -1,9 +1,8 @@
 import {
-  LotteryWinnerData,
   LotteryWinnerDataSimplified,
 } from "@/typings/lottery/lottery.types";
 import LotteryWinner from "./LotteryWinner";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { v4 } from "uuid";
 
 const LotteryWinnersList = ({

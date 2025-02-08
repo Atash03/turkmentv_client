@@ -22,7 +22,7 @@ import { VideoModel } from "@/models/video.model";
 import { VideosModel } from "@/models/videos.model";
 import { IVote } from "@/models/vote.model";
 import routes from "@/routes";
-import { CloudFog } from "lucide-react";
+import { cookies } from "next/headers";
 
 export class Queries {
   public static async getNews(
@@ -259,28 +259,26 @@ export class Queries {
     ).then((res) => res.json().then((res) => res as MessagesByTvAdmin));
   }
 
-  // Lottery ================================================================================
-
-  public static async authenticateLottery(
-    phone: string,
-    code: string
-  ): Promise<ILotteryResponse> {
-    return await fetch(`${baseUrl.QUIZ_SRC}${routes.lotteryActive}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        phone: phone,
-        key: code,
-      }),
-    }).then((res) => {
-      if (!res.ok) {
-        throw new Error("Authentication failed");
-      }
-      return res.json();
-    });
-  }
-
   // ============================================================================================
 }
+
+export const getTossData = async ({
+  type,
+  id,
+}: {
+  type: string;
+  id: string;
+}) => {
+  try {
+    const res = await fetch(`${baseUrl.QUIZ_SRC}${routes.tossId(type, id)}`);
+
+    if (!res.ok) {
+      return undefined;
+    }
+
+    const result = await res.json();
+    return result;
+  } catch (err) {
+    console.log(err);
+  }
+};

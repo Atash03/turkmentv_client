@@ -1,23 +1,26 @@
-'use client';
-import Image from 'next/image';
-import React, { useEffect, useRef, useState } from 'react';
-import SlotCounter, { SlotCounterRef } from 'react-slot-counter';
-import { useMediaQuery } from 'usehooks-ts';
+"use client";
+import Image from "next/image";
+import React, { useEffect, useRef, useState } from "react";
+import SlotCounter, { SlotCounterRef } from "react-slot-counter";
+import { useMediaQuery } from "usehooks-ts";
 
 interface LotterySlotCounterProps {
   numberString: string;
+  startNumber: string;
 }
 
-const LotterySlotCounter = ({ numberString }: LotterySlotCounterProps) => {
-  const [formattedNumber, setFormattedNumber] = useState(numberString);
+const LotterySlotCounter = ({
+  numberString,
+  startNumber,
+}: LotterySlotCounterProps) => {
+  const [formattedNumber, setFormattedNumber] = useState("00,00,00,00,00");
   const slotCounterRef = useRef<SlotCounterRef>(null); // Ref for manual control
   const isFirstRender = useRef(true); // Ref to track the initial render
 
-  const tablet = useMediaQuery('(max-width: 769px)');
-  const mobile = useMediaQuery('(max-width: 426px)');
+  const mobile = useMediaQuery("(max-width: 426px)");
 
   useEffect(() => {
-    const formatted = numberString.replace(/-/g, ',');
+    const formatted = numberString.replace(/-/g, ",");
     setFormattedNumber(formatted);
 
     // Skip animation on the first render
@@ -74,22 +77,24 @@ const LotterySlotCounter = ({ numberString }: LotterySlotCounterProps) => {
         className="flex items-center h-fit md:max-w-[1132px] sm:max-w-[640px] max-w-[400px] w-full justify-center text-white min-[1025px]:py-4 md:px-6 rounded-full overflow-y-hidden overflow-x-visible relative border-4 border-lightPrimary"
         style={{
           background:
-            'linear-gradient(180deg, #454673 0%, #575992 10.5%, #575992 90%, #454673 100%)',
-          boxShadow: '0px 4px 4px 0px #00000040',
-        }}>
+            "linear-gradient(180deg, #454673 0%, #575992 10.5%, #575992 90%, #454673 100%)",
+          boxShadow: "0px 4px 4px 0px #00000040",
+        }}
+      >
         {/* Highlight */}
         <div
           className="absolute top-[50%] -translate-y-1/2 left-0 w-full h-full"
           style={{
             background:
-              'linear-gradient(180deg, rgba(87, 89, 146, 0) 0%, #7274AB 50%, rgba(87, 89, 146, 0) 100%)',
-          }}></div>
+              "linear-gradient(180deg, rgba(87, 89, 146, 0) 0%, #7274AB 50%, rgba(87, 89, 146, 0) 100%)",
+          }}
+        ></div>
 
         <div className="z-10">
           <SlotCounter
             ref={slotCounterRef}
             value={formattedNumber}
-            startValue={'00,00,00,00,00'}
+            startValue={startNumber}
             charClassName="rolling-number"
             separatorClassName="slot-seperator"
             duration={3}

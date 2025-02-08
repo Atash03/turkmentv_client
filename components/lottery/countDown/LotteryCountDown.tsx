@@ -1,34 +1,31 @@
 "use client";
-
 import { calculateTimeLeft } from "@/lib/hooks/useCalculateTimeLeft";
+import { useLotteryStatus } from "@/store/store";
 import React, { useState, useEffect, Dispatch, SetStateAction } from "react";
 
 interface LotteryCountDownProps {
   startDate: string; // Event start date in "YYYY-MM-DD HH:mm:ss" format
   endDate: string; // Event end date in "YYYY-MM-DD HH:mm:ss" format
-  lotteryStatus: string;
-  setLotteryStatus: Dispatch<
-    SetStateAction<"not-started" | "started" | "ended">
-  >;
+  lotteryStatus: "Upcoming" | "Ongoing" | "Finished";
 }
 
 const LotteryCountDown: React.FC<LotteryCountDownProps> = ({
   startDate,
   endDate,
   lotteryStatus,
-  setLotteryStatus,
 }) => {
   const [timeLeft, setTimeLeft] = useState({
     hours: 0,
     minutes: 0,
     seconds: 0,
   });
-
-  console.log(lotteryStatus);
+  const { status, setStatus } = useLotteryStatus();
 
   useEffect(() => {
+    setStatus(lotteryStatus);
+
     const timer = setInterval(() => {
-      if (lotteryStatus === "not-started") {
+      if (lotteryStatus === "Upcoming") {
         const timeToStart = calculateTimeLeft(startDate);
         setTimeLeft(timeToStart);
 
@@ -37,9 +34,9 @@ const LotteryCountDown: React.FC<LotteryCountDownProps> = ({
           timeToStart.minutes === 0 &&
           timeToStart.seconds === 0
         ) {
-          setLotteryStatus("started"); // Update status to "started"
+          setStatus("Ongoing"); // Update status to "started"
         }
-      } else if (lotteryStatus === "started") {
+      } else if (lotteryStatus === "Ongoing") {
         const timeToEnd = calculateTimeLeft(endDate);
         setTimeLeft(timeToEnd);
 
@@ -48,32 +45,32 @@ const LotteryCountDown: React.FC<LotteryCountDownProps> = ({
           timeToEnd.minutes === 0 &&
           timeToEnd.seconds === 0
         ) {
-          setLotteryStatus("ended"); // Update status to "finished"
+          setStatus("Finished"); // Update status to "finished"
         }
       }
     }, 1000);
 
     return () => clearInterval(timer); // Clean up interval on component unmount
-  }, [startDate, endDate, lotteryStatus, setLotteryStatus]);
+  }, [startDate, endDate, lotteryStatus]);
 
   return (
     <div className="bg-lightPrimaryContainer sm:p-6 py-3 flex flex-col w-full md:gap-2 rounded-[12px] sm:gap-3 gap-0 text-lightOnPrimaryContainer">
       <h3 className="text-center md:font-heading-1-regular sm:text-[32px] sm:leading-[40px] text-[20px] leading-[28px] text-lightOnSurface">
-        {lotteryStatus === "started"
+        {status === "Ongoing"
           ? "Bije dowam edýär"
-          : lotteryStatus === "ended"
+          : status === "Finished"
           ? "Bije tamamlandy"
           : "Bije"}
       </h3>
       {/* LotteryCountDown */}
-      {lotteryStatus === "not-started" && (
+      {status === "Upcoming" && (
         <div className="flex items-center sm:gap-6 gap-2 justify-between">
           <div className="flex flex-col items-center justify-center flex-1 sm:p-6 p-4 sm:pb-3">
             <h3 className="md:text-[80px] sm:text-[56px] text-[28px] md:leading-[88px] sm:leading-[64px] leading-[36px] -tracking-[1%]">
               {timeLeft.hours}
             </h3>
             <h4 className="font-medium md:text-[20px] sm:text-[18px] text-[14px] sm:leading-[28px] leading-[20px] -tracking-[1%] text-lightOnSurfaceVariant">
-              hours
+              sagat
             </h4>
           </div>
 
@@ -88,7 +85,7 @@ const LotteryCountDown: React.FC<LotteryCountDownProps> = ({
               {timeLeft.minutes}
             </h3>
             <h4 className="font-medium md:text-[20px] sm:text-[18px] text-[14px] sm:leading-[28px] leading-[20px] -tracking-[1%] text-lightOnSurfaceVariant">
-              minutes
+              minut
             </h4>
           </div>
 
@@ -103,7 +100,7 @@ const LotteryCountDown: React.FC<LotteryCountDownProps> = ({
               {timeLeft.seconds}
             </h3>
             <h4 className="font-medium md:text-[20px] sm:text-[18px] text-[14px] sm:leading-[28px] leading-[20px] -tracking-[1%] text-lightOnSurfaceVariant">
-              seconds
+              sekunt
             </h4>
           </div>
         </div>
@@ -111,9 +108,9 @@ const LotteryCountDown: React.FC<LotteryCountDownProps> = ({
 
       <div className="flex items-center justify-center text-lightOnSurfaceVariant md:font-heading-1-regular md:text-[20px] sm:text-[18px] sm:leading-[28px] text-[14px] leading-[20px]">
         <span>
-          {lotteryStatus === "not-started"
+          {status === "Upcoming"
             ? "- den başlar"
-            : lotteryStatus === "started"
+            : status === "Ongoing"
             ? "girmek üçin aşakda kodyňyzy giriziň"
             : "netijeleri görmek üçin aşakda kodyňyzy giriziň"}
         </span>

@@ -7,7 +7,6 @@ import { useState, useMemo, useEffect, ReactNode } from 'react';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { IBurger } from '@/typings/burger.type';
-import { IAdvertisment, IAdvertismentContext } from '@/typings/advertisment.type';
 
 interface IProps {
   children: ReactNode;

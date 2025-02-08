@@ -20,6 +20,7 @@ export interface ILotteryData {
   sms_number: string;
   winners: ILotteryWinner[];
   rules: ILotteryRule[] | null;
+  bije_count: number;
 }
 
 export interface ILotteryResponse {

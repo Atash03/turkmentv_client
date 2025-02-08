@@ -1,11 +1,10 @@
-'use client';
-import { Queries } from '@/api/queries';
+"use client";
+import { Queries } from "@/api/queries";
 
-import { v4 } from 'uuid';
-import { useState, useEffect, useContext, Dispatch, SetStateAction } from 'react';
-import { Answer, IQuizQuestionsWinners } from '@/models/quizQuestionsWinners.model';
-import QuizContext from '@/context/QuizContext';
-import { IQuizQuestions } from '@/models/quizQuestions.model';
+import { v4 } from "uuid";
+import { useState, useEffect, useContext } from "react";
+import { IQuizQuestionsWinners } from "@/models/quizQuestionsWinners.model";
+import QuizContext from "@/context/QuizContext";
 
 interface Message {
   answer: string;
@@ -133,11 +132,11 @@ const QuizWinnerTable = ({ quizId, quizFinished, smsNumber }: IProps) => {
   // Function to handle incoming WebSocket message and update winnersData
   const handleOnMessage = (message: Message) => {
     if (!winnersData) {
-      console.error('winnersData is undefined');
+      console.error("winnersData is undefined");
       return;
     }
 
-    console.log('updating winnersData');
+    console.log("updating winnersData");
 
     // Update the winnersData by matching phone with starred_src from the message
     setWinnersData((prevWinnersData) => {
@@ -162,7 +161,10 @@ const QuizWinnerTable = ({ quizId, quizFinished, smsNumber }: IProps) => {
 
             // Calculate the new correct_answers_time by summing serial_number_for_correct
             const updatedCorrectAnswersTime = updatedAnswers
-              .reduce((sum, answer) => sum + answer.serial_number_for_correct, 0)
+              .reduce(
+                (sum, answer) => sum + answer.serial_number_for_correct,
+                0
+              )
               .toString();
 
             return {
@@ -182,7 +184,7 @@ const QuizWinnerTable = ({ quizId, quizFinished, smsNumber }: IProps) => {
       };
     });
 
-    console.log('winnersData is updated');
+    console.log("winnersData is updated");
   };
 
   return winnersData?.data.length !== 0 ? (
@@ -231,9 +233,10 @@ const QuizWinnerTable = ({ quizId, quizFinished, smsNumber }: IProps) => {
             {winnersData?.data.map((winner, id) => (
               <div
                 className={`flex border-b border-fillTableStrokeTableRow ${
-                  id % 2 === 0 ? 'bg-fillTableRow' : 'bg-fillTableRow2'
+                  id % 2 === 0 ? "bg-fillTableRow" : "bg-fillTableRow2"
                 }`}
-                key={v4()}>
+                key={v4()}
+              >
                 <div className="flex justify-center items-center text-base text-textBlack leading-[125%] max-w-[54px] w-[100%] pl-6 pr-3 py-5">
                   <span>{id + 1}</span>
                 </div>
@@ -246,46 +249,35 @@ const QuizWinnerTable = ({ quizId, quizFinished, smsNumber }: IProps) => {
                   <div className="flex justify-center items-center gap-6 text-base text-textGray leading-[125%] w-[100%] px-3 py-5">
                     {questionsData
                       ? questionsData.map((question) => {
-                          // const matchingAnswer = winner.client.answers.find(
-                          //   (answer) => answer.question_id === question.id,
-                          // );
-
                           const matchingAnswer =
                             winner.client.answers.find(
-                              (answer) => answer.question_id === question.id && answer.score > 0,
+                              (answer) =>
+                                answer.question_id === question.id &&
+                                answer.score > 0
                             ) ||
                             winner.client.answers.find(
-                              (answer) => answer.question_id === question.id,
+                              (answer) => answer.question_id === question.id
                             );
-
-                          // const matchingAnswer = () => {
-                          //   const duplicateAnswers: Answer[] = [];
-
-                          //   winner.client.answers.map((answer) =>
-                          //     answer.question_id === question.id
-                          //       ? duplicateAnswers.push(answer)
-                          //       : null,
-                          //   );
-
-                          //   console.log(duplicateAnswers);
-                          // };
 
                           return (
                             <span
                               key={v4()}
                               className={`text-sm font-semibold leading-[125%] ${
-                                matchingAnswer && matchingAnswer.serial_number_for_correct !== 0
-                                  ? 'text-fillGreen'
+                                matchingAnswer &&
+                                matchingAnswer.serial_number_for_correct !== 0
+                                  ? "text-fillGreen"
                                   : matchingAnswer &&
-                                    matchingAnswer?.serial_number_for_correct === 0
-                                  ? 'text-fillRed'
-                                  : 'text-textLight'
-                              }`}>
+                                    matchingAnswer?.serial_number_for_correct ===
+                                      0
+                                  ? "text-fillRed"
+                                  : "text-textLight"
+                              }`}
+                            >
                               {matchingAnswer && matchingAnswer.score !== 0
                                 ? matchingAnswer.serial_number_for_correct
                                 : matchingAnswer && matchingAnswer?.score === 0
-                                ? 'X'
-                                : '0'}
+                                ? "X"
+                                : "0"}
                             </span>
                           );
                         })
@@ -345,9 +337,10 @@ const QuizWinnerTable = ({ quizId, quizFinished, smsNumber }: IProps) => {
             {winnersData?.data.map((winner, id) => (
               <div
                 className={`flex border-b border-fillTableStrokeTableRow  items-center p-[8px] gap-[8px] ${
-                  id % 2 === 0 ? 'bg-fillTableRow' : 'bg-fillTableRow2'
+                  id % 2 === 0 ? "bg-fillTableRow" : "bg-fillTableRow2"
                 }`}
-                key={v4()}>
+                key={v4()}
+              >
                 <div className="flex  items-center text-base text-textBlack leading-[125%] max-w-[14px] w-[100%] ">
                   <span>{id + 1}</span>
                 </div>
@@ -385,26 +378,36 @@ const QuizWinnerTable = ({ quizId, quizFinished, smsNumber }: IProps) => {
                       <div className="flex justify-center items-center gap-[4px] text-xs text-textGray leading-[125%] w-fit">
                         {questionsData
                           ? questionsData.map((question) => {
-                              const matchingAnswer = winner.client.answers.find(
-                                (answer) => answer.question_id === question.id,
-                              );
+                              const matchingAnswer =
+                                winner.client.answers.find(
+                                  (answer) =>
+                                    answer.question_id === question.id &&
+                                    answer.score > 0
+                                ) ||
+                                winner.client.answers.find(
+                                  (answer) => answer.question_id === question.id
+                                );
                               return (
                                 <span
                                   key={v4()}
                                   className={`text-sm font-semibold leading-[125%] ${
-                                    matchingAnswer && matchingAnswer.serial_number_for_correct !== 0
-                                      ? 'text-fillGreen'
+                                    matchingAnswer &&
+                                    matchingAnswer.serial_number_for_correct !==
+                                      0
+                                      ? "text-fillGreen"
                                       : matchingAnswer &&
-                                        matchingAnswer.serial_number_for_correct === 0
-                                      ? 'text-fillRed'
-                                      : 'text-textLight'
-                                  }`}>
-                                  {matchingAnswer && matchingAnswer.serial_number_for_correct !== 0
+                                        matchingAnswer.serial_number_for_correct ===
+                                          0
+                                      ? "text-fillRed"
+                                      : "text-textLight"
+                                  }`}
+                                >
+                                  {matchingAnswer && matchingAnswer.score !== 0
                                     ? matchingAnswer.serial_number_for_correct
                                     : matchingAnswer &&
-                                      matchingAnswer.serial_number_for_correct === 0
-                                    ? 'X'
-                                    : '0'}
+                                      matchingAnswer?.score === 0
+                                    ? "X"
+                                    : "0"}
                                 </span>
                               );
                             })
@@ -436,7 +439,9 @@ const QuizWinnerTable = ({ quizId, quizFinished, smsNumber }: IProps) => {
             </div>
             <div className="flex gap-[10px] items-center ">
               <div className="border border-fillBlue rounded-full min-w-[32px] h-[32px] flex justify-center items-center">
-                <span className="text-fillBlue text-sm leading-[125%] ">100</span>
+                <span className="text-fillBlue text-sm leading-[125%] ">
+                  100
+                </span>
               </div>
 
               <span className="text-base leading-[120%] text-textLight w-full">
@@ -445,7 +450,9 @@ const QuizWinnerTable = ({ quizId, quizFinished, smsNumber }: IProps) => {
             </div>
             <div className="flex gap-[10px] items-center">
               <div className="flex justify-center items-center min-w-[32px]">
-                <span className="text-xl font-semibold leading-[120%] text-fillGreen ">1</span>
+                <span className="text-xl font-semibold leading-[120%] text-fillGreen ">
+                  1
+                </span>
               </div>
               <span className="text-base leading-[120%] text-textLight">
                 Dogry jogaplara näçinji bolup jogap berdi
@@ -453,7 +460,9 @@ const QuizWinnerTable = ({ quizId, quizFinished, smsNumber }: IProps) => {
             </div>
             <div className="flex gap-[10px] items-center ">
               <div className="flex justify-center items-center min-w-[32px]">
-                <span className="text-xl font-semibold leading-[120%] text-fillRed">X</span>
+                <span className="text-xl font-semibold leading-[120%] text-fillRed">
+                  X
+                </span>
               </div>
               <span className="text-base leading-[120%] text-textLight">
                 Soraga nädogry jogap berdi
@@ -462,9 +471,13 @@ const QuizWinnerTable = ({ quizId, quizFinished, smsNumber }: IProps) => {
           </div>
           <div className="flex gap-[10px] items-center ">
             <div className="flex justify-center items-center min-w-[32px]">
-              <span className="text-xl font-semibold leading-[120%] text-textLight">0</span>
+              <span className="text-xl font-semibold leading-[120%] text-textLight">
+                0
+              </span>
             </div>
-            <span className="text-base leading-[120%] text-textLight">Soraga jogap ugratmady</span>
+            <span className="text-base leading-[120%] text-textLight">
+              Soraga jogap ugratmady
+            </span>
           </div>
         </div>
       </div>

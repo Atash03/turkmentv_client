@@ -49,14 +49,6 @@ const Nav = () => {
               />
             </Link>
             <ul className="md:flex gap-5 items-center justify-start hidden">
-              {/* <li>
-                <Link
-                  className="block text-lg text-black transition-all font-roboto font-bold dark:text-white"
-                  href={'/news'}
-                  style={path.includes('news') ? { color: '#FFAB48' } : {}}>
-                  Habarlar
-                </Link>
-              </li> */}
               <li>
                 <Link
                   href={'/treasury'}

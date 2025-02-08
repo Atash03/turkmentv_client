@@ -1,7 +1,5 @@
 'use client';
 import { Queries } from '@/api/queries';
-import Loader from '@/components/Loader';
-import QuizQuestion from '@/components/quiz/QuizQuestion';
 import QuizQuestionList from '@/components/quiz/QuizQuestionList';
 import QuizSearch from '@/components/quiz/QuizSearch';
 import QuizTable from '@/components/quiz/QuizTable';

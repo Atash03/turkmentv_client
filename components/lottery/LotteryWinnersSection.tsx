@@ -11,16 +11,10 @@ import { AnimatePresence, motion } from "framer-motion";
 const WEBSOCKET_URL = "wss://sms.turkmentv.gov.tm/ws/lottery?dst=";
 const SLOT_COUNTER_DURATION = 30000;
 
-const LotteryWinnersSection = ({
-  lotteryStatus,
-}: {
-  lotteryStatus: string;
-}) => {
+const LotteryWinnersSection = ({ data }: { data: any }) => {
   const [winners, setWinners] = useState<LotteryWinnerDataSimplified[]>([]);
   const [currentNumber, setCurrentNumber] = useState<string>("00-00-00-00-00");
   const [isConfettiActive, setIsConfettiActive] = useState(false);
-
-  const { lotteryData } = useLotteryAuth();
   const [winnerSelectingStatus, setWinnerSelectingStatus] = useState<
     "not-selected" | "is-selecting" | "selected"
   >("not-selected");
@@ -28,52 +22,19 @@ const LotteryWinnersSection = ({
     useState<LotteryWinnerDataSimplified | null>(null);
   const [topText, setTopText] = useState<string>("Bije az wagtdan başlaýar");
   const [bottomText, setBottomText] = useState<string>("");
-
   const [messageQueue, setMessageQueue] = useState<
     LotteryWinnerDataSimplified[]
   >([]); // Queue for incoming WebSocket messages
   const [isProcessing, setIsProcessing] = useState<boolean>(false); // Track if a message is being processed
-
+  const [startNumber, setStartNumber] = useState("00,00,00,00,00");
   const { wsStatus, subscribeToMessages } = useWebsocketLottery(
-    `${WEBSOCKET_URL}${lotteryData?.data.sms_number}`
+    `${WEBSOCKET_URL}${data?.data.sms_number}`
   );
-
-  // Simulate WebSocket message for testing
-  const simulateMessage = () => {
-    const dummyWinner: LotteryWinnerDataSimplified = {
-      phone: `9936${Math.floor(10000000 + Math.random() * 90000000)}`, // Generate random client number
-      winner_no: winners.length + 1, // Increment winner number
-      ticket: `${Math.floor(Math.random() * 99)
-        .toString()
-        .padStart(2, "0")}-${Math.floor(Math.random() * 99)
-        .toString()
-        .padStart(2, "0")}-${Math.floor(Math.random() * 99)
-        .toString()
-        .padStart(2, "0")}-${Math.floor(Math.random() * 99)
-        .toString()
-        .padStart(2, "0")}-${Math.floor(Math.random() * 99)
-        .toString()
-        .padStart(2, "0")}`, // Generate random ticket
-    };
-
-    console.log("📩 Simulated Message:", dummyWinner); // Log the simulated message
-    setMessageQueue((prevQueue) => [...prevQueue, dummyWinner]);
-  };
-
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     simulateMessage();
-  //   }, 20000); // Trigger every 10 seconds
-
-  //   return () => clearInterval(interval); // Clean up interval on unmount
-  // }, []);
 
   // Initialize winners from lottery data
   useEffect(() => {
-    console.log("🎟️ Lottery Data:", lotteryData);
-
-    if (lotteryData && lotteryData.data.winners.length > 0) {
-      const simplifiedWinners = lotteryData.data.winners.map((winner) => ({
+    if (data?.data?.winners.length > 0) {
+      const simplifiedWinners = data.data.winners.map((winner: any) => ({
         phone: winner.client,
         winner_no: winner.winner_no,
         ticket: winner.ticket,
@@ -84,20 +45,19 @@ const LotteryWinnersSection = ({
       setWinnerSelectingStatus("selected");
       setTopText(`${lastWinner.winner_no}-nji ýeňiji`);
       setBottomText(lastWinner.phone);
+      setStartNumber(lastWinner.ticket.replace(/-/g, ","));
       setIsConfettiActive(true);
     }
-  }, [lotteryData]);
+  }, [data]);
 
   // Subscribe to WebSocket messages
   useEffect(() => {
     const unsubscribe = subscribeToMessages((event) => {
       try {
         const newWinner: LotteryWinnerDataSimplified = JSON.parse(event.data);
-        console.log("📩 WebSocket Message Received:", newWinner); // Log the parsed message
 
         // Add new message to the queue
         setMessageQueue((prevQueue) => {
-          console.log("📥 Adding to Queue:", newWinner);
           return [...prevQueue, newWinner];
         });
       } catch (error) {
@@ -110,8 +70,6 @@ const LotteryWinnersSection = ({
 
   // Process queue when a new message is added
   useEffect(() => {
-    console.log("📋 Current Message Queue:", messageQueue);
-
     if (!isProcessing && messageQueue.length > 0) {
       processQueue();
     }
@@ -124,10 +82,8 @@ const LotteryWinnersSection = ({
     setIsProcessing(true); // Lock processing
     const message = messageQueue[0]; // Get the first message in the queue
 
-    console.log("⚙️ Processing Message:", message); // Debug Log 4: Log the message being processed
-
     try {
-      await handleMessage(message); // Process the message
+      await handleMessage(message);
     } catch (error) {
       console.error("Error processing message:", error);
     }
@@ -138,7 +94,7 @@ const LotteryWinnersSection = ({
 
   // Handle the logic for processing a single WebSocket message
   const handleMessage = async (winner: LotteryWinnerDataSimplified) => {
-    console.log("⬇️ Updating Top and Bottom Text:", winner); // Debug Log 5: Log winner data before setting states
+    setStartNumber("00,00,00,00,00");
     setIsConfettiActive(false);
     setTopText(`${winner.winner_no}-nji ýeňiji saýlanýar`);
     setBottomText("...");
@@ -152,7 +108,6 @@ const LotteryWinnersSection = ({
     // Finalize winner selection
     setTopText(`${winner.winner_no}-nji ýeňiji`);
     setBottomText(winner.phone);
-    console.log("⬇️ Finalized Bottom Text:", winner.phone); // Debug Log 6: Log the final bottomText update
 
     setWinnerSelectingStatus("selected");
     setIsConfettiActive(true);
@@ -171,16 +126,6 @@ const LotteryWinnersSection = ({
         </div>
       )}
       <Confetti showConfetti={isConfettiActive} numberOfPieces={300} />
-
-      {/* Simmulation Button */}
-      {/* <div className="w-full flex justify-center py-4">
-        <button
-          onClick={simulateMessage}
-          className="px-4 py-2 bg-blue-500 text-white rounded"
-        >
-          Simulate Message
-        </button>
-      </div> */}
 
       <div className="container">
         <div
@@ -234,7 +179,10 @@ const LotteryWinnersSection = ({
 
           <div className="z-10">
             {currentNumber && (
-              <LotterySlotCounter numberString={currentNumber} />
+              <LotterySlotCounter
+                numberString={currentNumber}
+                startNumber={startNumber}
+              />
             )}
           </div>
           <div className="flex gap-6 rounded-[12px] flex-1 w-full items-center justify-center sm:pb-[62px] pb-[32px] px-4">
