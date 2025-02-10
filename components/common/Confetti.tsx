@@ -4,13 +4,7 @@ import ReactConfetti from "react-confetti";
 import { useWindowSize } from "react-use";
 import { useMediaQuery } from "usehooks-ts";
 
-const Confetti = ({
-  numberOfPieces = 200,
-  showConfetti,
-}: {
-  numberOfPieces?: number;
-  showConfetti: boolean;
-}) => {
+const Confetti = () => {
   const [recycle, setRecycle] = useState<boolean>(true);
   const { width, height } = useWindowSize();
   const colors = [
@@ -26,7 +20,7 @@ const Confetti = ({
 
   useEffect(() => {
     setTimeout(() => setRecycle(false), 30000);
-  }, []);
+  }, [recycle]);
 
   return (
     <div className="fixed top-0 left-0 z-50">
@@ -34,7 +28,7 @@ const Confetti = ({
         width={width}
         height={height}
         recycle={recycle}
-        numberOfPieces={mobile ? 200 / 3 : 200}
+        numberOfPieces={mobile ? 300 / 3 : 300}
         tweenDuration={500}
         colors={colors}
       />

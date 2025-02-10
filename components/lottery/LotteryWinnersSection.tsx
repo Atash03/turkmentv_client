@@ -7,6 +7,7 @@ import AnimatedText from "@/components/common/AnimatedText";
 import { useWebsocketLottery } from "@/hooks/useWebSocketLottery";
 import Confetti from "../common/Confetti";
 import { AnimatePresence, motion } from "framer-motion";
+import { revalidateTagName } from "@/api";
 
 const WEBSOCKET_URL = "wss://sms.turkmentv.gov.tm/ws/lottery?dst=";
 const SLOT_COUNTER_DURATION = 30000;
@@ -112,6 +113,7 @@ const LotteryWinnersSection = ({ data }: { data: any }) => {
     setWinnerSelectingStatus("selected");
     setIsConfettiActive(true);
 
+    revalidateTagName("lotteryData");
     // Add the winner to the list
     setWinners((prevWinners) => [...prevWinners, winner]);
     // Wait for the animation duration
@@ -125,7 +127,7 @@ const LotteryWinnersSection = ({ data }: { data: any }) => {
           Websocket connection error.
         </div>
       )}
-      <Confetti showConfetti={isConfettiActive} numberOfPieces={300} />
+      {isConfettiActive && <Confetti />}
 
       <div className="container">
         <div
