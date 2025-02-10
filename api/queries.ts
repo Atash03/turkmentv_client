@@ -22,6 +22,7 @@ import { VideoModel } from "@/models/video.model";
 import { VideosModel } from "@/models/videos.model";
 import { IVote } from "@/models/vote.model";
 import routes from "@/routes";
+import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 
 export class Queries {
@@ -270,7 +271,12 @@ export const getTossData = async ({
   id: string;
 }) => {
   try {
-    const res = await fetch(`${baseUrl.QUIZ_SRC}${routes.tossId(type, id)}`);
+    const res = await fetch(`${baseUrl.QUIZ_SRC}${routes.tossId(type, id)}`, {
+      next: {
+        revalidate: 300,
+        tags: ["lotteryData"],
+      },
+    });
 
     if (!res.ok) {
       return undefined;

@@ -27,6 +27,7 @@ export async function authenticateLottery(phone: string, code: string) {
 
     const result = await res.json();
 
+    console.log("Data fetched successfully " + res.status);
     return result;
   } catch (err) {
     console.log(err);
@@ -34,6 +35,6 @@ export async function authenticateLottery(phone: string, code: string) {
   }
 }
 
-export const revalidateTagName = (tag: string) => {
+export const revalidateTagName = async (tag: string) => {
   revalidateTag(tag);
 };
