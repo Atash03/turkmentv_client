@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { useLotteryAuth } from "@/store/useLotteryAuth";
 import { LotteryWinnerDataSimplified } from "@/typings/lottery/lottery.types";
 import LotteryWinnersList from "./winners/LotteryWinnersList";
 import LotterySlotCounter from "./slotCounter/LotterySlotCounter";

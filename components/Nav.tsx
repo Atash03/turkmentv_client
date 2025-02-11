@@ -2,8 +2,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { AiOutlineUser } from 'react-icons/ai';
-import ThemeSwitch from './home/ThemeSwitch';
 import { useContext, useEffect, useRef, useState } from 'react';
 import GlobalContext from '@/context/GlobalContext';
 import burger from '@/public/menu-outline.svg';
@@ -140,9 +138,9 @@ const Nav = () => {
                       Sowgatlar
                     </Link>
                     <Link
-                      href={'/lottery/auth'}
+                      href={'/cekilis/auth'}
                       className="block min-w-fit text-lg text-white transition-all font-roboto font-bold"
-                      style={path.includes('lottery') ? { color: '#FFAB48' } : {}}
+                      style={path.includes('cekilis') ? { color: '#FFAB48' } : {}}
                       onClick={() => setDropDownOpened(false)}>
                       Bije
                     </Link>

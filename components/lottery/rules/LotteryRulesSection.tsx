@@ -19,11 +19,6 @@ const LotteryRulesSection = ({ show = true, data }: IProps) => {
     data ? data?.data?.bije_count : 0
   );
 
-  if (!data.errorMessage) {
-    document.cookie = "phoneNumber=;path=/";
-    document.cookie = "key=;path=/";
-  }
-
   // Subscribe to WebSocket messages
   useEffect(() => {
     const unsubscribe = subscribeToMessages((event) => {
@@ -77,9 +72,9 @@ const LotteryRulesSection = ({ show = true, data }: IProps) => {
               </ul>
             </div>
 
-            <div className="bg-lightSurfaceContainer flex flex-col gap-4 px-4 py-[12px] rounded-[12px]">
+            <div className="bg-lightSurfaceContainer flex items-center gap-4 px-4 py-[12px] rounded-[12px]">
               <h1 className="md:font-heading-5-regular sm:text-[20px] text-[18px] sm:leading-[24px] leading-[28px]">
-                Umumy gatnaşyjylaryň sany:
+                Gatnaşyjylaryň sany:
               </h1>
               <p className="text-[24px]">{totalParticipants}</p>
             </div>

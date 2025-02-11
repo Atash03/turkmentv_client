@@ -1,6 +1,4 @@
-"use server";
-
-export async function getLotteryStatus(startTime: string, endTime: string) {
+export function getLotteryStatus(startTime: string, endTime: string) {
   const now = new Date();
   const start = new Date(startTime);
   const end = new Date(endTime);

@@ -57,10 +57,10 @@ const LotteryCountDown: React.FC<LotteryCountDownProps> = ({
     <div className="bg-lightPrimaryContainer sm:p-6 py-3 flex flex-col w-full md:gap-2 rounded-[12px] sm:gap-3 gap-0 text-lightOnPrimaryContainer">
       <h3 className="text-center md:font-heading-1-regular sm:text-[32px] sm:leading-[40px] text-[20px] leading-[28px] text-lightOnSurface">
         {status === "Ongoing"
-          ? "Bije dowam edýär"
+          ? "Çeklis dowam edýär"
           : status === "Finished"
-          ? "Bije tamamlandy"
-          : "Bije"}
+          ? "Çeklisx tamamlandy"
+          : null}
       </h3>
       {/* LotteryCountDown */}
       {status === "Upcoming" && (
@@ -69,9 +69,6 @@ const LotteryCountDown: React.FC<LotteryCountDownProps> = ({
             <h3 className="md:text-[80px] sm:text-[56px] text-[28px] md:leading-[88px] sm:leading-[64px] leading-[36px] -tracking-[1%]">
               {timeLeft.hours}
             </h3>
-            <h4 className="font-medium md:text-[20px] sm:text-[18px] text-[14px] sm:leading-[28px] leading-[20px] -tracking-[1%] text-lightOnSurfaceVariant">
-              sagat
-            </h4>
           </div>
 
           {/* Dots */}
@@ -84,9 +81,6 @@ const LotteryCountDown: React.FC<LotteryCountDownProps> = ({
             <h3 className="md:text-[80px] sm:text-[56px] text-[28px] md:leading-[88px] sm:leading-[64px] leading-[36px] -tracking-[1%]">
               {timeLeft.minutes}
             </h3>
-            <h4 className="font-medium md:text-[20px] sm:text-[18px] text-[14px] sm:leading-[28px] leading-[20px] -tracking-[1%] text-lightOnSurfaceVariant">
-              minut
-            </h4>
           </div>
 
           {/* Dots */}
@@ -99,22 +93,9 @@ const LotteryCountDown: React.FC<LotteryCountDownProps> = ({
             <h3 className="md:text-[80px] sm:text-[56px] text-[28px] md:leading-[88px] sm:leading-[64px] leading-[36px] -tracking-[1%]">
               {timeLeft.seconds}
             </h3>
-            <h4 className="font-medium md:text-[20px] sm:text-[18px] text-[14px] sm:leading-[28px] leading-[20px] -tracking-[1%] text-lightOnSurfaceVariant">
-              sekunt
-            </h4>
           </div>
         </div>
       )}
-
-      <div className="flex items-center justify-center text-lightOnSurfaceVariant md:font-heading-1-regular md:text-[20px] sm:text-[18px] sm:leading-[28px] text-[14px] leading-[20px]">
-        <span>
-          {status === "Upcoming"
-            ? "- den başlar"
-            : status === "Ongoing"
-            ? "girmek üçin aşakda kodyňyzy giriziň"
-            : "netijeleri görmek üçin aşakda kodyňyzy giriziň"}
-        </span>
-      </div>
     </div>
   );
 };

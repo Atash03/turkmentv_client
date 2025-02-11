@@ -178,9 +178,9 @@ const MobileMenu = () => {
                         Sowgatlar
                       </Link>
                       <Link
-                        href={'/lottery/auth'}
+                        href={'/cekilis/auth'}
                         className="block text-2xl text-white transition-all font-roboto font-bold"
-                        style={path.includes('lottery') ? { color: '#FFAB48' } : {}}
+                        style={path.includes('cekilis') ? { color: '#FFAB48' } : {}}
                         onClick={() => {
                           setDropDownOpened(false);
                           onClickCloseBurgerHandler();

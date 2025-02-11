@@ -19,7 +19,7 @@ const Confetti = () => {
   const mobile = useMediaQuery("(max-width: 426px)");
 
   useEffect(() => {
-    setTimeout(() => setRecycle(false), 30000);
+    setTimeout(() => setRecycle(false), 10000);
   }, [recycle]);
 
   return (
