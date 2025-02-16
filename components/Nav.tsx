@@ -138,9 +138,9 @@ const Nav = () => {
                       Sowgatlar
                     </Link>
                     <Link
-                      href={'/cekilis/auth'}
+                      href={'/b'}
                       className="block min-w-fit text-lg text-white transition-all font-roboto font-bold"
-                      style={path.includes('cekilis') ? { color: '#FFAB48' } : {}}
+                      style={path.includes('b') ? { color: '#FFAB48' } : {}}
                       onClick={() => setDropDownOpened(false)}>
                       Bije
                     </Link>

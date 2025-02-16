@@ -36,9 +36,9 @@ const LotteryAuthForm = () => {
       if (response.errorMessage) {
         setError(response.errorMessage);
       } else {
-        document.cookie = `phoneNumber=${phoneNumber};path=/;max-age=3600;`;
-        document.cookie = `key=${key};path=/;max-age=3600;`;
-        router.replace("/cekilis");
+        localStorage.setItem("phoneNumber", phoneNumber);
+        localStorage.setItem("key", key);
+        router.replace("/b");
       }
     } catch (err) {
       setError("Telefon belgisi ýa-da açar nädogry");

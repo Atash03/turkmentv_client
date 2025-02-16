@@ -4,36 +4,25 @@ import LotteryRulesSection from "@/components/lottery/rules/LotteryRulesSection"
 import LotteryCountDown from "@/components/lottery/countDown/LotteryCountDown";
 import Link from "next/link";
 import { authenticateLottery } from "@/api";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { getLotteryStatus } from "@/lib/actions";
 import LotteryWinners from "./LotteryWinners";
 import { useEffect, useState } from "react";
-import { ILotteryResponse } from "@/models/lottery/lottery.model";
 
 const LotteryMain = () => {
   const [lotteryData, setLotteryData] = useState<any>();
+  const router = useRouter();
 
   useEffect(() => {
     async function getData() {
-      const phone = document.cookie
-        .split("; ")
-        [
-          document.cookie
-            .split("; ")
-            .findIndex((item) => item.startsWith("phoneNumber="))
-        ].split("=")[1];
-      const key = document.cookie
-        .split("; ")
-        [
-          document.cookie
-            .split("; ")
-            .findIndex((item) => item.startsWith("key="))
-        ].split("=")[1];
+      const phone = localStorage.getItem("phoneNumber");
+      const key = localStorage.getItem("key");
       if (phone && key) {
         const res = await authenticateLottery(phone, key);
         setLotteryData(res);
       } else {
-        redirect("/cekilis/auth");
+        localStorage.clear();
+        router.push("/b/auth");
       }
     }
 
@@ -77,7 +66,7 @@ const LotteryMain = () => {
           <div className="w-full">
             <div className="container">
               <Link
-                href="/cekilis/auth"
+                href="/b/auth"
                 className="sm:text-textLarge sm:leading-textLarge text-[16px] rounded-full leading-[24px] sm:py-[12px] py-[8px] w-full flex justify-center items-center border-2 border-lightPrimary  hover:bg-lightPrimary font-medium text-lightPrimary hover:text-lightOnPrimary disabled:opacity-50 transition-all duration-300"
               >
                 Çykmak
