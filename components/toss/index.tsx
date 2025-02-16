@@ -1,20 +1,24 @@
+"use client";
 import LotteryHeader from "@/components/lottery/LotteryHeader";
 import LotteryRulesSection from "@/components/lottery/rules/LotteryRulesSection";
 import LotteryCountDown from "@/components/lottery/countDown/LotteryCountDown";
 import { getTossData } from "@/api/queries";
 import { getLotteryStatus } from "@/lib/actions";
 import LotteryWinners from "../lottery/LotteryWinners";
+import { useEffect, useState } from "react";
 
-const TossPage = async ({
-  type,
-  id,
-}: {
-  type: "bije" | "cekilis";
-  id: string;
-}) => {
-  const tossData = await getTossData({ type, id });
+const TossPage = ({ type, id }: { type: "bije" | "cekilis"; id: string }) => {
+  const [tossData, setTossData] = useState<any>();
 
-  const status = await getLotteryStatus(
+  useEffect(() => {
+    const getData = async () => {
+      setTossData(await getTossData({ type, id }));
+    };
+
+    getData();
+  }, []);
+
+  const status = getLotteryStatus(
     tossData?.data?.start_time,
     tossData?.data?.end_time
   );
