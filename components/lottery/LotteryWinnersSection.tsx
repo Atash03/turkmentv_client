@@ -82,10 +82,12 @@ const LotteryWinnersSection = ({ data }: { data: any }) => {
     setIsProcessing(true); // Lock processing
     const message = messageQueue[0]; // Get the first message in the queue
 
-    try {
-      await handleMessage(message);
-    } catch (error) {
-      console.error("Error processing message:", error);
+    if (message?.winner_no) {
+      try {
+        await handleMessage(message);
+      } catch (error) {
+        console.error("Error processing message:", error);
+      }
     }
 
     setMessageQueue((prevQueue) => prevQueue.slice(1)); // Remove the processed message from the queue

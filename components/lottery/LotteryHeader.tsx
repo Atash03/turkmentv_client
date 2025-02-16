@@ -27,7 +27,7 @@ const LotteryHeader = ({ title, description, image, smsCode, startDate }: Lotter
               width={1416}
               height={177}
               alt="banner"
-              className="rounded-[12px] object-cover h-[177px]"
+              className="rounded-[12px] h-[177px] md:object-cover"
             />
           </div>
         )}
