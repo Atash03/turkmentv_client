@@ -130,13 +130,13 @@ const LotteryWinnersSection = ({ data }: { data: any }) => {
 
       <div className="container">
         <div
-          className="flex flex-col items-center rounded-[32px] gap-[40px]"
+          className="flex flex-col items-center rounded-[32px] gap-[60px] pt-[20px]"
           style={{
             background: "linear-gradient(180deg, #F0ECF4 0%, #E1E0FF 43.5%)",
           }}
         >
           <AnimatePresence>
-            <div className="flex items-center justify-center w-full sm:min-h-[240px] pt-6">
+            <div className="flex items-center justify-center w-full pt-6">
               {winnerSelectingStatus === "not-selected" ? (
                 <AnimatedText
                   key={topText}
@@ -186,7 +186,7 @@ const LotteryWinnersSection = ({ data }: { data: any }) => {
               />
             )}
           </div>
-          <div className="flex gap-6 rounded-[12px] flex-1 w-full items-center justify-center sm:pb-[62px] pb-[32px] px-4">
+          <div className="flex gap-6 rounded-[12px] flex-1 w-full items-center justify-center pb-[32px] px-4">
             {winners.length > 0 && <LotteryWinnersList winners={winners} />}
           </div>
         </div>

@@ -51,8 +51,8 @@ const LotteryMain = () => {
     </div>
   ) : (
     lotteryData?.data && (
-      <div className="flex flex-col md:gap-[128px] gap-[80px] font-roboto md:pt-[64px] sm:pt-[48px] pt-[40px] ms:pb-[128px] pb-[80px] text-lightOnSurface">
-        <div className="flex flex-col sm:gap-[64px] gap-[40px]">
+      <div className="flex flex-col font-roboto md:pt-[64px] sm:pt-[48px] pt-[40px] ms:pb-[128px] pb-[80px] text-lightOnSurface">
+        <div className="flex flex-col sm:gap-[64px] gap-[40px] pb-[80px]">
           <LotteryHeader
             title={lotteryData?.data.title}
             description={lotteryData?.data.description}
@@ -72,7 +72,7 @@ const LotteryMain = () => {
           )}
         </div>
         <LotteryRulesSection data={lotteryData} />
-        <div className="flex flex-col gap-10">
+        <div className="flex flex-col gap-10 mt-[40px]">
           <LotteryWinners data={lotteryData} lotteryStatus={status} />
           <div className="w-full">
             <div className="container">

@@ -1,5 +1,6 @@
 "use client";
 import { useWebsocketLottery } from "@/hooks/useWebSocketLottery";
+import clsx from "clsx";
 import { useEffect, useState } from "react";
 
 interface IProps {
@@ -57,46 +58,54 @@ const LotteryRulesSection = ({ show = true, data }: IProps) => {
     <section>
       <div className="container">
         <div className="flex flex-col md:gap-8 gap-6">
-          <h2 className="md:font-heading-1-regular sm:text-[32px] text-[26px] sm:leading-[40px] leading-[34px]">
-            Düzgünleri:
-          </h2>
-
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="flex flex-col  bg-lightSurfaceContainer sm:py-4 md:px-8 sm:px-6 py-3 px-4 rounded-[12px] w-full">
-              <ul className="list-disc flex flex-col md:gap-4 gap-2 pl-[16px]">
-                {data?.data.rules?.map((item: any, i: number) => (
-                  <li className="font-small-regular" key={i}>
-                    {item.title}
-                  </li>
-                ))}
-              </ul>
+          <div
+            className={clsx(
+              "grid gap-6",
+              show ? "md:grid-cols-3" : "md:grid-cols-2"
+            )}
+          >
+            <div className="flex flex-col">
+              <h2 className="md:font-heading-1-regular text-[22px] sm:leading-[40px] leading-[34px]">
+                Düzgünleri:
+              </h2>
+              <div className="flex flex-1 flex-col  bg-lightSurfaceContainer sm:py-4 md:px-8 sm:px-6 py-3 px-4 rounded-[12px] w-full">
+                <ul className="list-disc flex flex-col md:gap-4 gap-2 pl-[16px]">
+                  {data?.data.rules?.map((item: any, i: number) => (
+                    <li className="font-small-regular" key={i}>
+                      {item.title}
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
 
-            <div className="bg-lightSurfaceContainer flex items-center gap-4 px-4 py-[12px] rounded-[12px]">
-              <h1 className="md:font-heading-5-regular sm:text-[20px] text-[18px] sm:leading-[24px] leading-[28px]">
+            <div className="flex flex-col">
+              <h1 className="md:font-heading-1-regular text-[22px] sm:leading-[40px] leading-[34px]">
                 Gatnaşyjylaryň sany:
               </h1>
-              <p className="text-[24px]">{totalParticipants}</p>
+              <div className="bg-lightSurfaceContainer flex flex-1 items-center justify-center gap-4 px-4 py-[12px] rounded-[12px]">
+                <p className="text-[24px]">{totalParticipants}</p>
+              </div>
             </div>
-          </div>
 
-          {show && (
-            <div className="flex flex-col md:gap-4 sm:gap-2 gap-4 bg-lightSurfaceContainer sm:py-4 md:px-8 sm:px-6 py-3 px-4 rounded-[12px] w-full">
-              <h3 className="md:font-heading-5-regular sm:text-[20px] text-[18px] sm:leading-[24px] leading-[28px]">
-                Siziň bijeli sanynyz:
-              </h3>
-              <ul className="flex flex-col items-center md:gap-4 gap-2">
-                {data?.user_lottery_numbers.map((item: any, i: number) => (
-                  <li
-                    className="text-[24px] text-[#46464F] md:text-[48px] lg:text-[80px] list-none"
-                    key={i}
-                  >
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+            {show && (
+              <div className="flex flex-col">
+                <h3 className="md:font-heading-1-regular text-[22px] sm:leading-[40px] leading-[34px]">
+                  Siziň bijeli sanyňyz:
+                </h3>
+                <ul className="flex flex-col flex-1 md:gap-4 gap-2 bg-lightSurfaceContainer sm:py-4 md:px-8 sm:px-6 py-3 px-4 rounded-[12px] w-full">
+                  {data?.user_lottery_numbers.map((item: any, i: number) => (
+                    <li
+                      className="text-[24px] text-[#46464F] list-none"
+                      key={i}
+                    >
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </section>

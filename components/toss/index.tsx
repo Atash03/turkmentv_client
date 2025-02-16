@@ -22,9 +22,9 @@ const TossPage = async ({
   return (
     <>
       {tossData?.data ? (
-        <div className="flex flex-col md:gap-[128px] gap-[80px] font-roboto md:pt-[64px] sm:pt-[48px] pt-[40px] ms:pb-[128px] pb-[80px] text-lightOnSurface">
+        <div className="flex flex-col font-roboto md:pt-[64px] sm:pt-[48px] pt-[40px] ms:pb-[128px] pb-[80px] text-lightOnSurface">
           {tossData && (
-            <div className="flex flex-col sm:gap-[64px] gap-[40px]">
+            <div className="flex flex-col sm:gap-[64px] gap-[40px] pb-[40px]">
               <LotteryHeader
                 title={tossData.data.title}
                 description={tossData.data.description}
@@ -47,7 +47,7 @@ const TossPage = async ({
 
           <LotteryRulesSection show={false} data={tossData} />
 
-          <div className="flex flex-col gap-10">
+          <div className="flex flex-col gap-10 mt-[40px]">
             <LotteryWinners data={tossData} lotteryStatus={status} />
           </div>
         </div>
