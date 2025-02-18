@@ -8,10 +8,12 @@ import { useRouter } from "next/navigation";
 import { getLotteryStatus } from "@/lib/actions";
 import LotteryWinners from "./LotteryWinners";
 import { useEffect, useState } from "react";
+import { useMediaQuery } from "usehooks-ts";
 
 const LotteryMain = () => {
   const [lotteryData, setLotteryData] = useState<any>();
   const router = useRouter();
+  const mobile = useMediaQuery("(max-width: 768px)");
 
   useEffect(() => {
     async function getData() {
@@ -45,7 +47,9 @@ const LotteryMain = () => {
           <LotteryHeader
             title={lotteryData?.data.title}
             description={lotteryData?.data.description}
-            image={lotteryData?.data.image}
+            image={
+              mobile ? lotteryData?.data.image_mobile : lotteryData?.data.image
+            }
             smsCode={lotteryData?.data.sms_code}
             startDate={lotteryData?.data.start_time}
           />

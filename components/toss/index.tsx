@@ -6,9 +6,11 @@ import { getTossData } from "@/api/queries";
 import { getLotteryStatus } from "@/lib/actions";
 import LotteryWinners from "../lottery/LotteryWinners";
 import { useEffect, useState } from "react";
+import { useMediaQuery } from "usehooks-ts";
 
 const TossPage = ({ type, id }: { type: "bije" | "cekilis"; id: string }) => {
   const [tossData, setTossData] = useState<any>();
+  const mobile = useMediaQuery("(max-width: 768px)");
 
   useEffect(() => {
     const getData = async () => {
@@ -32,7 +34,9 @@ const TossPage = ({ type, id }: { type: "bije" | "cekilis"; id: string }) => {
               <LotteryHeader
                 title={tossData.data.title}
                 description={tossData.data.description}
-                image={tossData.data.image}
+                image={
+                  mobile ? tossData?.data.image_mobile : tossData?.data.image
+                }
                 smsCode={tossData.data.sms_code}
                 startDate={tossData.data.start_time}
               />
