@@ -1,5 +1,10 @@
 export interface IQuizSearchData {
   data: { [key: string]: Datum };
+  result: {
+    total_score: number;
+    total_serial: number;
+    place: number;
+  };
 }
 
 export interface Datum {

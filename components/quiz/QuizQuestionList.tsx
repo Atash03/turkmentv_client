@@ -63,29 +63,8 @@ const QuizQuestionList = ({
           );
         });
 
-        // const isActive = data?.data.questions.some(
-        //   (question) => question.status === 'active' || question.status === 'new',
-        // );
-
-        // data.data.questions.map((question) =>
-        //   question.status === 'active' || question.status === 'new'
-        //     ? setQuizFinished(false)
-        //     : setQuizFinished(true),
-        // );
       }, 60000);
       return () => clearInterval(interval);
-
-      // Queries.getQuizQuestions().then((res) => {
-      //   setData(res);
-      //   setQuestionsData(res.data.questions);
-      //   setSmsNumber(res.data.sms_number);
-
-      //   res.data.questions.map((question) =>
-      //     question.status === 'active' || question.status === 'new'
-      //       ? setQuizFinished(false)
-      //       : setQuizFinished(true),
-      //   );
-      // });
     }
   }, [quizFinished]);
 

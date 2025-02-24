@@ -5,6 +5,7 @@ import { v4 } from "uuid";
 import { useState, useEffect, useContext } from "react";
 import { IQuizQuestionsWinners } from "@/models/quizQuestionsWinners.model";
 import QuizContext from "@/context/QuizContext";
+import { useQuizSearchActive } from "@/store/store";
 
 interface Message {
   answer: string;
@@ -41,151 +42,21 @@ interface IProps {
 }
 
 const QuizWinnerTable = ({ quizId, quizFinished, smsNumber }: IProps) => {
-  // const [questionsData, setQuestionsData] = useState<IQuizQuestions>();
   const [winnersData, setWinnersData] = useState<IQuizQuestionsWinners>();
   const { questionsData } = useContext(QuizContext).quizQuestionsContext;
 
-  const [socket, setSocket] = useState<WebSocket | null>(null);
-  const [isConnected, setIsConnected] = useState(false);
+  const { quizSearchData } = useContext(QuizContext).quizSearchContext;
+  const { active } = useQuizSearchActive();
 
   useEffect(() => {
-    Queries.getQuizWinners(quizId).then((res) => {
-      setWinnersData(res);
-    });
-  }, [quizId]);
-
-  //   let socket: WebSocket | null = null;
-  //   let reconnectTimeout: NodeJS.Timeout | null = null;
-  //   let pingInterval: NodeJS.Timeout | null = null;
-
-  //   const connectWebSocket = () => {
-  //     try {
-  //       socket = new WebSocket(`wss://sms.turkmentv.gov.tm/ws/quiz?dst=${smsNumber}`);
-  //       setSocket(socket);
-
-  //       socket.onopen = () => {
-  //         console.log('WebSocket is connected');
-  //         setIsConnected(true);
-
-  //         pingInterval = setInterval(() => {
-  //           if (socket?.readyState === WebSocket.OPEN) {
-  //             try {
-  //               socket.send(JSON.stringify({ type: 'ping' }));
-  //             } catch (error) {
-  //               console.error('Error sending ping:', error);
-  //             }
-  //           }
-  //         }, 25000); // Ping every 25 seconds
-  //       };
-
-  //       socket.onmessage = (event) => {
-  //         try {
-  //           console.log('Message received from WebSocket:', event.data);
-  //           const message = JSON.parse(event.data);
-  //           handleOnMessage(message);
-  //         } catch (error) {
-  //           console.error('Error processing message:', error);
-  //         }
-  //       };
-
-  //       socket.onerror = (error) => {
-  //         console.error('WebSocket error:', error);
-  //       };
-
-  //       socket.onclose = () => {
-  //         console.log('WebSocket is closed');
-  //         setIsConnected(false);
-
-  //         if (pingInterval) {
-  //           clearInterval(pingInterval);
-  //         }
-
-  //         if (!reconnectTimeout) {
-  //           reconnectTimeout = setTimeout(() => {
-  //             console.log('Attempting to reconnect WebSocket...');
-  //             connectWebSocket();
-  //           }, 5000); // Reconnect after 5 seconds
-  //         }
-  //       };
-  //     } catch (error) {
-  //       console.error('WebSocket connection error:', error);
-  //     }
-  //   };
-
-  //   if (smsNumber && winnersData) {
-  //     connectWebSocket();
-  //   }
-
-  //   return () => {
-  //     if (socket) {
-  //       socket.close();
-  //     }
-  //     if (reconnectTimeout) {
-  //       clearTimeout(reconnectTimeout);
-  //     }
-  //     if (pingInterval) {
-  //       clearInterval(pingInterval);
-  //     }
-  //   };
-  // }, [smsNumber]);
-
-  // Function to handle incoming WebSocket message and update winnersData
-  const handleOnMessage = (message: Message) => {
-    if (!winnersData) {
-      console.error("winnersData is undefined");
-      return;
+    if (!active) {
+      Queries.getQuizWinners(quizId).then((res) => {
+        setWinnersData(res);
+      });
+    } else if (active) {
+      setWinnersData(undefined);
     }
-
-    console.log("updating winnersData");
-
-    // Update the winnersData by matching phone with starred_src from the message
-    setWinnersData((prevWinnersData) => {
-      if (!prevWinnersData) {
-        return prevWinnersData;
-      }
-
-      return {
-        ...prevWinnersData,
-        data: prevWinnersData.data.map((winner) => {
-          if (winner.client.phone === message.starred_src) {
-            const updatedAnswers = [
-              ...winner.client.answers,
-              {
-                id: message.question_id,
-                question_id: message.question_id,
-                score: message.score,
-                serial_number_for_correct: message.serial_number_for_correct,
-                client_id: winner.client.id,
-              },
-            ];
-
-            // Calculate the new correct_answers_time by summing serial_number_for_correct
-            const updatedCorrectAnswersTime = updatedAnswers
-              .reduce(
-                (sum, answer) => sum + answer.serial_number_for_correct,
-                0
-              )
-              .toString();
-
-            return {
-              ...winner,
-              client: {
-                ...winner.client,
-                answers: updatedAnswers,
-              },
-              total_score_of_client: (
-                parseInt(winner.total_score_of_client) + message.score
-              ).toString(),
-              correct_answers_time: updatedCorrectAnswersTime, // Update correct_answers_time
-            };
-          }
-          return winner;
-        }),
-      };
-    });
-
-    console.log("winnersData is updated");
-  };
+  }, [quizId, active]);
 
   return winnersData?.data.length !== 0 ? (
     <div className="flex flex-col justify-center items-center gap-[60px]">
@@ -198,30 +69,33 @@ const QuizWinnerTable = ({ quizId, quizFinished, smsNumber }: IProps) => {
         <div className="table-desktop hidden sm:flex flex-col bg-fillTableHead rounded-[25px] shadow-quizButton overflow-hidden max-w-[1000px] w-full">
           {/* Table Head */}
           <div className="flex border-b border-fillTableStrokeTableHead">
-            {winnersData?.data[0].client_id ? (
+            {winnersData?.data[0].client_id || quizSearchData?.data ? (
               <div className="text-center flex justify-center items-center text-base text-textBlack leading-[125%] font-semibold max-w-[54px] w-[100%] pl-6 pr-3 py-5">
                 <span>№</span>
               </div>
             ) : null}
 
-            {winnersData?.data[0].client.phone ? (
+            {winnersData?.data[0].client.phone || quizSearchData?.data ? (
               <div className="text-center flex justify-center items-center text-base text-textBlack leading-[125%] font-semibold max-w-[176px] w-[100%] px-3 py-5">
                 <span>Gatnaşyjynyň tel. Beligisi</span>
               </div>
             ) : null}
 
-            {winnersData?.data[0].client.answers.length !== 0 ? (
+            {winnersData?.data[0].client.answers.length ||
+            quizSearchData?.data ? (
               <div className="text-center flex justify-center items-center text-base text-textBlack leading-[125%] font-semibold w-[100%] px-3 py-5">
                 <span>Soraglara jogap berilişiň nobaty</span>
               </div>
             ) : null}
 
-            {winnersData?.data[0].total_score_of_client ? (
+            {winnersData?.data[0].total_score_of_client ||
+            quizSearchData?.data ? (
               <div className="text-center flex justify-center items-center text-base text-textBlack leading-[125%] font-semibold max-w-[180px] w-[100%] px-3 py-5">
                 <span>Nobatlaryň jemi</span>
               </div>
             ) : null}
-            {winnersData?.data[0].total_score_of_client ? (
+            {winnersData?.data[0].total_score_of_client ||
+            quizSearchData?.data ? (
               <div className="text-center flex justify-center items-center text-base text-textBlack leading-[125%] font-semibold max-w-[180px] w-[100%] px-3 py-5">
                 <span>Utuklaryň jemi</span>
               </div>
@@ -230,34 +104,111 @@ const QuizWinnerTable = ({ quizId, quizFinished, smsNumber }: IProps) => {
 
           {/* Table Body */}
           <div className="">
-            {winnersData?.data.map((winner, id) => (
-              <div
-                className={`flex border-b border-fillTableStrokeTableRow ${
-                  id % 2 === 0 ? "bg-fillTableRow" : "bg-fillTableRow2"
-                }`}
-                key={v4()}
-              >
-                <div className="flex justify-center items-center text-base text-textBlack leading-[125%] max-w-[54px] w-[100%] pl-6 pr-3 py-5">
-                  <span>{id + 1}</span>
-                </div>
-                {winnersData.data[0].client.phone ? (
-                  <div className="flex justify-center items-center text-base text-textBlack leading-[125%] font-semibold max-w-[176px] w-[100%] px-3 py-5">
-                    <span>+{winner.client.phone}</span>
+            {winnersData
+              ? winnersData?.data.map((winner, id) => (
+                  <div
+                    className={`flex border-b border-fillTableStrokeTableRow ${
+                      id % 2 === 0 ? "bg-fillTableRow" : "bg-fillTableRow2"
+                    }`}
+                    key={v4()}
+                  >
+                    <div className="flex justify-center items-center text-base text-textBlack leading-[125%] max-w-[54px] w-[100%] pl-6 pr-3 py-5">
+                      <span>
+                        {id > 0 &&
+                        winner.correct_answers_time ===
+                          winnersData.data[id - 1].correct_answers_time
+                          ? id
+                          : id + 1}
+                      </span>
+                    </div>
+                    {winnersData.data[0].client.phone ? (
+                      <div className="flex justify-center items-center text-base text-textBlack leading-[125%] font-semibold max-w-[176px] w-[100%] px-3 py-5">
+                        <span>+{winner.client.phone}</span>
+                      </div>
+                    ) : null}
+                    {winnersData.data[0].client.answers.length !== 0 ? (
+                      <div className="flex justify-center items-center gap-6 text-base text-textGray leading-[125%] w-[100%] px-3 py-5">
+                        {questionsData
+                          ? questionsData.map((question) => {
+                              const matchingAnswer =
+                                winner.client.answers.find(
+                                  (answer) =>
+                                    answer.question_id === question.id &&
+                                    answer.score > 0
+                                ) ||
+                                winner.client.answers.find(
+                                  (answer) => answer.question_id === question.id
+                                );
+
+                              return (
+                                <span
+                                  key={v4()}
+                                  className={`text-sm font-semibold leading-[125%] ${
+                                    matchingAnswer &&
+                                    matchingAnswer.serial_number_for_correct !==
+                                      0
+                                      ? "text-fillGreen"
+                                      : matchingAnswer &&
+                                        matchingAnswer?.serial_number_for_correct ===
+                                          0
+                                      ? "text-fillRed"
+                                      : "text-textLight"
+                                  }`}
+                                >
+                                  {matchingAnswer && matchingAnswer.score !== 0
+                                    ? matchingAnswer.serial_number_for_correct
+                                    : matchingAnswer &&
+                                      matchingAnswer?.score === 0
+                                    ? "X"
+                                    : "0"}
+                                </span>
+                              );
+                            })
+                          : null}
+                      </div>
+                    ) : null}
+
+                    {winnersData.data[0].total_score_of_client ? (
+                      <div className="flex justify-center items-center text-base text-textBlack leading-[125%]  max-w-[180px] w-[100%] px-3 py-3">
+                        <span className="border border-[#2C7CDA] text-[#2C7CDA] rounded-full w-[36px] h-[36px] flex justify-center items-center text-base leading-[125%] ">
+                          {winner.correct_answers_time}
+                        </span>
+                      </div>
+                    ) : null}
+                    {winnersData.data[0].total_score_of_client ? (
+                      <div className="flex justify-center items-center text-base text-textBlack leading-[125%]  max-w-[180px] w-[100%] px-3 py-3">
+                        <span className="bg-fillOrange rounded-full w-[36px] h-[36px] flex justify-center items-center text-base leading-[125%] text-white">
+                          {winner.total_score_of_client}
+                        </span>
+                      </div>
+                    ) : null}
                   </div>
-                ) : null}
-                {winnersData.data[0].client.answers.length !== 0 ? (
-                  <div className="flex justify-center items-center gap-6 text-base text-textGray leading-[125%] w-[100%] px-3 py-5">
-                    {questionsData
-                      ? questionsData.map((question) => {
-                          const matchingAnswer =
-                            winner.client.answers.find(
-                              (answer) =>
-                                answer.question_id === question.id &&
-                                answer.score > 0
-                            ) ||
-                            winner.client.answers.find(
-                              (answer) => answer.question_id === question.id
-                            );
+                ))
+              : quizSearchData && (
+                  <div
+                    className={`flex border-b border-fillTableStrokeTableRow bg-fillTableRow2`}
+                  >
+                    {/* Place of the client */}
+                    <div className="flex justify-center items-center text-base text-textBlack leading-[125%] max-w-[54px] w-[100%] pl-6 pr-3 py-5">
+                      <span>{quizSearchData.result.place}</span>
+                    </div>
+                    {/* Client phone number */}
+                    <div className="flex justify-center items-center text-base text-textBlack leading-[125%] font-semibold max-w-[176px] w-[100%] px-3 py-5">
+                      <span>
+                        +
+                        {Object.keys(quizSearchData.data).map(
+                          (questionId, i) =>
+                            i === 0 &&
+                            quizSearchData.data[questionId].answers[0].client
+                        )}
+                      </span>
+                    </div>
+                    {/* Serial number answer to questions */}
+                    <div className="flex justify-center items-center gap-6 text-base text-textGray leading-[125%] w-[100%] px-3 py-5">
+                      {Object.keys(quizSearchData.data)
+                        .map((quistionId) => quizSearchData.data[quistionId])
+                        .map((question) => {
+                          const matchingAnswer = question.answers[0];
 
                           return (
                             <span
@@ -280,27 +231,21 @@ const QuizWinnerTable = ({ quizId, quizFinished, smsNumber }: IProps) => {
                                 : "0"}
                             </span>
                           );
-                        })
-                      : null}
-                  </div>
-                ) : null}
+                        })}
+                    </div>
 
-                {winnersData.data[0].total_score_of_client ? (
-                  <div className="flex justify-center items-center text-base text-textBlack leading-[125%]  max-w-[180px] w-[100%] px-3 py-3">
-                    <span className="border border-[#2C7CDA] text-[#2C7CDA] rounded-full w-[36px] h-[36px] flex justify-center items-center text-base leading-[125%] ">
-                      {winner.correct_answers_time}
-                    </span>
+                    <div className="flex justify-center items-center text-base text-textBlack leading-[125%]  max-w-[180px] w-[100%] px-3 py-3">
+                      <span className="border border-[#2C7CDA] text-[#2C7CDA] rounded-full w-[36px] h-[36px] flex justify-center items-center text-base leading-[125%] ">
+                        {quizSearchData.result.total_serial}
+                      </span>
+                    </div>
+                    <div className="flex justify-center items-center text-base text-textBlack leading-[125%]  max-w-[180px] w-[100%] px-3 py-3">
+                      <span className="bg-fillOrange rounded-full w-[36px] h-[36px] flex justify-center items-center text-base leading-[125%] text-white">
+                        {quizSearchData.result.total_score}
+                      </span>
+                    </div>
                   </div>
-                ) : null}
-                {winnersData.data[0].total_score_of_client ? (
-                  <div className="flex justify-center items-center text-base text-textBlack leading-[125%]  max-w-[180px] w-[100%] px-3 py-3">
-                    <span className="bg-fillOrange rounded-full w-[36px] h-[36px] flex justify-center items-center text-base leading-[125%] text-white">
-                      {winner.total_score_of_client}
-                    </span>
-                  </div>
-                ) : null}
-              </div>
-            ))}
+                )}
           </div>
         </div>
 
@@ -308,24 +253,26 @@ const QuizWinnerTable = ({ quizId, quizFinished, smsNumber }: IProps) => {
         <div className="sm:hidden flex flex-col bg-fillTableHead rounded-[13px] shadow-quizButton overflow-hidden max-w-[1000px] w-full">
           {/* Table Head */}
           <div className="flex border-b border-fillTableStrokeTableHead p-2 gap-[8px]">
-            {winnersData?.data[0].client_id ? (
+            {winnersData?.data[0].client_id || quizSearchData?.data ? (
               <div className="text-center flex items-center text-xs text-textBlack leading-[125%] font-semibold max-w-[14px] w-[100%]">
                 <span>№</span>
               </div>
             ) : null}
 
-            {winnersData?.data[0].client.phone ? (
+            {winnersData?.data[0].client.phone || quizSearchData?.data ? (
               <div className="text-center flex justify-center items-center text-xs text-textBlack leading-[125%] font-semibold max-w-[107px] w-[100%]">
                 <span>Gatnaşyjynyň tel. Beligisi</span>
               </div>
             ) : null}
 
-            {winnersData?.data[0].total_score_of_client ? (
+            {winnersData?.data[0].total_score_of_client ||
+            quizSearchData?.data ? (
               <div className="text-center flex justify-center items-center text-xs text-textBlack leading-[125%] font-semibold max-w-[75px] w-[100%]">
                 <span>Soraglara jogap berilişiň nobaty </span>
               </div>
             ) : null}
-            {winnersData?.data[0].total_score_of_client ? (
+            {winnersData?.data[0].total_score_of_client ||
+            quizSearchData?.data ? (
               <div className="text-center flex justify-center items-center text-xs text-textBlack leading-[125%] font-semibold max-w-[99px] w-[100%]">
                 <span>Nobatlaryň jemi</span>
               </div>
@@ -334,59 +281,138 @@ const QuizWinnerTable = ({ quizId, quizFinished, smsNumber }: IProps) => {
 
           {/* Table Body */}
           <div className="">
-            {winnersData?.data.map((winner, id) => (
-              <div
-                className={`flex border-b border-fillTableStrokeTableRow  items-center p-[8px] gap-[8px] ${
-                  id % 2 === 0 ? "bg-fillTableRow" : "bg-fillTableRow2"
-                }`}
-                key={v4()}
-              >
-                <div className="flex  items-center text-base text-textBlack leading-[125%] max-w-[14px] w-[100%] ">
-                  <span>{id + 1}</span>
-                </div>
+            {winnersData
+              ? winnersData?.data.map((winner, id) => (
+                  <div
+                    className={`flex border-b border-fillTableStrokeTableRow  items-center p-[8px] gap-[8px] ${
+                      id % 2 === 0 ? "bg-fillTableRow" : "bg-fillTableRow2"
+                    }`}
+                    key={v4()}
+                  >
+                    <div className="flex  items-center text-base text-textBlack leading-[125%] max-w-[14px] w-[100%] ">
+                      <span>{id + 1}</span>
+                    </div>
 
-                <div className="flex flex-col gap-[8px] w-full">
-                  <div className="flex gap-[8px] items-center">
-                    {winnersData.data[0].client.phone ? (
-                      <div className="flex items-center text-xs text-textBlack leading-[125%] font-semibold max-w-[107px] w-full">
-                        <span>+{winner.client.phone}</span>
-                      </div>
-                    ) : null}
+                    <div className="flex flex-col gap-[8px] w-full">
+                      <div className="flex gap-[8px] items-center">
+                        {winnersData.data[0].client.phone ? (
+                          <div className="flex items-center text-xs text-textBlack leading-[125%] font-semibold max-w-[107px] w-full">
+                            <span>+{winner.client.phone}</span>
+                          </div>
+                        ) : null}
 
-                    {winnersData.data[0].total_score_of_client ? (
-                      <div className="flex justify-center items-center text-xs text-textBlack leading-[125%] max-w-[75px] w-full">
-                        <span className="border border-[#2C7CDA] text-[#2C7CDA] rounded-full w-[24px] h-[24px] flex justify-center items-center text-xs leading-[125%] ">
-                          {winner.correct_answers_time}
-                        </span>
+                        {winnersData.data[0].total_score_of_client ? (
+                          <div className="flex justify-center items-center text-xs text-textBlack leading-[125%] max-w-[75px] w-full">
+                            <span className="border border-[#2C7CDA] text-[#2C7CDA] rounded-full w-[24px] h-[24px] flex justify-center items-center text-xs leading-[125%] ">
+                              {winner.correct_answers_time}
+                            </span>
+                          </div>
+                        ) : null}
+                        {winnersData.data[0].total_score_of_client ? (
+                          <div className="flex justify-center items-center text-xs text-textBlack leading-[125%] max-w-[99px] w-full">
+                            <span className="bg-fillOrange rounded-full w-[24px] h-[24px] flex justify-center items-center text-xs leading-[125%] text-white">
+                              {winner.total_score_of_client}
+                            </span>
+                          </div>
+                        ) : null}
                       </div>
-                    ) : null}
-                    {winnersData.data[0].total_score_of_client ? (
-                      <div className="flex justify-center items-center text-xs text-textBlack leading-[125%] max-w-[99px] w-full">
-                        <span className="bg-fillOrange rounded-full w-[24px] h-[24px] flex justify-center items-center text-xs leading-[125%] text-white">
-                          {winner.total_score_of_client}
-                        </span>
+                      <div className="flex gap-[8px] items-center">
+                        {winnersData?.data[0].client.answers.length !== 0 ? (
+                          <div className="flex justify-center items-center text-xs text-textLight leading-[125%] font-semibold w-fit">
+                            <span>Soraglara näçinji jogap berdi :</span>
+                          </div>
+                        ) : null}
+                        {winnersData.data[0].client.answers.length !== 0 ? (
+                          <div className="flex justify-center items-center gap-[4px] text-xs text-textGray leading-[125%] w-fit">
+                            {questionsData
+                              ? questionsData.map((question) => {
+                                  const matchingAnswer =
+                                    winner.client.answers.find(
+                                      (answer) =>
+                                        answer.question_id === question.id &&
+                                        answer.score > 0
+                                    ) ||
+                                    winner.client.answers.find(
+                                      (answer) =>
+                                        answer.question_id === question.id
+                                    );
+                                  return (
+                                    <span
+                                      key={v4()}
+                                      className={`text-sm font-semibold leading-[125%] ${
+                                        matchingAnswer &&
+                                        matchingAnswer.serial_number_for_correct !==
+                                          0
+                                          ? "text-fillGreen"
+                                          : matchingAnswer &&
+                                            matchingAnswer.serial_number_for_correct ===
+                                              0
+                                          ? "text-fillRed"
+                                          : "text-textLight"
+                                      }`}
+                                    >
+                                      {matchingAnswer &&
+                                      matchingAnswer.score !== 0
+                                        ? matchingAnswer.serial_number_for_correct
+                                        : matchingAnswer &&
+                                          matchingAnswer?.score === 0
+                                        ? "X"
+                                        : "0"}
+                                    </span>
+                                  );
+                                })
+                              : null}
+                          </div>
+                        ) : null}
                       </div>
-                    ) : null}
+                    </div>
                   </div>
-                  <div className="flex gap-[8px] items-center">
-                    {winnersData?.data[0].client.answers.length !== 0 ? (
-                      <div className="flex justify-center items-center text-xs text-textLight leading-[125%] font-semibold w-fit">
-                        <span>Soraglara näçinji jogap berdi :</span>
+                ))
+              : quizSearchData && (
+                  <div
+                    className={`flex border-b border-fillTableStrokeTableRow  items-center p-[8px] gap-[8px] bg-fillTableRow2`}
+                  >
+                    <div className="flex  items-center text-base text-textBlack leading-[125%] max-w-[14px] w-[100%] ">
+                      <span>{quizSearchData.result.place}</span>
+                    </div>
+
+                    <div className="flex flex-col gap-[8px] w-full">
+                      <div className="flex gap-[8px] items-center">
+                        <div className="flex items-center text-xs text-textBlack leading-[125%] font-semibold max-w-[107px] w-full">
+                          <span>
+                            +
+                            {Object.keys(quizSearchData.data).map(
+                              (questionId, i) =>
+                                i === 0 &&
+                                quizSearchData.data[questionId].answers[0]
+                                  .client
+                            )}
+                          </span>
+                        </div>
+
+                        <div className="flex justify-center items-center text-xs text-textBlack leading-[125%] max-w-[75px] w-full">
+                          <span className="border border-[#2C7CDA] text-[#2C7CDA] rounded-full w-[24px] h-[24px] flex justify-center items-center text-xs leading-[125%] ">
+                            {quizSearchData.result.total_serial}
+                          </span>
+                        </div>
+                        <div className="flex justify-center items-center text-xs text-textBlack leading-[125%] max-w-[99px] w-full">
+                          <span className="bg-fillOrange rounded-full w-[24px] h-[24px] flex justify-center items-center text-xs leading-[125%] text-white">
+                            {quizSearchData.result.total_score}
+                          </span>
+                        </div>
                       </div>
-                    ) : null}
-                    {winnersData.data[0].client.answers.length !== 0 ? (
-                      <div className="flex justify-center items-center gap-[4px] text-xs text-textGray leading-[125%] w-fit">
-                        {questionsData
-                          ? questionsData.map((question) => {
-                              const matchingAnswer =
-                                winner.client.answers.find(
-                                  (answer) =>
-                                    answer.question_id === question.id &&
-                                    answer.score > 0
-                                ) ||
-                                winner.client.answers.find(
-                                  (answer) => answer.question_id === question.id
-                                );
+                      <div className="flex gap-[8px] items-center">
+                        <div className="flex justify-center items-center text-xs text-textLight leading-[125%] font-semibold w-fit">
+                          <span>Soraglara näçinji jogap berdi :</span>
+                        </div>
+                        <div className="flex justify-center items-center gap-[4px] text-xs text-textGray leading-[125%] w-fit">
+                          {Object.keys(quizSearchData.data)
+                            .map(
+                              (quistionId) => quizSearchData.data[quistionId]
+                            )
+                            .map((question) => {
+                              const matchingAnswer = question.answers[0];
+
                               return (
                                 <span
                                   key={v4()}
@@ -396,7 +422,7 @@ const QuizWinnerTable = ({ quizId, quizFinished, smsNumber }: IProps) => {
                                       0
                                       ? "text-fillGreen"
                                       : matchingAnswer &&
-                                        matchingAnswer.serial_number_for_correct ===
+                                        matchingAnswer?.serial_number_for_correct ===
                                           0
                                       ? "text-fillRed"
                                       : "text-textLight"
@@ -410,14 +436,12 @@ const QuizWinnerTable = ({ quizId, quizFinished, smsNumber }: IProps) => {
                                     : "0"}
                                 </span>
                               );
-                            })
-                          : null}
+                            })}
+                        </div>
                       </div>
-                    ) : null}
+                    </div>
                   </div>
-                </div>
-              </div>
-            ))}
+                )}
           </div>
         </div>
       </div>

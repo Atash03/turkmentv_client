@@ -1,19 +1,21 @@
-'use client';
+"use client";
 
-import { Queries } from '@/api/queries';
-import Loader from '@/components/Loader';
-import QuizQuestion from '@/components/quiz/QuizQuestion';
-import QuizQuestionList from '@/components/quiz/QuizQuestionList';
-import QuizSearch from '@/components/quiz/QuizSearch';
-import QuizTable from '@/components/quiz/QuizTable';
-import QuizWinnerTable from '@/components/quiz/QuizWinnerTable';
-import GradientTitle from '@/components/vote/GradientTitle';
-import { IQuizQuestions, Question } from '@/models/quizQuestions.model';
-import QuizProvider from '@/providers/QuizProvider';
-import { Validator } from '@/utils/validator';
-import Image from 'next/image';
-import { useEffect, useState } from 'react';
-import { useMediaQuery } from 'usehooks-ts';
+import { Queries } from "@/api/queries";
+import Loader from "@/components/Loader";
+import QuizQuestion from "@/components/quiz/QuizQuestion";
+import QuizQuestionList from "@/components/quiz/QuizQuestionList";
+import QuizSearch from "@/components/quiz/QuizSearch";
+import QuizTable from "@/components/quiz/QuizTable";
+import QuizWinnerTable from "@/components/quiz/QuizWinnerTable";
+import GradientTitle from "@/components/vote/GradientTitle";
+import QuizContext from "@/context/QuizContext";
+import { IQuizQuestions, Question } from "@/models/quizQuestions.model";
+import QuizProvider from "@/providers/QuizProvider";
+import { useQuizSearchActive } from "@/store/store";
+import { Validator } from "@/utils/validator";
+import Image from "next/image";
+import { useContext, useEffect, useState } from "react";
+import { useMediaQuery } from "usehooks-ts";
 
 interface IParams {
   params: {
@@ -24,6 +26,7 @@ interface IParams {
 const page = ({ params }: IParams) => {
   const [quizFinished, setQuizFinished] = useState<boolean>(false);
   const [data, setData] = useState<IQuizQuestions>();
+  const { active } = useQuizSearchActive();
 
   // const { data, error, isFetching } = useQuery(
   //   ['quiz_questions'],
@@ -38,7 +41,8 @@ const page = ({ params }: IParams) => {
       Queries.getQuizQuestions().then((res) => {
         setData(res);
         res
-          ? res.data.questions[res.data.questions.length - 1].status === 'closed'
+          ? res.data.questions[res.data.questions.length - 1].status ===
+            "closed"
             ? setQuizFinished(true)
             : setQuizFinished(false)
           : null;
@@ -47,7 +51,8 @@ const page = ({ params }: IParams) => {
       Queries.getQuiz(params.quiz_id).then((res) => {
         setData(res);
         res
-          ? res.data.questions[res.data.questions.length - 1]?.status === 'closed'
+          ? res.data.questions[res.data.questions.length - 1]?.status ===
+            "closed"
             ? setQuizFinished(true)
             : setQuizFinished(false)
           : null;
@@ -55,7 +60,7 @@ const page = ({ params }: IParams) => {
     }
   }, []);
 
-  const mobile = useMediaQuery('(max-width: 768px)');
+  const mobile = useMediaQuery("(max-width: 768px)");
 
   if (data) {
     if (!data.data) {
@@ -70,7 +75,7 @@ const page = ({ params }: IParams) => {
 
     return (
       <main className="pt-[60px] pb-[200px]">
-        {typeof data !== 'string' ? (
+        {typeof data !== "string" ? (
           <div className="container flex flex-col md:gap-[200px] gap-[80px]">
             <QuizProvider>
               <div className="flex flex-col gap-[100px]">
@@ -95,7 +100,7 @@ const page = ({ params }: IParams) => {
                               ? data.data.banner_mobile
                               : data.data.banner
                           }
-                          alt={'banner'}
+                          alt={"banner"}
                           unoptimized
                           unselectable="off"
                           fill
@@ -104,7 +109,7 @@ const page = ({ params }: IParams) => {
                       ) : (
                         <Image
                           src={data?.data.banner}
-                          alt={'banner'}
+                          alt={"banner"}
                           unoptimized
                           unselectable="off"
                           fill
@@ -116,20 +121,25 @@ const page = ({ params }: IParams) => {
                 </div>
 
                 {data?.data.rules && data.data.notes ? (
-                  <QuizTable rules={data?.data.rules} notes={data?.data.notes} />
+                  <QuizTable
+                    rules={data?.data.rules}
+                    notes={data?.data.notes}
+                  />
                 ) : null}
               </div>
 
-              {data?.data.id && quizFinished ? <QuizSearch quizId={data?.data.id} /> : null}
-
               <div className="flex flex-col md:gap-[160px] gap-[80px]">
-                {data?.data ? (
+                {data?.data && !active ? (
                   <QuizQuestionList
                     paramsId={params.quiz_id}
                     initialQuestionsData={data}
                     setQuizFinished={setQuizFinished}
                     quizFinished={quizFinished}
                   />
+                ) : null}
+
+                {data?.data.id && quizFinished ? (
+                  <QuizSearch quizId={data?.data.id} />
                 ) : null}
 
                 {data?.data.id && (
