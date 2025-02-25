@@ -71,20 +71,20 @@ const QuizWinnerTable = ({ quizId, quizFinished, smsNumber }: IProps) => {
           <div className="flex border-b border-fillTableStrokeTableHead">
             {winnersData?.data[0].client_id || quizSearchData?.data ? (
               <div className="text-center flex justify-center items-center text-base text-textBlack leading-[125%] font-semibold max-w-[54px] w-[100%] pl-6 pr-3 py-5">
-                <span>№</span>
+                <span>Ýeri</span>
               </div>
             ) : null}
 
             {winnersData?.data[0].client.phone || quizSearchData?.data ? (
               <div className="text-center flex justify-center items-center text-base text-textBlack leading-[125%] font-semibold max-w-[176px] w-[100%] px-3 py-5">
-                <span>Gatnaşyjynyň tel. Beligisi</span>
+                <span>Telefon beligisi</span>
               </div>
             ) : null}
 
             {winnersData?.data[0].client.answers.length ||
             quizSearchData?.data ? (
               <div className="text-center flex justify-center items-center text-base text-textBlack leading-[125%] font-semibold w-[100%] px-3 py-5">
-                <span>Soraglara jogap berilişiň nobaty</span>
+                <span>Jogap beriş nobatlary</span>
               </div>
             ) : null}
 
@@ -255,26 +255,26 @@ const QuizWinnerTable = ({ quizId, quizFinished, smsNumber }: IProps) => {
           <div className="flex border-b border-fillTableStrokeTableHead p-2 gap-[8px]">
             {winnersData?.data[0].client_id || quizSearchData?.data ? (
               <div className="text-center flex items-center text-xs text-textBlack leading-[125%] font-semibold max-w-[14px] w-[100%]">
-                <span>№</span>
+                <span>Ýeri</span>
               </div>
             ) : null}
 
             {winnersData?.data[0].client.phone || quizSearchData?.data ? (
               <div className="text-center flex justify-center items-center text-xs text-textBlack leading-[125%] font-semibold max-w-[107px] w-[100%]">
-                <span>Gatnaşyjynyň tel. Beligisi</span>
+                <span>Telefon beligisi</span>
               </div>
             ) : null}
 
             {winnersData?.data[0].total_score_of_client ||
             quizSearchData?.data ? (
               <div className="text-center flex justify-center items-center text-xs text-textBlack leading-[125%] font-semibold max-w-[75px] w-[100%]">
-                <span>Soraglara jogap berilişiň nobaty </span>
+                <span>Nobatlaryň jemi </span>
               </div>
             ) : null}
             {winnersData?.data[0].total_score_of_client ||
             quizSearchData?.data ? (
               <div className="text-center flex justify-center items-center text-xs text-textBlack leading-[125%] font-semibold max-w-[99px] w-[100%]">
-                <span>Nobatlaryň jemi</span>
+                <span>Utuklaryň jemi</span>
               </div>
             ) : null}
           </div>
@@ -319,7 +319,7 @@ const QuizWinnerTable = ({ quizId, quizFinished, smsNumber }: IProps) => {
                       <div className="flex gap-[8px] items-center">
                         {winnersData?.data[0].client.answers.length !== 0 ? (
                           <div className="flex justify-center items-center text-xs text-textLight leading-[125%] font-semibold w-fit">
-                            <span>Soraglara näçinji jogap berdi :</span>
+                            <span>Jogap beriş nobatlary:</span>
                           </div>
                         ) : null}
                         {winnersData.data[0].client.answers.length !== 0 ? (
@@ -403,7 +403,7 @@ const QuizWinnerTable = ({ quizId, quizFinished, smsNumber }: IProps) => {
                       </div>
                       <div className="flex gap-[8px] items-center">
                         <div className="flex justify-center items-center text-xs text-textLight leading-[125%] font-semibold w-fit">
-                          <span>Soraglara näçinji jogap berdi :</span>
+                          <span>Jogap beriş nobatlary:</span>
                         </div>
                         <div className="flex justify-center items-center gap-[4px] text-xs text-textGray leading-[125%] w-fit">
                           {Object.keys(quizSearchData.data)

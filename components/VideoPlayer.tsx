@@ -28,11 +28,13 @@ const VideoPlayer = ({ maxHeight, maxWidth, video_id }: IProps) => {
     queryKey: ["video", `video:${video_id}`],
     queryFn: async () => {
       const response = await Queries.getVideo(video_id);
-      if (response.data.is_downloadable === 0) {
-        setCanDownload(false);
-      } else {
-        setCanDownload(true);
-      } // Set canDownload from API
+
+      // console.log(response);
+      // if (response.data.is_downloadable == 1) {
+      //   setCanDownload(true);
+      // } else {
+      //   setCanDownload(false);
+      // } // Set canDownload from API
       return response;
     },
   });
@@ -67,13 +69,18 @@ const VideoPlayer = ({ maxHeight, maxWidth, video_id }: IProps) => {
           <div className="lg:w-[700px] md:w-[550px] w-full h-[200px] sm:h-[250px] md:h-[350px] lg:h-[420px]">
             <video
               controls
-              controlsList={canDownload ? "" : "nodownload"} // Conditionally enable/disable download
-              src={data!.data.video_stream_url}
+              controlsList={
+                data?.data.is_downloadable === 0 ? "nodownload" : ""
+              } // Conditionally enable/disable download
               poster={data?.data.banner_url}
               playsInline
-              itemType="video/mp4"
-              onPlay={() => onPlayHandler()}
-            ></video>
+            >
+              <source
+                src={data!.data.video_stream_url}
+                type="video/mp4"
+                onPlay={() => onPlayHandler()}
+              />
+            </video>
           </div>
         ) : (
           <div className="flex flex-col gap-4 h-fit">
