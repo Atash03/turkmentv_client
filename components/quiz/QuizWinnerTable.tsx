@@ -1,40 +1,18 @@
 "use client";
-import { Queries } from "@/api/queries";
+import {
+  getNextQuizWinnners,
+  getQuizWinnersById,
+  Queries,
+} from "@/api/queries";
 
 import { v4 } from "uuid";
 import { useState, useEffect, useContext } from "react";
-import { IQuizQuestionsWinners } from "@/models/quizQuestionsWinners.model";
+import {
+  Datum,
+  IQuizQuestionsWinners,
+} from "@/models/quizQuestionsWinners.model";
 import QuizContext from "@/context/QuizContext";
 import { useQuizSearchActive } from "@/store/store";
-
-interface Message {
-  answer: string;
-  score: number;
-  date: string;
-  serial_number: number;
-  serial_number_for_correct: number;
-  starred_src: string;
-  quiz_id: number;
-  question_id: number;
-}
-
-interface Winner {
-  total_score_of_client: string;
-  correct_answers_time: string;
-  client_id: number;
-  client: {
-    id: number;
-    phone: string;
-    answers: {
-      id: number;
-      question_id: number;
-      score: number;
-      serial_number_for_correct: number;
-      client_id: number;
-    }[];
-  };
-}
-
 interface IProps {
   quizId: number;
   quizFinished: boolean;
@@ -42,23 +20,58 @@ interface IProps {
 }
 
 const QuizWinnerTable = ({ quizId, quizFinished, smsNumber }: IProps) => {
-  const [winnersData, setWinnersData] = useState<IQuizQuestionsWinners>();
+  const [winnersData, setWinnersData] = useState<Datum[] | []>([]);
   const { questionsData } = useContext(QuizContext).quizQuestionsContext;
-
+  const [winnersTotal, setWinnersTotal] = useState<number>(0);
+  const [nextPageQueries, setQueries] = useState<{
+    limit: number;
+    offset: number;
+  }>({
+    limit: 0,
+    offset: 0,
+  });
   const { quizSearchData } = useContext(QuizContext).quizSearchContext;
   const { active } = useQuizSearchActive();
 
+  async function getData(next?: boolean) {
+    if (next) {
+      const res = await getNextQuizWinnners(
+        quizId,
+        nextPageQueries.limit,
+        nextPageQueries.offset
+      );
+      if (res) {
+        setWinnersData([...winnersData, ...res.data]);
+        setQueries({
+          limit: res?.meta.per_page,
+          offset: nextPageQueries.offset + res?.meta.per_page,
+        });
+      }
+    } else {
+      const res = await getQuizWinnersById(quizId);
+      if (res) {
+        setWinnersTotal(res.meta.total);
+        setWinnersData(res.data);
+        setQueries({
+          limit: res?.meta.per_page,
+          offset: nextPageQueries.offset + res?.meta.per_page,
+        });
+      }
+    }
+  }
+
   useEffect(() => {
     if (!active) {
-      Queries.getQuizWinners(quizId).then((res) => {
-        setWinnersData(res);
-      });
+      // Queries.getQuizWinners(quizId).then((res) => {
+      //   setWinnersData(res);
+      // });
+      getData();
     } else if (active) {
-      setWinnersData(undefined);
+      setWinnersData([]);
     }
   }, [quizId, active]);
 
-  return winnersData?.data.length !== 0 ? (
+  return quizSearchData?.data || (winnersData && winnersData?.length) !== 0 ? (
     <div className="flex flex-col justify-center items-center gap-[60px]">
       <div className="flex flex-col gap-5 justify-center items-center w-full">
         <h2 className="text-textBlack text-[28px] text-center md:text-left md:text-[32px] font-semibold">
@@ -69,33 +82,30 @@ const QuizWinnerTable = ({ quizId, quizFinished, smsNumber }: IProps) => {
         <div className="table-desktop hidden sm:flex flex-col bg-fillTableHead rounded-[25px] shadow-quizButton overflow-hidden max-w-[1000px] w-full">
           {/* Table Head */}
           <div className="flex border-b border-fillTableStrokeTableHead">
-            {winnersData?.data[0].client_id || quizSearchData?.data ? (
+            {winnersData[0].client_id || quizSearchData?.data ? (
               <div className="text-center flex justify-center items-center text-base text-textBlack leading-[125%] font-semibold max-w-[54px] w-[100%] pl-6 pr-3 py-5">
                 <span>Ýeri</span>
               </div>
             ) : null}
 
-            {winnersData?.data[0].client.phone || quizSearchData?.data ? (
+            {winnersData[0].phone || quizSearchData?.data ? (
               <div className="text-center flex justify-center items-center text-base text-textBlack leading-[125%] font-semibold max-w-[176px] w-[100%] px-3 py-5">
                 <span>Telefon beligisi</span>
               </div>
             ) : null}
 
-            {winnersData?.data[0].client.answers.length ||
-            quizSearchData?.data ? (
+            {winnersData[0].answers.length || quizSearchData?.data ? (
               <div className="text-center flex justify-center items-center text-base text-textBlack leading-[125%] font-semibold w-[100%] px-3 py-5">
                 <span>Jogap beriş nobatlary</span>
               </div>
             ) : null}
 
-            {winnersData?.data[0].total_score_of_client ||
-            quizSearchData?.data ? (
+            {winnersData[0].total_score_of_client || quizSearchData?.data ? (
               <div className="text-center flex justify-center items-center text-base text-textBlack leading-[125%] font-semibold max-w-[180px] w-[100%] px-3 py-5">
                 <span>Nobatlaryň jemi</span>
               </div>
             ) : null}
-            {winnersData?.data[0].total_score_of_client ||
-            quizSearchData?.data ? (
+            {winnersData[0].total_score_of_client || quizSearchData?.data ? (
               <div className="text-center flex justify-center items-center text-base text-textBlack leading-[125%] font-semibold max-w-[180px] w-[100%] px-3 py-5">
                 <span>Utuklaryň jemi</span>
               </div>
@@ -105,7 +115,7 @@ const QuizWinnerTable = ({ quizId, quizFinished, smsNumber }: IProps) => {
           {/* Table Body */}
           <div className="">
             {winnersData
-              ? winnersData?.data.map((winner, id) => (
+              ? winnersData.map((winner, id) => (
                   <div
                     className={`flex border-b border-fillTableStrokeTableRow ${
                       id % 2 === 0 ? "bg-fillTableRow" : "bg-fillTableRow2"
@@ -116,27 +126,27 @@ const QuizWinnerTable = ({ quizId, quizFinished, smsNumber }: IProps) => {
                       <span>
                         {id > 0 &&
                         winner.correct_answers_time ===
-                          winnersData.data[id - 1].correct_answers_time
+                          winnersData[id - 1].correct_answers_time
                           ? id
                           : id + 1}
                       </span>
                     </div>
-                    {winnersData.data[0].client.phone ? (
+                    {winnersData[0].phone ? (
                       <div className="flex justify-center items-center text-base text-textBlack leading-[125%] font-semibold max-w-[176px] w-[100%] px-3 py-5">
-                        <span>+{winner.client.phone}</span>
+                        <span>+{winner.phone}</span>
                       </div>
                     ) : null}
-                    {winnersData.data[0].client.answers.length !== 0 ? (
+                    {winnersData[0].answers.length !== 0 ? (
                       <div className="flex justify-center items-center gap-6 text-base text-textGray leading-[125%] w-[100%] px-3 py-5">
                         {questionsData
                           ? questionsData.map((question) => {
                               const matchingAnswer =
-                                winner.client.answers.find(
+                                winner.answers.find(
                                   (answer) =>
                                     answer.question_id === question.id &&
                                     answer.score > 0
                                 ) ||
-                                winner.client.answers.find(
+                                winner.answers.find(
                                   (answer) => answer.question_id === question.id
                                 );
 
@@ -168,14 +178,14 @@ const QuizWinnerTable = ({ quizId, quizFinished, smsNumber }: IProps) => {
                       </div>
                     ) : null}
 
-                    {winnersData.data[0].total_score_of_client ? (
+                    {winnersData[0].total_score_of_client ? (
                       <div className="flex justify-center items-center text-base text-textBlack leading-[125%]  max-w-[180px] w-[100%] px-3 py-3">
                         <span className="border border-[#2C7CDA] text-[#2C7CDA] rounded-full w-[36px] h-[36px] flex justify-center items-center text-base leading-[125%] ">
                           {winner.correct_answers_time}
                         </span>
                       </div>
                     ) : null}
-                    {winnersData.data[0].total_score_of_client ? (
+                    {winnersData[0].total_score_of_client ? (
                       <div className="flex justify-center items-center text-base text-textBlack leading-[125%]  max-w-[180px] w-[100%] px-3 py-3">
                         <span className="bg-fillOrange rounded-full w-[36px] h-[36px] flex justify-center items-center text-base leading-[125%] text-white">
                           {winner.total_score_of_client}
@@ -253,26 +263,24 @@ const QuizWinnerTable = ({ quizId, quizFinished, smsNumber }: IProps) => {
         <div className="sm:hidden flex flex-col bg-fillTableHead rounded-[13px] shadow-quizButton overflow-hidden max-w-[1000px] w-full">
           {/* Table Head */}
           <div className="flex border-b border-fillTableStrokeTableHead p-2 gap-[8px]">
-            {winnersData?.data[0].client_id || quizSearchData?.data ? (
+            {winnersData[0].client_id || quizSearchData?.data ? (
               <div className="text-center flex items-center text-xs text-textBlack leading-[125%] font-semibold max-w-[14px] w-[100%]">
                 <span>Ýeri</span>
               </div>
             ) : null}
 
-            {winnersData?.data[0].client.phone || quizSearchData?.data ? (
+            {winnersData[0].phone || quizSearchData?.data ? (
               <div className="text-center flex justify-center items-center text-xs text-textBlack leading-[125%] font-semibold max-w-[107px] w-[100%]">
                 <span>Telefon beligisi</span>
               </div>
             ) : null}
 
-            {winnersData?.data[0].total_score_of_client ||
-            quizSearchData?.data ? (
+            {winnersData[0].total_score_of_client || quizSearchData?.data ? (
               <div className="text-center flex justify-center items-center text-xs text-textBlack leading-[125%] font-semibold max-w-[75px] w-[100%]">
                 <span>Nobatlaryň jemi </span>
               </div>
             ) : null}
-            {winnersData?.data[0].total_score_of_client ||
-            quizSearchData?.data ? (
+            {winnersData[0].total_score_of_client || quizSearchData?.data ? (
               <div className="text-center flex justify-center items-center text-xs text-textBlack leading-[125%] font-semibold max-w-[99px] w-[100%]">
                 <span>Utuklaryň jemi</span>
               </div>
@@ -282,7 +290,7 @@ const QuizWinnerTable = ({ quizId, quizFinished, smsNumber }: IProps) => {
           {/* Table Body */}
           <div className="">
             {winnersData
-              ? winnersData?.data.map((winner, id) => (
+              ? winnersData.map((winner, id) => (
                   <div
                     className={`flex border-b border-fillTableStrokeTableRow  items-center p-[8px] gap-[8px] ${
                       id % 2 === 0 ? "bg-fillTableRow" : "bg-fillTableRow2"
@@ -295,20 +303,20 @@ const QuizWinnerTable = ({ quizId, quizFinished, smsNumber }: IProps) => {
 
                     <div className="flex flex-col gap-[8px] w-full">
                       <div className="flex gap-[8px] items-center">
-                        {winnersData.data[0].client.phone ? (
+                        {winnersData[0].phone ? (
                           <div className="flex items-center text-xs text-textBlack leading-[125%] font-semibold max-w-[107px] w-full">
-                            <span>+{winner.client.phone}</span>
+                            <span>+{winner.phone}</span>
                           </div>
                         ) : null}
 
-                        {winnersData.data[0].total_score_of_client ? (
+                        {winnersData[0].total_score_of_client ? (
                           <div className="flex justify-center items-center text-xs text-textBlack leading-[125%] max-w-[75px] w-full">
                             <span className="border border-[#2C7CDA] text-[#2C7CDA] rounded-full w-[24px] h-[24px] flex justify-center items-center text-xs leading-[125%] ">
                               {winner.correct_answers_time}
                             </span>
                           </div>
                         ) : null}
-                        {winnersData.data[0].total_score_of_client ? (
+                        {winnersData[0].total_score_of_client ? (
                           <div className="flex justify-center items-center text-xs text-textBlack leading-[125%] max-w-[99px] w-full">
                             <span className="bg-fillOrange rounded-full w-[24px] h-[24px] flex justify-center items-center text-xs leading-[125%] text-white">
                               {winner.total_score_of_client}
@@ -317,22 +325,22 @@ const QuizWinnerTable = ({ quizId, quizFinished, smsNumber }: IProps) => {
                         ) : null}
                       </div>
                       <div className="flex gap-[8px] items-center">
-                        {winnersData?.data[0].client.answers.length !== 0 ? (
+                        {winnersData[0].answers.length !== 0 ? (
                           <div className="flex justify-center items-center text-xs text-textLight leading-[125%] font-semibold w-fit">
                             <span>Jogap beriş nobatlary:</span>
                           </div>
                         ) : null}
-                        {winnersData.data[0].client.answers.length !== 0 ? (
+                        {winnersData[0].answers.length !== 0 ? (
                           <div className="flex justify-center items-center gap-[4px] text-xs text-textGray leading-[125%] w-fit">
                             {questionsData
                               ? questionsData.map((question) => {
                                   const matchingAnswer =
-                                    winner.client.answers.find(
+                                    winner.answers.find(
                                       (answer) =>
                                         answer.question_id === question.id &&
                                         answer.score > 0
                                     ) ||
-                                    winner.client.answers.find(
+                                    winner.answers.find(
                                       (answer) =>
                                         answer.question_id === question.id
                                     );
@@ -445,6 +453,15 @@ const QuizWinnerTable = ({ quizId, quizFinished, smsNumber }: IProps) => {
           </div>
         </div>
       </div>
+
+      {winnersData.length < winnersTotal && (
+        <button
+          onClick={() => getData(true)}
+          className="py-[5px] px-[10px] rounded-md bg-blue-500 text-white border border-blue-500 lg:hover:bg-white lg:hover:text-blue-500 transition-all duration-300"
+        >
+          Dowamy
+        </button>
+      )}
 
       {/* Rules block */}
       <div className="flex flex-col gap-[20px] p-5 border border-strokeLightGray1 rounded-[25px] max-w-[1000px] w-full items-center justify-center">

@@ -1,42 +1,42 @@
-import localFont from 'next/font/local';
-import Script from 'next/script';
+import localFont from "next/font/local";
+import Script from "next/script";
 
-import { Roboto } from 'next/font/google';
-import { Merriweather } from 'next/font/google';
-import { Merriweather_Sans } from 'next/font/google';
-import { Alexandria } from 'next/font/google';
+import { Roboto } from "next/font/google";
+import { Merriweather } from "next/font/google";
+import { Merriweather_Sans } from "next/font/google";
+import { Alexandria } from "next/font/google";
 
-import 'swiper/swiper-bundle.css';
-import './globals.css';
-import QueryProvider from '@/providers/QueryProvider';
-import { HtmlContext } from 'next/dist/shared/lib/html-context.shared-runtime';
+import "swiper/swiper-bundle.css";
+import "./globals.css";
+import QueryProvider from "@/providers/QueryProvider";
+import { HtmlContext } from "next/dist/shared/lib/html-context.shared-runtime";
 // FONTS
 const aeroport = localFont({
-  src: '../fonts/Aeroport.otf',
-  variable: '--font-aeroport',
+  src: "../fonts/Aeroport.otf",
+  variable: "--font-aeroport",
 });
 const roboto = Roboto({
-  subsets: ['latin'],
-  weight: ['300', '400', '700'],
-  variable: '--font-roboto',
+  subsets: ["latin"],
+  weight: ["300", "400", "700"],
+  variable: "--font-roboto",
 });
 const mw = Merriweather({
-  subsets: ['cyrillic', 'cyrillic-ext', 'latin', 'latin-ext'],
-  weight: '700',
-  variable: '--font-mw',
+  subsets: ["cyrillic", "cyrillic-ext", "latin", "latin-ext"],
+  weight: "700",
+  variable: "--font-mw",
 });
 const mw_sans = Merriweather_Sans({
-  subsets: ['cyrillic-ext', 'latin', 'latin-ext'],
-  weight: ['300', '400', '700'],
-  variable: '--font-mwsans',
+  subsets: ["cyrillic-ext", "latin", "latin-ext"],
+  weight: ["300", "400", "700"],
+  variable: "--font-mwsans",
 });
 const alexandria = Alexandria({
-  subsets: ['latin', 'latin-ext'],
-  variable: '--font-alexandria',
+  subsets: ["latin", "latin-ext"],
+  variable: "--font-alexandria",
 });
 
 export const metadata = {
-  title: 'Turkmen TV',
+  title: "Turkmen TV",
 };
 
 interface IProps {
@@ -47,12 +47,14 @@ export default function RootLayout({ children }: IProps) {
   return (
     <html
       lang="tm"
-      className={`${aeroport.variable} ${mw.variable} ${roboto.variable} ${mw_sans.variable} ${alexandria.variable}`}>
+      className={`${aeroport.variable} ${mw.variable} ${roboto.variable} ${mw_sans.variable} ${alexandria.variable}`}
+    >
       <head>
         <link rel="icon" href="/logo.png" sizes="any" />
         <meta
           name="viewport"
-          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no;"></meta>
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no;"
+        ></meta>
       </head>
       <body className="relative overflow-x-hidden">
         <QueryProvider>{children}</QueryProvider>
@@ -61,7 +63,8 @@ export default function RootLayout({ children }: IProps) {
       <Script
         id="ganalytics-import"
         async
-        src="https://www.googletagmanager.com/gtag/js?id=G-F2267QXY9T"></Script>
+        src="https://www.googletagmanager.com/gtag/js?id=G-F2267QXY9T"
+      ></Script>
       <Script id="ganalytics-body">
         {` 
   window.dataLayer = window.dataLayer || []; 

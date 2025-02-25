@@ -288,3 +288,45 @@ export const getTossData = async ({
     console.log(err);
   }
 };
+
+export const getQuizWinnersById = async (id: number) => {
+  try {
+    const res = await fetch(
+      `${baseUrl.QUIZ_SRC}${routes.getQuizQuestionsWinners(id)}`,
+      {
+        next: { revalidate: 3600 },
+      }
+    );
+
+    const result = await res.json();
+    console.log(result);
+
+    return result as IQuizQuestionsWinners;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const getNextQuizWinnners = async (
+  id: number,
+  limit: number,
+  offset: number
+) => {
+  try {
+    const res = await fetch(
+      `${baseUrl.QUIZ_SRC}${routes.getQuizQuestionsWinners(
+        id
+      )}?limit=${limit}&offset=${offset}`,
+      {
+        next: { revalidate: 3600 },
+      }
+    );
+
+    const result = await res.json();
+    console.log(result);
+
+    return result as IQuizQuestionsWinners;
+  } catch (err) {
+    console.log(err);
+  }
+};

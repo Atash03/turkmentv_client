@@ -36,6 +36,7 @@ const QuizSearch = ({ quizId }: { quizId: number }) => {
     event: React.FormEvent<HTMLFormElement>
   ) => {
     event.preventDefault();
+    setActive(true);
 
     try {
       const response = await fetch(
@@ -50,11 +51,9 @@ const QuizSearch = ({ quizId }: { quizId: number }) => {
       );
 
       // Handle the response as needed
-
       const data = await response.json();
       setQuizSearchData(data);
       setSearchActive(true);
-      setActive(true);
     } catch (error) {}
   };
 
