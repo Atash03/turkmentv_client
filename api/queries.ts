@@ -330,3 +330,22 @@ export const getNextQuizWinnners = async (
     console.log(err);
   }
 };
+
+export const getPlaylistById = async (id: string) => {
+  try {
+    const res = await fetch(
+      `${baseUrl.MATERIALS_SRC}${routes.videos(
+        `?per_page=8&page=1&category_id=${id}`
+      )}`,
+      {
+        next: { revalidate: 3600 },
+      }
+    );
+
+    const result = await res.json();
+
+    return result;
+  } catch (err) {
+    console.log(err);
+  }
+};
