@@ -6,26 +6,31 @@ import aydym from "@/public/aydym-com.webp";
 import horjun from "@/public/horjun.png";
 import belet from "@/public/belet.jpg";
 import { v4 } from "uuid";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
+import { Queries } from "@/api/queries";
+import Loader from "../Loader";
 
 const PlaylistVideos = ({ id, data }: { id: string; data: any }) => {
-  const [index, setIndex] = useState<number>(0);
+  const searchParams = useSearchParams();
+  const videoId = searchParams.get("video");
 
   return (
     <div className="video-item-inner">
       <div className="video-item-wrapper flex flex-col md:flex-row md:items-start items-center gap-10 relative pb-14 w-full">
-        <InfoBlock data={data?.data[index]} />
+        <InfoBlock video_id={data?.data[Number(videoId)].id} />
 
         <div className="video-item-inner flex flex-col gap-4 grow-0">
           {data?.data.map(
             (item: any, i: number) =>
-              i !== index && (
-                <button key={v4()} onClick={() => setIndex(i)}>
+              i !== Number(videoId) && (
+                <Link href={`/playlist/${id}?video=${i}`} key={v4()}>
                   <VideoItem
                     id={item.id}
                     img={item.banner_url}
                     title={item.title}
                   />
-                </button>
+                </Link>
               )
           )}
         </div>
@@ -36,91 +41,106 @@ const PlaylistVideos = ({ id, data }: { id: string; data: any }) => {
 
 export default PlaylistVideos;
 
-const InfoBlock = ({ data }: { data: any }) => (
-  <div className="flex gap-6 flex-1 w-full justify-between h-full">
-    <div className="flex flex-col gap-6 w-full h-full">
-      <div className="flex justify-between gap-[32px] w-full h-full">
-        <div className="w-full flex flex-col gap-6 h-full">
-          <div className="flex flex-col gap-[40px] h-full  w-full">
-            <div className="flex gap-[40px] flex-col  h-full  w-full">
-              <div className="w-full">
-                <VideoPlayer content={data} />
-              </div>
+const InfoBlock = ({ video_id }: { video_id: number }) => {
+  const { data, isFetching, error } = useQuery({
+    queryKey: ["video", video_id],
+    queryFn: () => Queries.getVideo(video_id),
+  });
 
-              <div className="flex flex-col gap-6">
-                {data?.desc ? (
-                  <p className="font-roboto text-lg w-full text-black">
-                    {data.desc}
-                  </p>
-                ) : null}
+  if (isFetching)
+    return (
+      <div className="w-full h-[500px] sm:h-[667px] md:h-[600px] l flex items-center justify-center">
+        <Loader height={700} />
+      </div>
+    );
+  if (error) return <h1>{JSON.stringify(error)}</h1>;
 
-                {data?.aydym_com_url ||
-                data?.horjun_content_url ||
-                data?.belet_url ? (
-                  <div className="flex flex-col gap-6">
-                    <h2 className="text-2xl font-semibold">
-                      Beýleki platformalarda seret:
-                    </h2>
-                    <div className="flex gap-11 items-center">
-                      {data.aydym_com_url ? (
-                        <Link
-                          href={data.aydym_com_url}
-                          target="_blank"
-                          className="flex flex-col items-center justify-center gap-2"
-                        >
-                          <div className="relative h-16 w-16 flex items-center justify-center overflow-hidden border-[#00AEFF] border-[1.5px] p-2 rounded-full">
-                            <Image
-                              src={aydym}
-                              alt="Aydym.com"
-                              className="rounded-full"
-                            />
-                          </div>
-                          <h3>Aydym.com</h3>
-                        </Link>
-                      ) : null}
-                      {data.horjun_content_url ? (
-                        <Link
-                          href={data.horjun_content_url}
-                          target="_blank"
-                          className="flex flex-col items-center justify-center gap-2"
-                        >
-                          <div className="relative h-16 w-16 flex items-center justify-center overflow-hidden border-[#00AEFF] border-[1.5px] p-2 rounded-full">
-                            <Image
-                              src={horjun}
-                              alt="HorjunTv"
-                              className="rounded-full"
-                            />
-                          </div>
-                          <h3>HorjunTv</h3>
-                        </Link>
-                      ) : null}
-                      {data.belet_url ? (
-                        <Link
-                          href={data.belet_url}
-                          target="_blank"
-                          className="flex flex-col items-center justify-center gap-2"
-                        >
-                          <div className="relative h-16 w-16 flex items-center justify-center overflow-hidden border-[#00AEFF] border-[1.5px] p-2 rounded-full">
-                            <Image
-                              src={belet}
-                              alt="BeletTv"
-                              className="rounded-full"
-                            />
-                          </div>
-                          <h3>BeletFilm</h3>
-                        </Link>
-                      ) : null}
+  return (
+    <div className="flex gap-6 flex-1 w-full justify-between h-full">
+      <div className="flex flex-col gap-6 w-full h-full">
+        <div className="flex justify-between gap-[32px] w-full h-full">
+          <div className="w-full flex flex-col gap-6 h-full">
+            <div className="flex flex-col gap-[40px] h-full  w-full">
+              <div className="flex gap-[40px] flex-col  h-full  w-full">
+                <div className="w-full">
+                  <VideoPlayer content={data?.data} />
+                </div>
+
+                <div className="flex flex-col gap-6">
+                  {data?.data?.desc ? (
+                    <p className="font-roboto text-lg w-full text-black">
+                      {data?.data.desc}
+                    </p>
+                  ) : null}
+
+                  {data?.data?.aydym_com_url ||
+                  data?.data?.horjun_content_url ||
+                  data?.data?.belet_url ? (
+                    <div className="flex flex-col gap-6">
+                      <h2 className="text-2xl font-semibold">
+                        Beýleki platformalarda seret:
+                      </h2>
+                      <div className="flex gap-11 items-center">
+                        {data?.data.aydym_com_url ? (
+                          <Link
+                            href={data?.data.aydym_com_url}
+                            target="_blank"
+                            className="flex flex-col items-center justify-center gap-2"
+                          >
+                            <div className="relative h-16 w-16 flex items-center justify-center overflow-hidden border-[#00AEFF] border-[1.5px] p-2 rounded-full">
+                              <Image
+                                src={aydym}
+                                alt="Aydym.com"
+                                className="rounded-full"
+                              />
+                            </div>
+                            <h3>Aydym.com</h3>
+                          </Link>
+                        ) : null}
+                        {data?.data.horjun_content_url ? (
+                          <Link
+                            href={data?.data.horjun_content_url}
+                            target="_blank"
+                            className="flex flex-col items-center justify-center gap-2"
+                          >
+                            <div className="relative h-16 w-16 flex items-center justify-center overflow-hidden border-[#00AEFF] border-[1.5px] p-2 rounded-full">
+                              <Image
+                                src={horjun}
+                                alt="HorjunTv"
+                                className="rounded-full"
+                              />
+                            </div>
+                            <h3>HorjunTv</h3>
+                          </Link>
+                        ) : null}
+                        {data?.data.belet_url ? (
+                          <Link
+                            href={data?.data.belet_url}
+                            target="_blank"
+                            className="flex flex-col items-center justify-center gap-2"
+                          >
+                            <div className="relative h-16 w-16 flex items-center justify-center overflow-hidden border-[#00AEFF] border-[1.5px] p-2 rounded-full">
+                              <Image
+                                src={belet}
+                                alt="BeletTv"
+                                className="rounded-full"
+                              />
+                            </div>
+                            <h3>BeletFilm</h3>
+                          </Link>
+                        ) : null}
+                      </div>
                     </div>
-                  </div>
-                ) : null}
+                  ) : null}
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 const VideoPlayer = ({ content }: { content: any }) => {
   const [hasWindow, setHasWindow] = useState<boolean>(false);
