@@ -201,6 +201,7 @@ const VideoPlayer = ({ content, nextId }: { content: any; nextId: number }) => {
               controlsList={data?.is_downloadable === 0 ? "nodownload" : ""} // Conditionally enable/disable download
               poster={data?.banner_url}
               playsInline
+              autoPlay={nextId !== 1}
               onEnded={() => router.push(`${pathName}?video=${nextId}`)}
             >
               <source src={data?.video_stream_url} type="video/mp4" />
@@ -223,6 +224,7 @@ const VideoPlayer = ({ content, nextId }: { content: any; nextId: number }) => {
               controlsList={data?.is_downloadable === 0 ? "nodownload" : ""} // Conditionally enable/disable download
               className="w-full rounded bg-white"
               onEnded={() => router.push(`${pathName}?video=${nextId}`)}
+              autoPlay={nextId !== 1}
             >
               <source src={data?.content_url} />
             </audio>
