@@ -6,19 +6,24 @@ import aydym from "@/public/aydym-com.webp";
 import horjun from "@/public/horjun.png";
 import belet from "@/public/belet.jpg";
 import { v4 } from "uuid";
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { Queries } from "@/api/queries";
 import Loader from "../Loader";
+import { Button } from "../ui/button";
 
 const PlaylistVideos = ({ id, data }: { id: string; data: any }) => {
   const searchParams = useSearchParams();
   const videoId = searchParams.get("video");
+  const nextVideo = (Number(videoId) + 1) % data?.data?.length;
 
   return (
     <div className="video-item-inner">
       <div className="video-item-wrapper flex flex-col md:flex-row md:items-start items-center gap-10 relative pb-14 w-full">
-        <InfoBlock video_id={data?.data[Number(videoId)].id} />
+        <InfoBlock
+          video_id={data?.data[Number(videoId)].id}
+          nextId={nextVideo}
+        />
 
         <div className="video-item-inner flex flex-col gap-4 grow-0">
           {data?.data.map(
@@ -41,11 +46,19 @@ const PlaylistVideos = ({ id, data }: { id: string; data: any }) => {
 
 export default PlaylistVideos;
 
-const InfoBlock = ({ video_id }: { video_id: number }) => {
+const InfoBlock = ({
+  video_id,
+  nextId,
+}: {
+  video_id: number;
+  nextId: number;
+}) => {
   const { data, isFetching, error } = useQuery({
     queryKey: ["video", video_id],
     queryFn: () => Queries.getVideo(video_id),
   });
+  const router = useRouter();
+  const pathName = usePathname();
 
   if (isFetching)
     return (
@@ -63,7 +76,7 @@ const InfoBlock = ({ video_id }: { video_id: number }) => {
             <div className="flex flex-col gap-[40px] h-full  w-full">
               <div className="flex gap-[40px] flex-col  h-full  w-full">
                 <div className="w-full">
-                  <VideoPlayer content={data?.data} />
+                  <VideoPlayer content={data?.data} nextId={nextId} />
                 </div>
 
                 <div className="flex flex-col gap-6">
@@ -72,6 +85,26 @@ const InfoBlock = ({ video_id }: { video_id: number }) => {
                       {data?.data.desc}
                     </p>
                   ) : null}
+                  <Button
+                    onClick={() => router.push(`${pathName}?video=${nextId}`)}
+                    className="w-fit bg-blue-500 text-white flex gap-[5px] items-center"
+                  >
+                    <span>Indiki</span>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      className="lucide lucide-play"
+                    >
+                      <polygon points="6 3 20 12 6 21 6 3" />
+                    </svg>
+                  </Button>
 
                   {data?.data?.aydym_com_url ||
                   data?.data?.horjun_content_url ||
@@ -142,9 +175,11 @@ const InfoBlock = ({ video_id }: { video_id: number }) => {
   );
 };
 
-const VideoPlayer = ({ content }: { content: any }) => {
+const VideoPlayer = ({ content, nextId }: { content: any; nextId: number }) => {
   const [hasWindow, setHasWindow] = useState<boolean>(false);
   const [data, setData] = useState<any>(content);
+  const router = useRouter();
+  const pathName = usePathname();
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -166,6 +201,7 @@ const VideoPlayer = ({ content }: { content: any }) => {
               controlsList={data?.is_downloadable === 0 ? "nodownload" : ""} // Conditionally enable/disable download
               poster={data?.banner_url}
               playsInline
+              onEnded={() => router.push(`${pathName}?video=${nextId}`)}
             >
               <source src={data?.video_stream_url} type="video/mp4" />
             </video>
@@ -186,6 +222,7 @@ const VideoPlayer = ({ content }: { content: any }) => {
               controls
               controlsList={data?.is_downloadable === 0 ? "nodownload" : ""} // Conditionally enable/disable download
               className="w-full rounded bg-white"
+              onEnded={() => router.push(`${pathName}?video=${nextId}`)}
             >
               <source src={data?.content_url} />
             </audio>
