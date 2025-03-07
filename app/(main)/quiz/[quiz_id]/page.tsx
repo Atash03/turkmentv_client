@@ -2,19 +2,18 @@
 
 import { Queries } from "@/api/queries";
 import Loader from "@/components/Loader";
-import QuizQuestion from "@/components/quiz/QuizQuestion";
 import QuizQuestionList from "@/components/quiz/QuizQuestionList";
 import QuizSearch from "@/components/quiz/QuizSearch";
 import QuizTable from "@/components/quiz/QuizTable";
 import QuizWinnerTable from "@/components/quiz/QuizWinnerTable";
 import GradientTitle from "@/components/vote/GradientTitle";
-import QuizContext from "@/context/QuizContext";
-import { IQuizQuestions, Question } from "@/models/quizQuestions.model";
+import { IQuizQuestions } from "@/models/quizQuestions.model";
 import QuizProvider from "@/providers/QuizProvider";
-import { useQuizSearchActive } from "@/store/store";
+import { useQuizSearchActive, useSteps } from "@/store/store";
 import { Validator } from "@/utils/validator";
 import Image from "next/image";
-import { useContext, useEffect, useState } from "react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
 
 interface IParams {
@@ -27,35 +26,48 @@ const page = ({ params }: IParams) => {
   const [quizFinished, setQuizFinished] = useState<boolean>(false);
   const [data, setData] = useState<IQuizQuestions>();
   const { active } = useQuizSearchActive();
-
-  // const { data, error, isFetching } = useQuery(
-  //   ['quiz_questions'],
-  //   () => Queries.getQuizQuestions(),
-  //   {
-  //     keepPreviousData: true,
-  //   },
-  // );
+  const { step, setStep } = useSteps();
 
   useEffect(() => {
     if (!params.quiz_id) {
       Queries.getQuizQuestions().then((res) => {
         setData(res);
-        res
-          ? res.data.questions[res.data.questions.length - 1].status ===
-            "closed"
-            ? setQuizFinished(true)
-            : setQuizFinished(false)
-          : null;
+        if (res.data.questions) {
+          res.data.questions.map((question) =>
+            question.status === "active" || question.status === "new"
+              ? setQuizFinished(false)
+              : setQuizFinished(true)
+          );
+        } else if (res.data.steps && res.data.steps?.length > 0) {
+          setStep(res.data.steps[0].tapgyr);
+          for (let i = 0; i < res.data.steps.length; i++) {
+            res.data.steps[i].questions.map((question) =>
+              question.status === "active" || question.status === "new"
+                ? setQuizFinished(false)
+                : setQuizFinished(true)
+            );
+          }
+        }
       });
     } else {
       Queries.getQuiz(params.quiz_id).then((res) => {
         setData(res);
-        res
-          ? res.data.questions[res.data.questions.length - 1]?.status ===
-            "closed"
-            ? setQuizFinished(true)
-            : setQuizFinished(false)
-          : null;
+        if (res.data.questions) {
+          res.data.questions.map((question) =>
+            question.status === "active" || question.status === "new"
+              ? setQuizFinished(false)
+              : setQuizFinished(true)
+          );
+        } else if (res.data.steps && res.data.steps?.length > 0) {
+          setStep(res.data.steps[0].tapgyr);
+          for (let i = 0; i < res.data.steps.length; i++) {
+            res.data.steps[i].questions.map((question) =>
+              question.status === "active" || question.status === "new"
+                ? setQuizFinished(false)
+                : setQuizFinished(true)
+            );
+          }
+        }
       });
     }
   }, []);
@@ -129,6 +141,37 @@ const page = ({ params }: IParams) => {
               </div>
 
               <div className="flex flex-col md:gap-[160px] gap-[80px]">
+                {data.data.has_steps !== 0 && data.data.steps && (
+                  <div className="flex flex-col gap-4 items-center w-full">
+                    <h1 className="text-textBlack md:text-[60px] leading-[100%] font-semibold">
+                      Tapgyr
+                    </h1>
+                    <div className="flex w-full md:w-1/2 gap-[10px]">
+                      {data.data.steps.map((item) => (
+                        <button
+                          onClick={() => {
+                            setStep(item.tapgyr);
+                          }}
+                          key={item.tapgyr}
+                          className={`flex-1 py-[5px] rounded-lg transition-all duration-300 ${
+                            step === item.tapgyr
+                              ? "bg-lightPrimary text-white"
+                              : "bg-lightPrimaryContainer text-textLight"
+                          }`}
+                        >
+                          {item.tapgyr}
+                        </button>
+                      ))}
+                      <Link
+                        href={`/quiz/${params.quiz_id}/results`}
+                        className={`flex-1 py-[5px] rounded-lg transition-all duration-300 bg-lightPrimaryContainer text-center text-textLight`}
+                      >
+                        Netije
+                      </Link>
+                    </div>
+                  </div>
+                )}
+
                 {data?.data && !active ? (
                   <QuizQuestionList
                     paramsId={params.quiz_id}
@@ -138,15 +181,14 @@ const page = ({ params }: IParams) => {
                   />
                 ) : null}
 
-                {data?.data.id && quizFinished ? (
+                {data?.data.id && quizFinished && data.data.has_steps === 0 ? (
                   <QuizSearch quizId={data?.data.id} />
                 ) : null}
 
-                {data?.data.id && (
+                {data?.data.id && data.data.has_steps === 0 && (
                   <QuizWinnerTable
-                    smsNumber={data.data.sms_number}
                     quizId={data?.data.id}
-                    quizFinished={quizFinished}
+                    questionsData={data.data.questions}
                   />
                 )}
               </div>

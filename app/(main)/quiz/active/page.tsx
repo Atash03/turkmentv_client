@@ -1,15 +1,15 @@
-'use client';
-import { Queries } from '@/api/queries';
-import QuizQuestionList from '@/components/quiz/QuizQuestionList';
-import QuizSearch from '@/components/quiz/QuizSearch';
-import QuizTable from '@/components/quiz/QuizTable';
-import QuizWinnerTable from '@/components/quiz/QuizWinnerTable';
-import { IQuizQuestions, Question } from '@/models/quizQuestions.model';
-import QuizProvider from '@/providers/QuizProvider';
-import { Validator } from '@/utils/validator';
-import Image from 'next/image';
-import { useEffect, useState } from 'react';
-import { useMediaQuery } from 'usehooks-ts';
+"use client";
+import { Queries } from "@/api/queries";
+import QuizQuestionList from "@/components/quiz/QuizQuestionList";
+import QuizSearch from "@/components/quiz/QuizSearch";
+import QuizTable from "@/components/quiz/QuizTable";
+import QuizWinnerTable from "@/components/quiz/QuizWinnerTable";
+import { IQuizQuestions, Question } from "@/models/quizQuestions.model";
+import QuizProvider from "@/providers/QuizProvider";
+import { Validator } from "@/utils/validator";
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import { useMediaQuery } from "usehooks-ts";
 
 const page = () => {
   const [quizFinished, setQuizFinished] = useState<boolean>(false);
@@ -18,19 +18,19 @@ const page = () => {
   useEffect(() => {
     Queries.getQuizQuestions().then((res) => {
       setData(res);
-      res
-        ? res.data.questions[res.data.questions.length - 1]?.status === 'closed'
+      res && res.data.questions
+        ? res.data.questions[res.data.questions.length - 1]?.status === "closed"
           ? setQuizFinished(true)
           : setQuizFinished(false)
         : null;
     });
   }, []);
 
-  const mobile = useMediaQuery('(max-width: 768px)');
+  const mobile = useMediaQuery("(max-width: 768px)");
 
   return (
     <main className="pt-[60px] pb-[200px]">
-      {typeof data !== 'string' ? (
+      {typeof data !== "string" ? (
         <div className="container flex flex-col md:gap-[200px] gap-[80px]">
           <QuizProvider>
             <div className="flex flex-col gap-[100px]">
@@ -55,7 +55,7 @@ const page = () => {
                             ? data.data.banner_mobile
                             : data.data.banner
                         }
-                        alt={'banner'}
+                        alt={"banner"}
                         unoptimized
                         unselectable="off"
                         fill
@@ -64,7 +64,7 @@ const page = () => {
                     ) : (
                       <Image
                         src={data?.data.banner}
-                        alt={'banner'}
+                        alt={"banner"}
                         unoptimized
                         unselectable="off"
                         fill
@@ -80,7 +80,9 @@ const page = () => {
               ) : null}
             </div>
 
-            {data?.data.id && quizFinished ? <QuizSearch quizId={data?.data.id} /> : null}
+            {data?.data.id && quizFinished ? (
+              <QuizSearch quizId={data?.data.id} />
+            ) : null}
 
             <div className="flex flex-col md:gap-[160px] gap-[80px]">
               {data?.data ? (
@@ -96,9 +98,8 @@ const page = () => {
               ) : null} */}
               {data?.data.id && (
                 <QuizWinnerTable
-                  smsNumber={data.data.sms_number}
                   quizId={data?.data.id}
-                  quizFinished={quizFinished}
+                  questionsData={data.data.questions}
                 />
               )}
             </div>

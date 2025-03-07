@@ -191,6 +191,12 @@ export class Queries {
     }).then((res) => res.json().then((res) => res as IQuizQuestions));
   }
 
+  public static async getQuizById(quiz_id: string) {
+    return await fetch(`${baseUrl.QUIZ_SRC}${routes.getQuiz(quiz_id)}`, {
+      next: { revalidate: 3600 },
+    }).then((res) => res.json().then((res) => res));
+  }
+
   public static async getQuizHistory(
     id: number
   ): Promise<IQuizQuestionsHistory> {
@@ -289,17 +295,77 @@ export const getTossData = async ({
   }
 };
 
-export const getQuizWinnersById = async (id: number) => {
+export const getQuizNetijeData = async (id: string) => {
   try {
     const res = await fetch(
-      `${baseUrl.QUIZ_SRC}${routes.getQuizQuestionsWinners(id)}`,
+      `${baseUrl.QUIZ_SRC}${routes.getQuizNetijeWinners(id)}`,
       {
-        next: { revalidate: 3600 },
+        next: {
+          revalidate: 300,
+          tags: ["netije"],
+        },
       }
     );
 
+    if (!res.ok) {
+      return undefined;
+    }
+
     const result = await res.json();
-    console.log(result);
+    return result;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const getNextQuizNetijeData = async (
+  id: string,
+  limit: number,
+  offset: number
+) => {
+  try {
+    const res = await fetch(
+      `${baseUrl.QUIZ_SRC}${routes.getQuizNetijeWinners(
+        id
+      )}?limit=${limit}&offset=${offset}`,
+      {
+        next: {
+          revalidate: 300,
+          tags: ["netije"],
+        },
+      }
+    );
+
+    if (!res.ok) {
+      return undefined;
+    }
+
+    const result = await res.json();
+    return result;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const getQuizWinnersById = async (id: number, step?: number) => {
+  try {
+    const res = step
+      ? await fetch(
+          `${baseUrl.QUIZ_SRC}${routes.getQuizQuestionsWinners(
+            id
+          )}?tapgyr=${step}`,
+          {
+            next: { revalidate: 3600 },
+          }
+        )
+      : await fetch(
+          `${baseUrl.QUIZ_SRC}${routes.getQuizQuestionsWinners(id)}`,
+          {
+            next: { revalidate: 3600 },
+          }
+        );
+
+    const result = await res.json();
 
     return result as IQuizQuestionsWinners;
   } catch (err) {
@@ -310,17 +376,27 @@ export const getQuizWinnersById = async (id: number) => {
 export const getNextQuizWinnners = async (
   id: number,
   limit: number,
-  offset: number
+  offset: number,
+  step?: number
 ) => {
   try {
-    const res = await fetch(
-      `${baseUrl.QUIZ_SRC}${routes.getQuizQuestionsWinners(
-        id
-      )}?limit=${limit}&offset=${offset}`,
-      {
-        next: { revalidate: 3600 },
-      }
-    );
+    const res = step
+      ? await fetch(
+          `${baseUrl.QUIZ_SRC}${routes.getQuizQuestionsWinners(
+            id
+          )}?tapgyr=${step}&limit=${limit}&offset=${offset}`,
+          {
+            next: { revalidate: 3600 },
+          }
+        )
+      : await fetch(
+          `${baseUrl.QUIZ_SRC}${routes.getQuizQuestionsWinners(
+            id
+          )}?limit=${limit}&offset=${offset}`,
+          {
+            next: { revalidate: 3600 },
+          }
+        );
 
     const result = await res.json();
     console.log(result);

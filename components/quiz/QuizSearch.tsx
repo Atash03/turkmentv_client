@@ -36,8 +36,6 @@ const QuizSearch = ({ quizId }: { quizId: number }) => {
     event: React.FormEvent<HTMLFormElement>
   ) => {
     event.preventDefault();
-    setActive(true);
-
     try {
       const response = await fetch(
         `https://sms.turkmentv.gov.tm/api/quiz/${quizId}/search`,
@@ -54,6 +52,7 @@ const QuizSearch = ({ quizId }: { quizId: number }) => {
       const data = await response.json();
       setQuizSearchData(data);
       setSearchActive(true);
+      setActive(true);
     } catch (error) {}
   };
 

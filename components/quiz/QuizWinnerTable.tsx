@@ -13,15 +13,14 @@ import {
 } from "@/models/quizQuestionsWinners.model";
 import QuizContext from "@/context/QuizContext";
 import { useQuizSearchActive } from "@/store/store";
+import { Question } from "@/models/quizQuestions.model";
 interface IProps {
   quizId: number;
-  quizFinished: boolean;
-  smsNumber: string;
+  questionsData: Question[] | undefined
 }
 
-const QuizWinnerTable = ({ quizId, quizFinished, smsNumber }: IProps) => {
+const QuizWinnerTable = ({ quizId, questionsData }: IProps) => {
   const [winnersData, setWinnersData] = useState<Datum[] | []>([]);
-  const { questionsData } = useContext(QuizContext).quizQuestionsContext;
   const [winnersTotal, setWinnersTotal] = useState<number>(0);
   const [nextPageQueries, setQueries] = useState<{
     limit: number;
@@ -54,7 +53,7 @@ const QuizWinnerTable = ({ quizId, quizFinished, smsNumber }: IProps) => {
         setWinnersData(res.data);
         setQueries({
           limit: res?.meta.per_page,
-          offset: nextPageQueries.offset + res?.meta.per_page,
+          offset: res?.meta.per_page,
         });
       }
     }

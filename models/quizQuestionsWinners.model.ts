@@ -9,6 +9,15 @@ export interface Datum {
   client_id: number;
   phone: string;
   answers: Answer[];
+  client?: {
+    id: number;
+    phone: string;
+  };
+  tapgyr_breakdown?: {
+    tapgyr: number;
+    tapgyr_correct_time: number;
+    tapgyr_score: number;
+  }[];
 }
 export interface Answer {
   id: number;

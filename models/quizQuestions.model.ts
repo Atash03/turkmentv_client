@@ -13,7 +13,12 @@ export interface Data {
   description: string;
   rules: Note[];
   notes: Note[];
-  questions: Question[];
+  questions?: Question[];
+  has_steps: 0 | 1;
+  steps?: {
+    tapgyr: number;
+    questions: Question[];
+  }[];
 }
 
 export interface Note {

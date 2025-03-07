@@ -96,7 +96,9 @@ const VideoPlayer = ({ maxHeight, maxWidth, video_id }: IProps) => {
             </div>
             <audio
               controls
-              controlsList={canDownload ? "" : "nodownload"} // Conditionally enable/disable download
+              controlsList={
+                data?.data.is_downloadable === 0 ? "nodownload" : ""
+              } // Conditionally enable/disable download
               className="w-full rounded bg-white"
               onPlay={() => onPlayHandler()}
             >

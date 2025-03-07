@@ -12,6 +12,7 @@ export default {
   getQuizQuestions: `/quiz/active`,
   getQuiz: (quiz_id: string) => `/quiz/${quiz_id}`,
   getQuizQuestionsWinners: (id: number) => `/quiz/${id}/winners`,
+  getQuizNetijeWinners: (id: string) => `/quiz/${id}/netije`,
   getQuizQuestionHistory: (id: number) => `/question/${id}/history`,
   // ===================================================================
 
