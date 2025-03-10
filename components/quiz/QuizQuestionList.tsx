@@ -25,7 +25,8 @@ const QuizQuestionList = ({
   const [questionData, setQuestionsData] = useState<Question[] | undefined>(
     initialQuestionsData.data.questions
       ? initialQuestionsData.data.questions
-      : initialQuestionsData.data.steps
+      : initialQuestionsData.data.steps &&
+        initialQuestionsData.data.steps.length > 0
       ? initialQuestionsData.data.steps[0].questions
       : []
   );

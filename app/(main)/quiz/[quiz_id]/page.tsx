@@ -141,36 +141,38 @@ const page = ({ params }: IParams) => {
               </div>
 
               <div className="flex flex-col md:gap-[160px] gap-[80px]">
-                {data.data.has_steps !== 0 && data.data.steps && (
-                  <div className="flex flex-col gap-4 items-center w-full">
-                    <h1 className="text-textBlack md:text-[60px] leading-[100%] font-semibold">
-                      Tapgyr
-                    </h1>
-                    <div className="flex w-full md:w-1/2 gap-[10px]">
-                      {data.data.steps.map((item) => (
-                        <button
-                          onClick={() => {
-                            setStep(item.tapgyr);
-                          }}
-                          key={item.tapgyr}
-                          className={`flex-1 py-[5px] rounded-lg transition-all duration-300 ${
-                            step === item.tapgyr
-                              ? "bg-lightPrimary text-white"
-                              : "bg-lightPrimaryContainer text-textLight"
-                          }`}
+                {data.data.has_steps !== 0 &&
+                  data.data.steps &&
+                  data.data.steps?.length > 0 && (
+                    <div className="flex flex-col gap-4 items-center w-full">
+                      <h1 className="text-textBlack md:text-[60px] leading-[100%] font-semibold">
+                        Tapgyr
+                      </h1>
+                      <div className="flex w-full md:w-1/2 gap-[10px]">
+                        {data.data.steps.map((item) => (
+                          <button
+                            onClick={() => {
+                              setStep(item.tapgyr);
+                            }}
+                            key={item.tapgyr}
+                            className={`flex-1 py-[5px] rounded-lg transition-all duration-300 ${
+                              step === item.tapgyr
+                                ? "bg-lightPrimary text-white"
+                                : "bg-lightPrimaryContainer text-textLight"
+                            }`}
+                          >
+                            {item.tapgyr}
+                          </button>
+                        ))}
+                        <Link
+                          href={`/quiz/${params.quiz_id}/results`}
+                          className={`flex-1 py-[5px] rounded-lg transition-all duration-300 bg-lightPrimaryContainer text-center text-textLight`}
                         >
-                          {item.tapgyr}
-                        </button>
-                      ))}
-                      <Link
-                        href={`/quiz/${params.quiz_id}/results`}
-                        className={`flex-1 py-[5px] rounded-lg transition-all duration-300 bg-lightPrimaryContainer text-center text-textLight`}
-                      >
-                        Netije
-                      </Link>
+                          Netije
+                        </Link>
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
 
                 {data?.data && !active ? (
                   <QuizQuestionList
