@@ -4,9 +4,11 @@ import { Question } from "@/models/quizQuestions.model";
 import {
   Datum,
   IQuizQuestionsWinners,
+  ISearchNetije,
 } from "@/models/quizQuestionsWinners.model";
 import { notFound } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import Loader from "../Loader";
 
 const padding = "py-4";
 
@@ -17,10 +19,11 @@ interface IProps {
 }
 
 const QuizTapgyrWinners = ({ id, tapgyr, questions }: IProps) => {
-  const [data, setData] = useState<Datum[] | []>([]);
+  const [data, setData] = useState<Datum[] | ISearchNetije[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [phone, setPhone] = useState<string>("");
   const [total, setTotal] = useState<number>(0);
+  const [error, setError] = useState<string>("");
   const [nextPageQueries, setQueries] = useState<{
     limit: number;
     offset: number;
@@ -42,7 +45,7 @@ const QuizTapgyrWinners = ({ id, tapgyr, questions }: IProps) => {
           limit: res.meta.per_page,
           offset: nextPageQueries.offset + res.meta.per_page,
         });
-        setData([...data, ...res.data]);
+        setData([...(data as Datum[]), ...res.data]);
       }
     } else {
       setLoading(true);
@@ -61,32 +64,37 @@ const QuizTapgyrWinners = ({ id, tapgyr, questions }: IProps) => {
     }
   }
 
-  // const handleSearchSubmit = async (event: any) => {
-  //   if (event.key === "Enter") {
-  //     event.preventDefault();
-  //     try {
-  //       setLoading(true);
-  //       const response = await fetch(
-  //         `https://sms.turkmentv.gov.tm/api/quiz/${id}/search`,
-  //         {
-  //           method: "POST",
-  //           headers: {
-  //             "Content-Type": "application/json",
-  //           },
-  //           body: JSON.stringify({ phone, tapgyr: tapgyr }),
-  //         }
-  //       );
+  const handleSearchSubmit = async (event: any) => {
+    if (event.key === "Enter" && phone.length === 8) {
+      event.preventDefault();
+      try {
+        setLoading(true);
+        const response = await fetch(
+          `https://sms.turkmentv.gov.tm/api/quiz/${id}/search_netije`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ phone }),
+          }
+        );
 
-  //       // Handle the response as needed
-  //       const data = await response.json();
-  //       setLoading(false);
-  //       // setData(data);
-  //       console.log(data);
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   }
-  // };
+        // Handle the response as needed
+        const data = await response.json();
+        setLoading(false);
+        if (!data.error) {
+          setData([data.data]);
+          setTotal(0);
+        } else {
+          setData([]);
+          setError("Telefon belgisi tapylmady");
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
 
   useEffect(() => {
     getData();
@@ -98,7 +106,7 @@ const QuizTapgyrWinners = ({ id, tapgyr, questions }: IProps) => {
         <h1 className="text-[28px] text-[#1B1B21] md:text-[36px]">
           Tapgyr {tapgyr}
         </h1>
-        {/* <div className="flex items-center gap-[14px] lg:col-span-2 relative">
+        <div className="flex items-center gap-[14px] lg:col-span-2 relative">
           <svg
             width="20"
             height="20"
@@ -125,13 +133,14 @@ const QuizTapgyrWinners = ({ id, tapgyr, questions }: IProps) => {
             maxLength={8}
             minLength={8}
           />
-        </div> */}
+        </div>
       </header>
       {data.length > 0 && !loading ? (
         <table className="bg-[#F6F2FA] rounded-[12px] overflow-hidden">
           <thead className="bg-[#EAE7EF] p-[20px]">
             <tr>
-              {data[0].client_id && (
+              {((data[0] as Datum).client_id ||
+                (data[0] as ISearchNetije).place) && (
                 <th scope="col" className={`${padding} text-center`}>
                   Ýeri
                 </th>
@@ -141,7 +150,8 @@ const QuizTapgyrWinners = ({ id, tapgyr, questions }: IProps) => {
                   Telefon beligisi
                 </th>
               )}
-              {data[0].answers.length > 0 && (
+              {((data[0] as Datum).answers?.length > 0 ||
+                (data[0] as ISearchNetije).tapgyr_breakdown?.length) && (
                 <th
                   scope="col"
                   className={`${padding} text-center hidden md:inline-block md:w-full`}
@@ -149,12 +159,14 @@ const QuizTapgyrWinners = ({ id, tapgyr, questions }: IProps) => {
                   Jogap beriş nobatlary
                 </th>
               )}
-              {data[0].correct_answers_time && (
+              {((data[0] as Datum).correct_answers_time ||
+                (data[0] as ISearchNetije).total_nobat) && (
                 <th scope="col" className={`${padding} text-center`}>
                   Nobatlaryň jemi
                 </th>
               )}
-              {data[0].total_score_of_client && (
+              {((data[0] as Datum).total_score_of_client ||
+                (data[0] as ISearchNetije).total_score) && (
                 <th scope="col" className={`${padding} text-center`}>
                   Utuklaryň jemi
                 </th>
@@ -172,9 +184,11 @@ const QuizTapgyrWinners = ({ id, tapgyr, questions }: IProps) => {
                   {/* Yeri */}
                   <th scope="row" className={`${padding} text-center`}>
                     {id > 0 &&
-                    winner.correct_answers_time ===
-                      data[id - 1].correct_answers_time
+                    (winner as Datum).correct_answers_time ===
+                      (data[id - 1] as Datum).correct_answers_time
                       ? id
+                      : (winner as ISearchNetije).place
+                      ? (winner as ISearchNetije).place
                       : id + 1}
                   </th>
                   {/* Phone number */}
@@ -186,14 +200,28 @@ const QuizTapgyrWinners = ({ id, tapgyr, questions }: IProps) => {
                     <div className="w-full flex gap-[5px] justify-center">
                       {questions.map((question) => {
                         const matchingAnswer =
-                          winner.answers.find(
+                          (winner as Datum).answers?.find(
                             (answer) =>
                               answer.question_id === question.id &&
                               answer.score > 0
                           ) ||
-                          winner.answers.find(
+                          (winner as Datum).answers?.find(
                             (answer) => answer.question_id === question.id
-                          );
+                          ) ||
+                          ((winner as ISearchNetije).tapgyr_breakdown &&
+                            (winner as ISearchNetije).tapgyr_breakdown
+                              .find((step) => step.tapgyr === tapgyr)
+                              ?.answers.find(
+                                (answer) =>
+                                  answer.question_id === question.id &&
+                                  answer.score > 0
+                              )) ||
+                          ((winner as ISearchNetije).tapgyr_breakdown &&
+                            (winner as ISearchNetije).tapgyr_breakdown
+                              .find((step) => step.tapgyr === tapgyr)
+                              ?.answers.find(
+                                (answer) => answer.question_id === question.id
+                              ));
 
                         return (
                           <span
@@ -223,8 +251,14 @@ const QuizTapgyrWinners = ({ id, tapgyr, questions }: IProps) => {
                   <td className={`${padding}`}>
                     <div className="flex justify-center items-center text-base text-textBlack leading-[125%] w-[100%]">
                       <span className="border border-[#2C7CDA] text-[#2C7CDA] rounded-full w-[36px] h-[36px] flex justify-center items-center text-base leading-[125%] ">
-                        {winner.correct_answers_time
-                          ? winner.correct_answers_time
+                        {(winner as Datum).correct_answers_time
+                          ? (winner as Datum).correct_answers_time
+                          : (winner as ISearchNetije).tapgyr_breakdown[
+                              tapgyr - 1
+                            ].tapgyr_total_nobat
+                          ? (winner as ISearchNetije).tapgyr_breakdown[
+                              tapgyr - 1
+                            ].tapgyr_total_nobat
                           : "-"}
                       </span>
                     </div>
@@ -233,8 +267,14 @@ const QuizTapgyrWinners = ({ id, tapgyr, questions }: IProps) => {
                   <td className={`${padding}`}>
                     <div className="flex justify-center items-center text-base text-textBlack leading-[125%] w-[100%]">
                       <span className="bg-fillOrange rounded-full w-[36px] h-[36px] flex justify-center items-center text-base leading-[125%] text-white">
-                        {winner.total_score_of_client
-                          ? winner.total_score_of_client
+                        {(winner as Datum).total_score_of_client
+                          ? (winner as Datum).total_score_of_client
+                          : (winner as ISearchNetije).tapgyr_breakdown[
+                              tapgyr - 1
+                            ].tapgyr_total_score
+                          ? (winner as ISearchNetije).tapgyr_breakdown[
+                              tapgyr - 1
+                            ].tapgyr_total_score
                           : "-"}
                       </span>
                     </div>
@@ -253,14 +293,28 @@ const QuizTapgyrWinners = ({ id, tapgyr, questions }: IProps) => {
                     <div className="w-full flex gap-[5px] justify-center">
                       {questions.map((question) => {
                         const matchingAnswer =
-                          winner.answers.find(
+                          (winner as Datum).answers?.find(
                             (answer) =>
                               answer.question_id === question.id &&
                               answer.score > 0
                           ) ||
-                          winner.answers.find(
+                          (winner as Datum).answers?.find(
                             (answer) => answer.question_id === question.id
-                          );
+                          ) ||
+                          ((winner as ISearchNetije).tapgyr_breakdown &&
+                            (winner as ISearchNetije).tapgyr_breakdown
+                              .find((step) => step.tapgyr === tapgyr)
+                              ?.answers.find(
+                                (answer) =>
+                                  answer.question_id === question.id &&
+                                  answer.score > 0
+                              )) ||
+                          ((winner as ISearchNetije).tapgyr_breakdown &&
+                            (winner as ISearchNetije).tapgyr_breakdown
+                              .find((step) => step.tapgyr === tapgyr)
+                              ?.answers.find(
+                                (answer) => answer.question_id === question.id
+                              ));
 
                         return (
                           <span
@@ -291,10 +345,12 @@ const QuizTapgyrWinners = ({ id, tapgyr, questions }: IProps) => {
             ))}
           </tbody>
         </table>
+      ) : !error ? (
+        <Loader />
       ) : (
-        <h1>Loading...</h1>
+        <div className="w-full text-center">{error}</div>
       )}
-      {data.length < total && (
+      {data.length < total && !error && (
         <button
           onClick={() => getData(true)}
           className="py-[5px] self-center px-[10px] md:w-fit rounded-md bg-blue-500 text-white border border-blue-500 lg:hover:bg-white lg:hover:text-blue-500 transition-all duration-300"

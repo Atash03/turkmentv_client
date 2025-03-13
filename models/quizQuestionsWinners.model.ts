@@ -25,6 +25,8 @@ export interface Answer {
   score: number;
   serial_number_for_correct: number;
   client_id: number;
+  tapgyr?: number;
+  quiz_id?: number;
 }
 
 interface IMeta {
@@ -35,4 +37,18 @@ interface IMeta {
   per_page: number;
   to: number;
   total: number;
+}
+
+export interface ISearchNetije {
+  total_nobat: number;
+  total_score: number;
+  place: number;
+  phone: string;
+  tapgyr_breakdown: {
+    tapgyr: number;
+    tapgyr_total_score: number;
+    tapgyr_total_nobat: number;
+    tapgyr_place: number;
+    answers: Answer[];
+  }[];
 }

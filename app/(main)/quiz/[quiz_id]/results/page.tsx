@@ -4,6 +4,7 @@ import QuizHeader from "@/components/quiz/QuizHeader";
 import QuizTapgyrResults from "@/components/quiz/QuizTapgyrResults";
 import QuizTapgyrWinners from "@/components/quiz/QuizTapgyrWinners";
 import { Data } from "@/models/quizQuestions.model";
+import { notFound } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 interface IParams {
@@ -16,7 +17,9 @@ const Page = ({ params }: IParams) => {
   const [data, setData] = useState<Data>();
 
   useEffect(() => {
-    Queries.getQuizById(params.quiz_id).then((res) => setData(res.data));
+    Queries.getQuizById(params.quiz_id)
+      .then((res) => setData(res.data))
+      .catch(() => notFound());
   }, []);
 
   return (
@@ -33,7 +36,12 @@ const Page = ({ params }: IParams) => {
           data.steps &&
           data.steps?.length > 0 &&
           data.steps.map((step) => (
-            <QuizTapgyrWinners id={params.quiz_id} tapgyr={step.tapgyr} questions={step.questions} />
+            <QuizTapgyrWinners
+              key={step.tapgyr}
+              id={params.quiz_id}
+              tapgyr={step.tapgyr}
+              questions={step.questions}
+            />
           ))}
       </div>
     </section>

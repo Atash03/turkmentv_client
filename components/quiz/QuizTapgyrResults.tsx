@@ -1,6 +1,6 @@
 "use client";
 import { getNextQuizNetijeData, getQuizNetijeData } from "@/api/queries";
-import { Datum } from "@/models/quizQuestionsWinners.model";
+import { Datum, ISearchNetije } from "@/models/quizQuestionsWinners.model";
 import { notFound } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import Loader from "../Loader";
@@ -8,10 +8,11 @@ import Loader from "../Loader";
 const padding = "py-4";
 
 const QuizTapgyrResults = ({ id, steps }: { id: string; steps: string[] }) => {
-  const [data, setData] = useState<Datum[]>([]);
+  const [data, setData] = useState<Datum[] | ISearchNetije[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [phone, setPhone] = useState<string>("");
   const [total, setTotal] = useState<number>(0);
+  const [error, setError] = useState<string>("");
   const [nextPageQueries, setQueries] = useState<{
     limit: number;
     offset: number;
@@ -51,32 +52,37 @@ const QuizTapgyrResults = ({ id, steps }: { id: string; steps: string[] }) => {
     }
   }
 
-  //   const handleSearchSubmit = async (event: any) => {
-  //     if (event.key === "Enter") {
-  //       event.preventDefault();
-  //       try {
-  //         setLoading(true);
-  //         const response = await fetch(
-  //           `https://sms.turkmentv.gov.tm/api/quiz/${id}/search`,
-  //           {
-  //             method: "POST",
-  //             headers: {
-  //               "Content-Type": "application/json",
-  //             },
-  //             body: JSON.stringify({ phone, tapgyr: 1 }),
-  //           }
-  //         );
+  const handleSearchSubmit = async (event: any) => {
+    if (event.key === "Enter" && phone.length === 8) {
+      event.preventDefault();
+      try {
+        setLoading(true);
+        const response = await fetch(
+          `https://sms.turkmentv.gov.tm/api/quiz/${id}/search_netije`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ phone }),
+          }
+        );
 
-  //         // Handle the response as needed
-  //         const data = await response.json();
-  //         setLoading(false);
-  //         // setData(data);
-  //         console.log(data);
-  //       } catch (error) {
-  //         console.log(error);
-  //       }
-  //     }
-  //   };
+        // Handle the response as needed
+        const data = await response.json();
+        setLoading(false);
+        if (!data.error) {
+          setData([data.data]);
+          setTotal(0);
+        } else {
+          setData([]);
+          setError("Telefon belgisi tapylmady");
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
 
   useEffect(() => {
     getData();
@@ -84,9 +90,11 @@ const QuizTapgyrResults = ({ id, steps }: { id: string; steps: string[] }) => {
 
   return (
     <article className="flex flex-col gap-[24px]">
-      <header className="flex justify-center">
-        <h1 className="text-[28px] text-[#1B1B21] md:text-[36px]">Netijeler</h1>
-        {/* <div className="flex items-center gap-[14px] lg:col-span-2 relative">
+      <header className="grid grid-rows-2 md:grid-rows-1 md:grid-cols-2 lg:grid-cols-3">
+        <h1 className="text-[28px] text-[#1B1B21] md:text-[36px] text-center md:text-start">
+          Netijeler
+        </h1>
+        <div className="flex items-center gap-[14px] lg:col-span-2 relative">
           <svg
             width="20"
             height="20"
@@ -113,23 +121,24 @@ const QuizTapgyrResults = ({ id, steps }: { id: string; steps: string[] }) => {
             maxLength={8}
             minLength={8}
           />
-        </div> */}
+        </div>
       </header>
       {data.length > 0 && !loading ? (
         // Table Head
         <div className="flex flex-col bg-[#F6F2FA] rounded-[12px] overflow-hidden">
           <div className="flex justify-between bg-[#EAE7EF] p-[20px]">
-            {data[0].client?.id && (
+            {((data[0] as Datum).client?.id ||
+              (data[0] as ISearchNetije).place) && (
               <span className={`${padding} max-w-[20px] w-full text-center`}>
                 Ýeri
               </span>
             )}
-            {data[0].client?.phone && (
+            {((data[0] as Datum)?.client?.phone || data[0].phone) && (
               <span className={`${padding} max-w-[150px] w-full text-center`}>
                 Telefon beligisi
               </span>
             )}
-            {data[0].tapgyr_breakdown &&
+            {data[0]?.tapgyr_breakdown &&
               steps.map((item) => (
                 <span
                   key={item}
@@ -138,14 +147,16 @@ const QuizTapgyrResults = ({ id, steps }: { id: string; steps: string[] }) => {
                   Tapgyr {item}
                 </span>
               ))}
-            {data[0].correct_answers_time && (
+            {((data[0] as Datum).correct_answers_time ||
+              (data[0] as ISearchNetije).total_nobat) && (
               <span
                 className={`${padding} min-w-[50px] text-center md:min-w-[115px] max-w-[150px] w-full flex justify-center`}
               >
                 Nobatlaryň jemi
               </span>
             )}
-            {data[0].total_score_of_client && (
+            {((data[0] as Datum).total_score_of_client ||
+              (data[0] as ISearchNetije).total_score) && (
               <span
                 className={`${padding} min-w-[50px] text-center md:min-w-[115px] max-w-[150px] w-full flex justify-center`}
               >
@@ -167,16 +178,23 @@ const QuizTapgyrResults = ({ id, steps }: { id: string; steps: string[] }) => {
                     className={`${padding} max-w-[20px] w-full text-center`}
                   >
                     {id > 0 &&
-                    winner.correct_answers_time ===
-                      data[id - 1].correct_answers_time
+                    (winner as Datum).correct_answers_time ===
+                      (data[id - 1] as Datum).correct_answers_time
                       ? id
+                      : (winner as ISearchNetije).place
+                      ? (winner as ISearchNetije).place
                       : id + 1}
                   </span>
                   <div
                     className={`${padding} max-w-[150px] w-full text-center flex flex-col gap-[7px]`}
                   >
                     <span className="h-[36px]">
-                      +{winner.client?.phone ? winner.client.phone : "-"}
+                      +
+                      {(winner as Datum).client?.phone
+                        ? (winner as Datum).client?.phone
+                        : (winner as ISearchNetije).phone
+                        ? (winner as ISearchNetije).phone
+                        : "-"}
                     </span>
                     {steps.map((step, i) => (
                       <span
@@ -198,12 +216,20 @@ const QuizTapgyrResults = ({ id, steps }: { id: string; steps: string[] }) => {
                       >
                         <div className="flex justify-center items-center text-base text-textBlack leading-[125%]  max-w-[50px] w-[100%]">
                           <span className="border border-[#2C7CDA] text-[#2C7CDA] rounded-full w-[36px] h-[36px] flex justify-center items-center text-base leading-[125%] ">
-                            {tapgyr ? tapgyr.tapgyr_correct_time : "-"}
+                            {tapgyr && "tapgyr_correct_time" in tapgyr
+                              ? tapgyr.tapgyr_correct_time
+                              : tapgyr && "tapgyr_total_nobat" in tapgyr
+                              ? tapgyr.tapgyr_total_nobat
+                              : "-"}
                           </span>
                         </div>
                         <div className="flex justify-center items-center text-base text-textBlack leading-[125%]  max-w-[50px] w-[100%]">
                           <span className="bg-fillOrange rounded-full w-[36px] h-[36px] flex justify-center items-center text-base leading-[125%] text-white">
-                            {tapgyr ? tapgyr.tapgyr_score : "-"}
+                            {tapgyr && "tapgyr_score" in tapgyr
+                              ? tapgyr.tapgyr_score
+                              : tapgyr && "tapgyr_total_score" in tapgyr
+                              ? tapgyr.tapgyr_total_score
+                              : "-"}
                           </span>
                         </div>
                       </div>
@@ -214,8 +240,10 @@ const QuizTapgyrResults = ({ id, steps }: { id: string; steps: string[] }) => {
                   >
                     <div className="flex justify-center items-center text-base text-textBlack leading-[125%]  max-w-[180px] w-[100%]">
                       <span className="border border-[#2C7CDA] text-[#2C7CDA] rounded-full w-[36px] h-[36px] flex justify-center items-center text-base leading-[125%] ">
-                        {winner.correct_answers_time
-                          ? winner.correct_answers_time
+                        {(winner as Datum).correct_answers_time
+                          ? (winner as Datum).correct_answers_time
+                          : (winner as ISearchNetije).total_nobat
+                          ? (winner as ISearchNetije).total_nobat
                           : "-"}
                       </span>
                     </div>
@@ -227,7 +255,11 @@ const QuizTapgyrResults = ({ id, steps }: { id: string; steps: string[] }) => {
                         <div key={i} className="py-[5px] md:hidden">
                           <div className="flex justify-center items-center text-base text-textBlack leading-[125%]  max-w-[180px] w-[100%]">
                             <span className="border border-[#2C7CDA] text-[#2C7CDA] rounded-full w-[30px] h-[30px] flex justify-center items-center text-base leading-[125%] ">
-                              {tapgyr ? tapgyr.tapgyr_correct_time : "-"}
+                              {tapgyr && "tapgyr_correct_time" in tapgyr
+                                ? tapgyr.tapgyr_correct_time
+                                : tapgyr && "tapgyr_total_nobat" in tapgyr
+                                ? tapgyr.tapgyr_total_nobat
+                                : "-"}
                             </span>
                           </div>
                         </div>
@@ -239,8 +271,10 @@ const QuizTapgyrResults = ({ id, steps }: { id: string; steps: string[] }) => {
                   >
                     <div className="flex justify-center items-center text-base text-textBlack leading-[125%]  max-w-[180px] w-[100%]">
                       <span className="bg-fillOrange rounded-full w-[36px] h-[36px] flex justify-center items-center text-base leading-[125%] text-white">
-                        {winner.total_score_of_client
-                          ? winner.total_score_of_client
+                        {(winner as Datum).total_score_of_client
+                          ? (winner as Datum).total_score_of_client
+                          : (winner as ISearchNetije).total_score
+                          ? (winner as ISearchNetije).total_score
                           : "-"}
                       </span>
                     </div>
@@ -252,7 +286,11 @@ const QuizTapgyrResults = ({ id, steps }: { id: string; steps: string[] }) => {
                         <div key={i} className="py-[5px] md:hidden">
                           <div className="flex justify-center items-center text-base text-textBlack leading-[125%]  max-w-[180px] w-[100%]">
                             <span className="bg-fillOrange rounded-full w-[30px] h-[30px] flex justify-center items-center text-base leading-[125%] text-white">
-                              {tapgyr ? tapgyr.tapgyr_correct_time : "-"}
+                              {tapgyr && "tapgyr_correct_time" in tapgyr
+                                ? tapgyr.tapgyr_correct_time
+                                : tapgyr && "tapgyr_total_nobat" in tapgyr
+                                ? tapgyr.tapgyr_total_nobat
+                                : "-"}
                             </span>
                           </div>
                         </div>
@@ -295,10 +333,12 @@ const QuizTapgyrResults = ({ id, steps }: { id: string; steps: string[] }) => {
             ))}
           </div>
         </div>
-      ) : (
+      ) : !error ? (
         <Loader />
+      ) : (
+        <div className="text-center w-full">{error}</div>
       )}
-      {data.length < total && (
+      {data.length < total && !error && (
         <button
           onClick={() => getData(true)}
           className="py-[5px] self-center px-[10px] md:w-fit rounded-md bg-blue-500 text-white border border-blue-500 lg:hover:bg-white lg:hover:text-blue-500 transition-all duration-300"
