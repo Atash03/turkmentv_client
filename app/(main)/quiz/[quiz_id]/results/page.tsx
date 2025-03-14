@@ -1,6 +1,7 @@
 "use client";
 import { Queries } from "@/api/queries";
 import QuizHeader from "@/components/quiz/QuizHeader";
+import QuizResultsSearch from "@/components/quiz/QuizResultsSearch";
 import QuizTapgyrResults from "@/components/quiz/QuizTapgyrResults";
 import QuizTapgyrWinners from "@/components/quiz/QuizTapgyrWinners";
 import { Data } from "@/models/quizQuestions.model";
@@ -26,6 +27,7 @@ const Page = ({ params }: IParams) => {
     <section className="container py-[40px]">
       <div className="flex flex-col w-full py-[40px] gap-[80px]">
         <QuizHeader data={data} />
+        <QuizResultsSearch id={params.quiz_id} />
         <QuizTapgyrResults
           id={params.quiz_id}
           steps={
