@@ -1,10 +1,11 @@
 "use client";
 import { useQuizResults, useResultsLoading } from "@/store/store";
+import { X } from "lucide-react";
 import React, { useState } from "react";
 
 const QuizResultsSearch = ({ id }: { id: string }) => {
   const [phone, setPhone] = useState<string>("");
-  const { setError, setResultData } = useQuizResults();
+  const { setError, setResultData, error, resultData } = useQuizResults();
   const { setLoading } = useResultsLoading();
 
   const handleSearchSubmit = async (event: any) => {
@@ -43,7 +44,7 @@ const QuizResultsSearch = ({ id }: { id: string }) => {
       <h1 className="text-[28px] leading-[120%] font-semibold text-textBlack text-center md:text-left">
         Öz jogaplaryňyzy görüň
       </h1>
-      <div className="flex items-center gap-[14px] relative md:w-1/2">
+      <div className="flex items-center gap-[14px] relative md:w-1/2 w-full">
         <svg
           width="20"
           height="20"
@@ -70,6 +71,20 @@ const QuizResultsSearch = ({ id }: { id: string }) => {
           maxLength={8}
           minLength={8}
         />
+        {phone && (
+          <button
+            className="absolute right-4"
+            onClick={() => {
+              setPhone("");
+              if (resultData.length || error) {
+                setResultData([]);
+                setError("");
+              }
+            }}
+          >
+            <X />
+          </button>
+        )}
       </div>
     </div>
   );

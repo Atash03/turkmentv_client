@@ -73,8 +73,8 @@ const QuizTapgyrResults = ({ id, steps }: { id: string; steps: string[] }) => {
         </h1>
       </header>
       {data.length > 0 && !loading && !searchLoading ? (
-        // Table Head
-        <div className="flex flex-col bg-[#F6F2FA] rounded-[12px] overflow-hidden">
+        <div className="flex flex-col bg-[#F6F2FA] rounded-[12px] overflow-hidden max-w-[700px] self-center w-full">
+          {/* Table Head */}
           <div className="flex justify-between bg-[#EAE7EF] p-[20px]">
             {((data[0] as Datum).client?.id ||
               (data[0] as ISearchNetije).place) && (
@@ -87,15 +87,6 @@ const QuizTapgyrResults = ({ id, steps }: { id: string; steps: string[] }) => {
                 Telefon beligisi
               </span>
             )}
-            {data[0]?.tapgyr_breakdown &&
-              steps.map((item) => (
-                <span
-                  key={item}
-                  className={`hidden md:inline-block min-w-[60px] max-w-[150px] w-full text-center ${padding}`}
-                >
-                  Tapgyr {item}
-                </span>
-              ))}
             {((data[0] as Datum).correct_answers_time ||
               (data[0] as ISearchNetije).total_nobat) && (
               <span
@@ -114,14 +105,14 @@ const QuizTapgyrResults = ({ id, steps }: { id: string; steps: string[] }) => {
             )}
           </div>
           {/* Table body */}
-          <div className=" text-[#46464F]">
+          <div className="text-[#46464F]">
             {data.map((winner, id) => (
               <React.Fragment key={id}>
                 <div
                   key={id}
                   className={`${
-                    id !== data.length - 1 && "md:border-b md:border-[#C7C5D0]"
-                  } flex justify-between px-[20px]`}
+                    id !== data.length - 1 && "border-b border-[#C7C5D0]"
+                  } flex justify-between items-center px-[20px]`}
                 >
                   <span
                     className={`${padding} max-w-[20px] w-full text-center`}
@@ -134,56 +125,14 @@ const QuizTapgyrResults = ({ id, steps }: { id: string; steps: string[] }) => {
                       ? (winner as ISearchNetije).place
                       : id + 1}
                   </span>
-                  <div
-                    className={`${padding} max-w-[150px] w-full text-center flex flex-col gap-[7px]`}
-                  >
-                    <span className="h-[36px]">
-                      +
-                      {(winner as Datum).client?.phone
-                        ? (winner as Datum).client?.phone
-                        : (winner as ISearchNetije).phone
-                        ? (winner as ISearchNetije).phone
-                        : "-"}
-                    </span>
-                    {steps.map((step, i) => (
-                      <span
-                        key={i}
-                        className="py-[5px] text-center col-span-2 md:hidden"
-                      >
-                        Tapgyr {step}
-                      </span>
-                    ))}
-                  </div>
-                  {steps.map((step, i) => {
-                    const tapgyr = winner.tapgyr_breakdown?.find(
-                      (i) => i.tapgyr === Number(step)
-                    );
-                    return (
-                      <div
-                        key={i}
-                        className="min-w-[60px] max-w-[150px] w-full justify-center hidden md:flex"
-                      >
-                        <div className="flex justify-center items-center text-base text-textBlack leading-[125%]  max-w-[50px] w-[100%]">
-                          <span className="border border-[#2C7CDA] text-[#2C7CDA] rounded-full w-[36px] h-[36px] flex justify-center items-center text-base leading-[125%] ">
-                            {tapgyr && "tapgyr_correct_time" in tapgyr
-                              ? tapgyr.tapgyr_correct_time
-                              : tapgyr && "tapgyr_total_nobat" in tapgyr
-                              ? tapgyr.tapgyr_total_nobat
-                              : "-"}
-                          </span>
-                        </div>
-                        <div className="flex justify-center items-center text-base text-textBlack leading-[125%]  max-w-[50px] w-[100%]">
-                          <span className="bg-fillOrange rounded-full w-[36px] h-[36px] flex justify-center items-center text-base leading-[125%] text-white">
-                            {tapgyr && "tapgyr_score" in tapgyr
-                              ? tapgyr.tapgyr_score
-                              : tapgyr && "tapgyr_total_score" in tapgyr
-                              ? tapgyr.tapgyr_total_score
-                              : "-"}
-                          </span>
-                        </div>
-                      </div>
-                    );
-                  })}
+                  <span>
+                    +
+                    {(winner as Datum).client?.phone
+                      ? (winner as Datum).client?.phone
+                      : (winner as ISearchNetije).phone
+                      ? (winner as ISearchNetije).phone
+                      : "-"}
+                  </span>
                   <div
                     className={`min-w-[50px] md:min-w-[115px] max-w-[150px] w-full flex flex-col md:flex-row justify-center ${padding}`}
                   >
@@ -196,24 +145,6 @@ const QuizTapgyrResults = ({ id, steps }: { id: string; steps: string[] }) => {
                           : "-"}
                       </span>
                     </div>
-                    {steps.map((step, i) => {
-                      const tapgyr = winner.tapgyr_breakdown?.find(
-                        (i) => i.tapgyr === Number(step)
-                      );
-                      return (
-                        <div key={i} className="py-[5px] md:hidden">
-                          <div className="flex justify-center items-center text-base text-textBlack leading-[125%]  max-w-[180px] w-[100%]">
-                            <span className="border border-[#2C7CDA] text-[#2C7CDA] rounded-full w-[30px] h-[30px] flex justify-center items-center text-base leading-[125%] ">
-                              {tapgyr && "tapgyr_correct_time" in tapgyr
-                                ? tapgyr.tapgyr_correct_time
-                                : tapgyr && "tapgyr_total_nobat" in tapgyr
-                                ? tapgyr.tapgyr_total_nobat
-                                : "-"}
-                            </span>
-                          </div>
-                        </div>
-                      );
-                    })}
                   </div>
                   <div
                     className={`min-w-[50px] md:min-w-[115px] max-w-[150px] w-full flex flex-col md:flex-row justify-center ${padding}`}
@@ -227,57 +158,8 @@ const QuizTapgyrResults = ({ id, steps }: { id: string; steps: string[] }) => {
                           : "-"}
                       </span>
                     </div>
-                    {steps.map((step, i) => {
-                      const tapgyr = winner.tapgyr_breakdown?.find(
-                        (i) => i.tapgyr === Number(step)
-                      );
-                      return (
-                        <div key={i} className="py-[5px] md:hidden">
-                          <div className="flex justify-center items-center text-base text-textBlack leading-[125%]  max-w-[180px] w-[100%]">
-                            <span className="bg-fillOrange rounded-full w-[30px] h-[30px] flex justify-center items-center text-base leading-[125%] text-white">
-                              {tapgyr && "tapgyr_correct_time" in tapgyr
-                                ? tapgyr.tapgyr_correct_time
-                                : tapgyr && "tapgyr_total_nobat" in tapgyr
-                                ? tapgyr.tapgyr_total_nobat
-                                : "-"}
-                            </span>
-                          </div>
-                        </div>
-                      );
-                    })}
                   </div>
                 </div>
-                {/* {steps.map((step, i) => {
-                  const tapgyr = winner.tapgyr_breakdown?.find(
-                    (i) => i.tapgyr === Number(step)
-                  );
-                  return (
-                    <div
-                      key={i}
-                      className={`${
-                        i === steps.length - 1 && "border-b border-[#C7C5D0]"
-                      } md:border-none md:hidden grid grid-cols-4`}
-                    >
-                      <span className="py-[5px] text-center col-span-2">
-                        Tapgyr {step}
-                      </span>
-                      <div className="py-[5px]">
-                        <div className="flex justify-center items-center text-base text-textBlack leading-[125%]  max-w-[180px] w-[100%]">
-                          <span className="border border-[#2C7CDA] text-[#2C7CDA] rounded-full w-[30px] h-[30px] flex justify-center items-center text-base leading-[125%] ">
-                            {tapgyr ? tapgyr.tapgyr_correct_time : "-"}
-                          </span>
-                        </div>
-                      </div>
-                      <div className="py-[5px]">
-                        <div className="flex justify-center items-center text-base text-textBlack leading-[125%]  max-w-[180px] w-[100%]">
-                          <span className="bg-fillOrange rounded-full w-[30px] h-[30px] flex justify-center items-center text-base leading-[125%] text-white">
-                            {tapgyr ? tapgyr.tapgyr_correct_time : "-"}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })} */}
               </React.Fragment>
             ))}
           </div>
