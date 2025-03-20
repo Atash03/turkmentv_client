@@ -19,15 +19,24 @@ interface IParams {
 const Page = ({ params }: IParams) => {
   const [data, setData] = useState<Data>();
   const [tab, setTab] = useState<number | string>(0);
+  const [loading, setLoading] = useState<boolean>(false);
   const { resultData, error } = useQuizResults();
 
   useEffect(() => {
     if (!resultData.length && !error) {
+      setLoading(true);
       Queries.getQuizById(params.quiz_id)
-        .then((res) => setData(res.data))
-        .catch(() => notFound());
+        .then((res) => {
+          setData(res.data);
+          setLoading(false);
+        })
+        .catch(() => {
+          setLoading(false);
+          notFound();
+        });
     }
   }, [resultData, error]);
+
 
   return (
     <section className="container py-[40px]">
@@ -38,6 +47,7 @@ const Page = ({ params }: IParams) => {
           steps={data?.steps ? data?.steps : []}
           tab={tab}
           setStep={setTab}
+          loading={loading}
         />
         {tab === "results" && (
           <QuizTapgyrResults

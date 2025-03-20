@@ -137,8 +137,9 @@ const QuizTapgyrWinners = ({ id, tapgyr, questions }: IProps) => {
                       (data[id - 1] as Datum).correct_answers_time
                       ? id
                       : (winner as ISearchNetije).tapgyr_breakdown
-                      ? (winner as ISearchNetije).tapgyr_breakdown[tapgyr - 1]
-                          .tapgyr_place
+                      ? (winner as ISearchNetije).tapgyr_breakdown.find(
+                          (item) => item.tapgyr === tapgyr
+                        )?.tapgyr_place
                       : id + 1}
                   </th>
                   {/* Phone number */}
@@ -191,7 +192,7 @@ const QuizTapgyrWinners = ({ id, tapgyr, questions }: IProps) => {
                               ? matchingAnswer.serial_number_for_correct
                               : matchingAnswer && matchingAnswer?.score === 0
                               ? "X"
-                              : "0"}
+                              : "-"}
                           </span>
                         );
                       })}
@@ -203,12 +204,12 @@ const QuizTapgyrWinners = ({ id, tapgyr, questions }: IProps) => {
                       <span className="border border-[#2C7CDA] text-[#2C7CDA] rounded-full w-[36px] h-[36px] flex justify-center items-center text-base leading-[125%] ">
                         {(winner as Datum).correct_answers_time
                           ? (winner as Datum).correct_answers_time
-                          : (winner as ISearchNetije).tapgyr_breakdown[
-                              tapgyr - 1
-                            ].tapgyr_total_nobat
-                          ? (winner as ISearchNetije).tapgyr_breakdown[
-                              tapgyr - 1
-                            ].tapgyr_total_nobat
+                          : (winner as ISearchNetije).tapgyr_breakdown.find(
+                              (item) => item.tapgyr === tapgyr
+                            )?.tapgyr_total_nobat
+                          ? (winner as ISearchNetije).tapgyr_breakdown.find(
+                              (item) => item.tapgyr === tapgyr
+                            )?.tapgyr_total_nobat
                           : "-"}
                       </span>
                     </div>
@@ -219,12 +220,12 @@ const QuizTapgyrWinners = ({ id, tapgyr, questions }: IProps) => {
                       <span className="bg-fillOrange rounded-full w-[36px] h-[36px] flex justify-center items-center text-base leading-[125%] text-white">
                         {(winner as Datum).total_score_of_client
                           ? (winner as Datum).total_score_of_client
-                          : (winner as ISearchNetije).tapgyr_breakdown[
-                              tapgyr - 1
-                            ].tapgyr_total_score
-                          ? (winner as ISearchNetije).tapgyr_breakdown[
-                              tapgyr - 1
-                            ].tapgyr_total_score
+                          : (winner as ISearchNetije).tapgyr_breakdown.find(
+                              (item) => item.tapgyr === tapgyr
+                            )?.tapgyr_total_score
+                          ? (winner as ISearchNetije).tapgyr_breakdown.find(
+                              (item) => item.tapgyr === tapgyr
+                            )?.tapgyr_total_score
                           : "-"}
                       </span>
                     </div>

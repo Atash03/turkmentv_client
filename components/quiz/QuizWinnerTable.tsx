@@ -169,7 +169,7 @@ const QuizWinnerTable = ({ quizId, questionsData }: IProps) => {
                                     : matchingAnswer &&
                                       matchingAnswer?.score === 0
                                     ? "X"
-                                    : "0"}
+                                    : "-"}
                                 </span>
                               );
                             })
@@ -237,7 +237,7 @@ const QuizWinnerTable = ({ quizId, questionsData }: IProps) => {
                                 ? matchingAnswer.serial_number_for_correct
                                 : matchingAnswer && matchingAnswer?.score === 0
                                 ? "X"
-                                : "0"}
+                                : "-"}
                             </span>
                           );
                         })}
@@ -364,7 +364,7 @@ const QuizWinnerTable = ({ quizId, questionsData }: IProps) => {
                                         : matchingAnswer &&
                                           matchingAnswer?.score === 0
                                         ? "X"
-                                        : "0"}
+                                        : "-"}
                                     </span>
                                   );
                                 })
@@ -440,7 +440,7 @@ const QuizWinnerTable = ({ quizId, questionsData }: IProps) => {
                                     : matchingAnswer &&
                                       matchingAnswer?.score === 0
                                     ? "X"
-                                    : "0"}
+                                    : "-"}
                                 </span>
                               );
                             })}

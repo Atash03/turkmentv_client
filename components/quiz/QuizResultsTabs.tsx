@@ -8,39 +8,42 @@ interface IQuizTabProps {
   }[];
   setStep: React.Dispatch<React.SetStateAction<number | string>>;
   tab: number | string;
+  loading: boolean;
 }
 
-function QuizResultsTabs({ steps, setStep, tab }: IQuizTabProps) {
+function QuizResultsTabs({ steps, setStep, tab, loading }: IQuizTabProps) {
   return (
-    <div className="flex gap-[10px] w-full md:w-1/2 self-center">
-      {steps.map((item) => (
+    !loading && (
+      <div className="flex gap-[10px] w-full md:w-1/2 self-center">
+        {steps.map((item) => (
+          <button
+            onClick={() => {
+              setStep(item.tapgyr - 1);
+            }}
+            key={item.tapgyr}
+            className={`flex-1 py-[5px] rounded-lg transition-all duration-300 ${
+              tab === item.tapgyr - 1
+                ? "bg-lightPrimary text-white"
+                : "bg-lightPrimaryContainer text-textLight"
+            }`}
+          >
+            {item.tapgyr}
+          </button>
+        ))}
         <button
           onClick={() => {
-            setStep(item.tapgyr - 1);
+            setStep("results");
           }}
-          key={item.tapgyr}
           className={`flex-1 py-[5px] rounded-lg transition-all duration-300 ${
-            tab === item.tapgyr - 1
+            tab === "results"
               ? "bg-lightPrimary text-white"
               : "bg-lightPrimaryContainer text-textLight"
           }`}
         >
-          {item.tapgyr}
+          Netije
         </button>
-      ))}
-      <button
-        onClick={() => {
-          setStep("results");
-        }}
-        className={`flex-1 py-[5px] rounded-lg transition-all duration-300 ${
-          tab === "results"
-            ? "bg-lightPrimary text-white"
-            : "bg-lightPrimaryContainer text-textLight"
-        }`}
-      >
-        Netije
-      </button>
-    </div>
+      </div>
+    )
   );
 }
 

@@ -17,11 +17,10 @@ const QuizHeader = ({ data }: { data: Data | undefined }) => {
       {(data?.banner || data?.banner_mobile) && (
         <>
           {data.banner_mobile && (
-            <div className="w-full relative bg-[#E1E0FF] rounded-[8px] overflow-hidden md:hidden object-cover">
+            <div className="w-full relative bg-[#E1E0FF] h-[100px] rounded-[8px] overflow-hidden md:hidden object-cover">
               <Image
                 src={data.banner_mobile ? data.banner_mobile : data.banner}
                 alt="banner"
-                height={100}
                 unselectable="off"
                 className="object-cover"
                 fill

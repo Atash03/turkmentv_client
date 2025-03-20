@@ -57,7 +57,7 @@ const QuizQuestion = ({
                 {question}
               </h2>
 
-              <div className="flex flex-wrap justify-center md:justify-start md:gap-5 gap-[10px]">
+              <div className="flex flex-wrap md:gap-5 gap-[10px]">
                 <div className="flex gap-2 items-center">
                   <div
                     className={`w-[18px] h-[18px] md:w-4 md:h-4 ${
@@ -121,7 +121,7 @@ const QuizQuestion = ({
             {question}
           </h2>
 
-          <div className="flex flex-wrap justify-center md:justify-start md:gap-5 gap-[10px]">
+          <div className="flex flex-wrap md:gap-5 gap-[10px]">
             <div className="flex gap-2 items-center">
               <div
                 className={`w-[18px] h-[18px] md:w-4 md:h-4 ${
