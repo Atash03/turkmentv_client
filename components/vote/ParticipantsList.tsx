@@ -74,8 +74,7 @@ const ParticipantsList = ({ vote_id, all }: IParams) => {
         setVoteStatus(res.data.status);
         setSmsNumber(res.data.sms_number);
       });
-    }
-    {
+    } else {
       router.push("/vote/active");
     }
 
