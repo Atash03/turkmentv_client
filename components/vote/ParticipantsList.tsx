@@ -17,6 +17,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 interface IParams {
   vote_id?: string;
+  all?: boolean;
 }
 
 interface ISocketMessage {
@@ -27,7 +28,7 @@ interface ISocketMessage {
   date: string;
 }
 
-const ParticipantsList = ({ vote_id }: IParams) => {
+const ParticipantsList = ({ vote_id, all }: IParams) => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [data, setData] = useState<IAllVotes>();
@@ -65,7 +66,16 @@ const ParticipantsList = ({ vote_id }: IParams) => {
         setVoteStatus(res.data.status);
         setSmsNumber(res.data.sms_number);
       });
-    } else {
+    } else if (all) {
+      Queries.getAllVotes().then((res) => {
+        setData(res);
+        setParticipantsData([...res.data.voting_items]);
+        setVoteDescription(res.data.description);
+        setVoteStatus(res.data.status);
+        setSmsNumber(res.data.sms_number);
+      });
+    }
+    {
       router.push("/vote/active");
     }
 

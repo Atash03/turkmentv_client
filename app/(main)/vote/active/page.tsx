@@ -1,5 +1,6 @@
-import ParticipantsList from '@/components/vote/ParticipantsList';
-import VoteProvider from '@/providers/VoteProvider';
+import ParticipantsList from "@/components/vote/ParticipantsList";
+import VoteProvider from "@/providers/VoteProvider";
+import { Suspense } from "react";
 
 const page = () => {
   return (
@@ -7,7 +8,9 @@ const page = () => {
       <div className="container">
         <VoteProvider>
           <div className="flex flex-col items-center w-full">
-            <ParticipantsList />
+            <Suspense>
+              <ParticipantsList all />
+            </Suspense>
           </div>
         </VoteProvider>
       </div>
