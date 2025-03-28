@@ -11,6 +11,7 @@ export default {
   // Quiz ==============================================================
   getQuizQuestions: `/quiz/active`,
   getQuiz: (quiz_id: string) => `/quiz/${quiz_id}`,
+  getQuizUUID: (quiz_id: string) => `/quiz/uuid/${quiz_id}`,
   getQuizQuestionsWinners: (id: number) => `/quiz/${id}/winners`,
   getQuizNetijeWinners: (id: string) => `/quiz/${id}/netije`,
   getQuizQuestionHistory: (id: number) => `/question/${id}/history`,
@@ -19,6 +20,7 @@ export default {
   // Votes ================================================================
   allVotes: "/voting/show_on_site",
   vote: (vote_id: string) => `/voting/${vote_id}`,
+  voteUUID: (vote_id: string) => `/voting/uuid/${vote_id}`,
   // ======================================================================
 
   // Lottery ================================================================

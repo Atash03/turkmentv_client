@@ -191,6 +191,12 @@ export class Queries {
     }).then((res) => res.json().then((res) => res as IQuizQuestions));
   }
 
+  public static async getQuizByUUID(quiz_id: string): Promise<IQuizQuestions> {
+    return await fetch(`${baseUrl.QUIZ_SRC}${routes.getQuizUUID(quiz_id)}`, {
+      next: { revalidate: 3600 },
+    }).then((res) => res.json().then((res) => res as IQuizQuestions));
+  }
+
   public static async getQuizById(quiz_id: string) {
     return await fetch(`${baseUrl.QUIZ_SRC}${routes.getQuiz(quiz_id)}`, {
       next: { revalidate: 3600 },
@@ -230,6 +236,12 @@ export class Queries {
 
   public static async getVote(vote_id: string): Promise<IVote> {
     return await fetch(`${baseUrl.QUIZ_SRC}${routes.vote(vote_id)}`, {
+      next: { revalidate: 3600 },
+    }).then((res) => res.json().then((res) => res as IVote));
+  }
+
+  public static async getVoteByUUID(vote_id: string): Promise<IVote> {
+    return await fetch(`${baseUrl.QUIZ_SRC}${routes.voteUUID(vote_id)}`, {
       next: { revalidate: 3600 },
     }).then((res) => res.json().then((res) => res as IVote));
   }
