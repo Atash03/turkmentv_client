@@ -15,6 +15,10 @@ import Link from "next/link";
 import Confetti from "../common/Confetti";
 import { useRouter, useSearchParams } from "next/navigation";
 
+interface IParams {
+  vote_id?: string;
+}
+
 interface ISocketMessage {
   voting_id: number;
   voting_item_id: number;
@@ -23,7 +27,7 @@ interface ISocketMessage {
   date: string;
 }
 
-const ParticipantsList = () => {
+const ParticipantsList = ({ vote_id }: IParams) => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [data, setData] = useState<IAllVotes>();
@@ -44,9 +48,17 @@ const ParticipantsList = () => {
   const { setVoteDescription } = useContext(VoteContext).voteDescriptionContext;
 
   useEffect(() => {
-    const id = searchParams.get("d")
+    const id = searchParams.get("d");
     if (id) {
-      Queries.getVote(id).then((res) => {
+      Queries.getVoteByUUID(id).then((res) => {
+        setData(res);
+        setParticipantsData(res.data.voting_items);
+        setVoteDescription(res.data.description);
+        setVoteStatus(res.data.status);
+        setSmsNumber(res.data.sms_number);
+      });
+    } else if (vote_id) {
+      Queries.getVote(vote_id).then((res) => {
         setData(res);
         setParticipantsData(res.data.voting_items);
         setVoteDescription(res.data.description);
@@ -54,7 +66,7 @@ const ParticipantsList = () => {
         setSmsNumber(res.data.sms_number);
       });
     } else {
-      router.push('/vote/active')
+      router.push("/vote/active");
     }
 
     if (participantsData) {
