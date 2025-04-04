@@ -84,7 +84,15 @@ const LotteryRulesSection = ({ show = true, data }: IProps) => {
                 Gatnaşyjylaryň sany:
               </h1>
               <div className="bg-lightSurfaceContainer flex flex-1 items-center justify-center gap-4 px-4 py-[12px] rounded-[12px]">
-                <p className="text-[24px]">{totalParticipants}</p>
+                <p
+                  className={clsx(
+                    data?.data.rules?.length > 3
+                      ? "text-[28px] sm:text-[56px] md:text-[80px]"
+                      : "text-[24px]"
+                  )}
+                >
+                  {totalParticipants}
+                </p>
               </div>
             </div>
 
