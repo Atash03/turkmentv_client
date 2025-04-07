@@ -37,6 +37,7 @@ const Page = ({ params }: IParams) => {
     }
   }, [resultData, error]);
 
+  console.log(data);
 
   return (
     <section className="container py-[40px]">

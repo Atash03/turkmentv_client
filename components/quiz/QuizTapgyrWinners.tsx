@@ -81,7 +81,7 @@ const QuizTapgyrWinners = ({ id, tapgyr, questions }: IProps) => {
     <article className="flex flex-col gap-[24px]">
       <header className="flex justify-center">
         <h1 className="text-[28px] text-[#1B1B21] md:text-[36px]">
-          Tapgyr {tapgyr}
+          Gepleşik {tapgyr}
         </h1>
       </header>
       {data.length > 0 && !loading && !searchLoading ? (
