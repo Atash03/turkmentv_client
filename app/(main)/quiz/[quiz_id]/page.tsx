@@ -146,7 +146,7 @@ const page = ({ params }: IParams) => {
                   data.data.steps?.length > 0 && (
                     <div className="flex flex-col gap-4 items-center w-full">
                       <h1 className="text-textBlack md:text-[60px] leading-[100%] font-semibold">
-                        Tapgyr
+                        Gepleşik
                       </h1>
                       <div className="flex w-full md:w-1/2 gap-[10px]">
                         {data.data.steps.map((item) => (
