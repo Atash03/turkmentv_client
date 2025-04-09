@@ -28,6 +28,9 @@ const Page = ({ params }: IParams) => {
       Queries.getQuizById(params.quiz_id)
         .then((res) => {
           setData(res.data);
+          if (res.data.steps?.length) {
+            setTab(res.data?.steps[res.data?.steps.length - 1].tapgyr - 1);
+          }
           setLoading(false);
         })
         .catch(() => {
@@ -36,8 +39,6 @@ const Page = ({ params }: IParams) => {
         });
     }
   }, [resultData, error]);
-
-  console.log(data);
 
   return (
     <section className="container py-[40px]">

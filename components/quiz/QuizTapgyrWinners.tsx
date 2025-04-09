@@ -3,7 +3,6 @@ import { getNextQuizWinnners, getQuizWinnersById } from "@/api/queries";
 import { Question } from "@/models/quizQuestions.model";
 import {
   Datum,
-  IQuizQuestionsWinners,
   ISearchNetije,
 } from "@/models/quizQuestionsWinners.model";
 import { notFound } from "next/navigation";
@@ -188,11 +187,14 @@ const QuizTapgyrWinners = ({ id, tapgyr, questions }: IProps) => {
                                 : "text-textLight"
                             }`}
                           >
-                            {matchingAnswer && matchingAnswer.score !== 0
-                              ? matchingAnswer.serial_number_for_correct
-                              : matchingAnswer && matchingAnswer?.score === 0
-                              ? "X"
-                              : "-"}
+                            {matchingAnswer && matchingAnswer.score !== 0 ? (
+                              matchingAnswer.serial_number_for_correct
+                            ) : matchingAnswer &&
+                              matchingAnswer?.score === 0 ? (
+                              "X"
+                            ) : (
+                              <span className="text-[20px]">-</span>
+                            )}
                           </span>
                         );
                       })}

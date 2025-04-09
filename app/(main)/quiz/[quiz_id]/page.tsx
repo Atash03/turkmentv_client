@@ -39,7 +39,7 @@ const page = ({ params }: IParams) => {
               : setQuizFinished(true)
           );
         } else if (res.data.steps && res.data.steps?.length > 0) {
-          setStep(res.data.steps[0].tapgyr);
+          setStep(res.data.steps[res.data.steps.length - 1].tapgyr);
           for (let i = 0; i < res.data.steps.length; i++) {
             res.data.steps[i].questions.map((question) =>
               question.status === "active" || question.status === "new"
@@ -59,7 +59,7 @@ const page = ({ params }: IParams) => {
               : setQuizFinished(true)
           );
         } else if (res.data.steps && res.data.steps?.length > 0) {
-          setStep(res.data.steps[0].tapgyr);
+          setStep(res.data.steps[res.data.steps.length - 1].tapgyr);
           for (let i = 0; i < res.data.steps.length; i++) {
             res.data.steps[i].questions.map((question) =>
               question.status === "active" || question.status === "new"
