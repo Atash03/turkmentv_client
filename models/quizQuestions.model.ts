@@ -5,6 +5,7 @@ export interface IQuizQuestions {
 
 export interface Data {
   id: number;
+  uuid?: number;
   title: string;
   date: string;
   banner: string;

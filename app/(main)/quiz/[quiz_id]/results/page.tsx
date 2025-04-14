@@ -23,13 +23,25 @@ const Page = ({ params }: IParams) => {
   const { resultData, error } = useQuizResults();
 
   useEffect(() => {
+    const local_info = sessionStorage.getItem("TURKMENTV_QUIZ_RESULTS");
     if (!resultData.length && !error) {
       setLoading(true);
       Queries.getQuizById(params.quiz_id)
         .then((res) => {
           setData(res.data);
           if (res.data.steps?.length) {
-            setTab(res.data?.steps[res.data?.steps.length - 1].tapgyr - 1);
+            if (local_info) {
+              if (
+                JSON.parse(local_info)?.tab &&
+                JSON.parse(local_info)?.uuid === res.data.uuid
+              ) {
+                setTab(JSON.parse(local_info)?.tab);
+              } else {
+                setTab(res.data?.steps[res.data?.steps.length - 1].tapgyr - 1);
+              }
+            } else {
+              setTab(res.data?.steps[res.data?.steps.length - 1].tapgyr - 1);
+            }
           }
           setLoading(false);
         })
@@ -39,6 +51,18 @@ const Page = ({ params }: IParams) => {
         });
     }
   }, [resultData, error]);
+
+  useEffect(() => {
+    if (data) {
+      sessionStorage.setItem(
+        "TURKMENTV_QUIZ_RESULTS",
+        JSON.stringify({
+          uuid: data?.uuid,
+          tab: tab,
+        })
+      );
+    }
+  }, [data, tab]);
 
   return (
     <section className="container py-[40px]">

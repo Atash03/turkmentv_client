@@ -29,6 +29,8 @@ const page = ({ params }: IParams) => {
   const { step, setStep } = useSteps();
 
   useEffect(() => {
+    const local_info = sessionStorage.getItem("TURKMENTV_QUIZ_INFO");
+
     if (!params.quiz_id) {
       Queries.getQuizQuestions().then((res) => {
         setData(res);
@@ -39,7 +41,18 @@ const page = ({ params }: IParams) => {
               : setQuizFinished(true)
           );
         } else if (res.data.steps && res.data.steps?.length > 0) {
-          setStep(res.data.steps[res.data.steps.length - 1].tapgyr);
+          if (local_info) {
+            if (
+              JSON.parse(local_info)?.tab &&
+              JSON.parse(local_info)?.uuid === res.data.uuid
+            ) {
+              setStep(JSON.parse(local_info)?.tab);
+            } else {
+              setStep(res.data.steps[res.data.steps.length - 1].tapgyr);
+            }
+          } else {
+            setStep(res.data.steps[res.data.steps.length - 1].tapgyr);
+          }
           for (let i = 0; i < res.data.steps.length; i++) {
             res.data.steps[i].questions.map((question) =>
               question.status === "active" || question.status === "new"
@@ -59,7 +72,18 @@ const page = ({ params }: IParams) => {
               : setQuizFinished(true)
           );
         } else if (res.data.steps && res.data.steps?.length > 0) {
-          setStep(res.data.steps[res.data.steps.length - 1].tapgyr);
+          if (local_info) {
+            if (
+              JSON.parse(local_info)?.tab &&
+              JSON.parse(local_info)?.uuid === res.data.uuid
+            ) {
+              setStep(JSON.parse(local_info)?.tab);
+            } else {
+              setStep(res.data.steps[res.data.steps.length - 1].tapgyr);
+            }
+          } else {
+            setStep(res.data.steps[res.data.steps.length - 1].tapgyr);
+          }
           for (let i = 0; i < res.data.steps.length; i++) {
             res.data.steps[i].questions.map((question) =>
               question.status === "active" || question.status === "new"
@@ -71,6 +95,18 @@ const page = ({ params }: IParams) => {
       });
     }
   }, []);
+
+  useEffect(() => {
+    if (data) {
+      sessionStorage.setItem(
+        "TURKMENTV_QUIZ_INFO",
+        JSON.stringify({
+          uuid: data.data.uuid,
+          tab: step,
+        })
+      );
+    }
+  }, [data, step]);
 
   const mobile = useMediaQuery("(max-width: 768px)");
 
