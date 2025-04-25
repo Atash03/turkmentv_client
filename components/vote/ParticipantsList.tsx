@@ -281,7 +281,9 @@ const ParticipantsList = ({ vote_id, all }: IParams) => {
               <GradientTitle title="победители" size="small" />
             ) : null}
 
-            {participantsData && participantsData[0].votes_count > 0 ? (
+            {participantsData &&
+            participantsData.length > 0 &&
+            participantsData[0].votes_count > 0 ? (
               <div className="flex flex-col items-center overflow-hidden bg-fillNavyBlue rounded-[10px] sm:rounded-[30px] max-w-[940px] w-full px-[5px] py-[20px] sm:p-[20px] sm:gap-[20px] gap-[10px]">
                 {participantsData.map((participant, index) =>
                   participant.votes_count ===
