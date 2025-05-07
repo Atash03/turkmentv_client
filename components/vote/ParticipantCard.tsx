@@ -187,7 +187,7 @@ const ParticipantCard = ({
           {number}
         </h3>
         {photo && name ? (
-          <div className="relative min-w-[50px] rounded-[10px] overflow-hidden sm:min-w-[80px] h-[50px] sm:h-[80px]">
+          <div className="relative min-w-[50px] rounded-[10px] overflow-hidden sm:min-w-[104px] h-[50px] sm:h-[104px]">
             <Image
               fill
               src={photo}
