@@ -20,6 +20,7 @@ export interface VotingItem {
   votes_count: number;
   vote_code: string;
   title: null | string;
+  description: null | string;
   photo: null | string;
   votes_percents: number;
 }

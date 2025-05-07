@@ -301,6 +301,7 @@ const ParticipantsList = ({ vote_id, all }: IParams) => {
                           voteStatus={voteStatus ? voteStatus : ""}
                           isFirst={index === 0 ? true : false}
                           name={participant.title}
+                          description={participant.description}
                           progress={participant.votes_percents}
                           votes={participant.votes_count}
                           voteCode={participant.vote_code}
@@ -318,6 +319,7 @@ const ParticipantsList = ({ vote_id, all }: IParams) => {
                         voteStatus={voteStatus ? voteStatus : ""}
                         isFirst={index === 0 ? true : false}
                         name={participant.title}
+                        description={participant.description}
                         progress={participant.votes_percents}
                         votes={participant.votes_count}
                         voteCode={participant.vote_code}
@@ -354,6 +356,7 @@ const ParticipantsList = ({ vote_id, all }: IParams) => {
                           voteStatus={voteStatus ? voteStatus : ""}
                           isFirst={index === 0 ? true : false}
                           name={participant.title}
+                          description={participant.description}
                           progress={participant.votes_percents}
                           votes={participant.votes_count}
                           voteCode={participant.vote_code}
@@ -371,6 +374,7 @@ const ParticipantsList = ({ vote_id, all }: IParams) => {
                         voteStatus={voteStatus ? voteStatus : ""}
                         isFirst={index === 0 ? true : false}
                         name={participant.title}
+                        description={participant.description}
                         progress={participant.votes_percents}
                         votes={participant.votes_count}
                         voteCode={participant.vote_code}
@@ -396,6 +400,7 @@ const ParticipantsList = ({ vote_id, all }: IParams) => {
                           voteStatus={voteStatus ? voteStatus : ""}
                           isFirst={index === 0 ? true : false}
                           name={participant.title}
+                          description={participant.description}
                           progress={participant.votes_percents}
                           votes={participant.votes_count}
                           voteCode={participant.vote_code}
@@ -413,6 +418,7 @@ const ParticipantsList = ({ vote_id, all }: IParams) => {
                         voteStatus={voteStatus ? voteStatus : ""}
                         isFirst={index === 0 ? true : false}
                         name={participant.title}
+                        description={participant.description}
                         progress={participant.votes_percents}
                         votes={participant.votes_count}
                         voteCode={participant.vote_code}
