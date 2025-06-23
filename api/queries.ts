@@ -90,7 +90,9 @@ export class Queries {
   }
 
   public static async getVideo(id: number): Promise<VideoModel> {
-    return await fetch(`${baseUrl.MATERIALS_SRC}${routes.video(id)}`).then(
+    return await fetch(`${baseUrl.MATERIALS_SRC}${routes.video(id)}`, {
+      cache: "no-store",
+    }).then(
       (res) => res.json().then((res) => res as VideoModel)
     );
   }
