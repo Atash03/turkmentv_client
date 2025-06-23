@@ -16,6 +16,8 @@ import horjun from "@/public/horjun.png";
 import belet from "@/public/belet.jpg";
 
 import ReactionsBlock from "./treasury/ReactionsBlock";
+import { useCallback, useEffect, useState } from "react";
+import axios from "axios";
 
 interface IProps {
   video_id: number;
@@ -23,9 +25,37 @@ interface IProps {
 
 const InfoBlock = ({ video_id }: IProps) => {
   const { data, isFetching, error } = useQuery({
-    queryKey: ["video", video_id],
+    queryKey: ["video", `video:${video_id}`],
     queryFn: () => Queries.getVideo(video_id),
   });
+  const [view, setView] = useState(data?.data?.view || 0);
+
+  const addView = useCallback(async () => {
+    const materials = localStorage.getItem('MHB_MATERIALS_ID');
+    if (materials) {
+      const materialsArray = materials.split(',');
+      if (!materialsArray.includes(video_id.toString())) {
+        const res = await axios.post(`https://turkmentv.gov.tm/v2/api/material/${video_id}/views/increment`);
+        if (res.status === 200) {
+          materialsArray.push(video_id.toString());
+          setView(view + 1);
+        }
+      }
+      localStorage.setItem('MHB_MATERIALS_ID', materialsArray.join(','));
+    } else {
+      const res = await axios.post(`https://turkmentv.gov.tm/v2/api/material/${video_id}/views/increment`);
+      if (res.status === 200) {
+        localStorage.setItem('MHB_MATERIALS_ID', [video_id.toString()].join(','));
+        setView(view + 1);
+      }
+    }
+
+  }, [video_id])
+
+  useEffect(() => {
+    addView();
+  }, []);
+
 
   if (isFetching)
     return (
@@ -52,7 +82,7 @@ const InfoBlock = ({ video_id }: IProps) => {
                   className="w-[30px] h-[18px]"
                 />
                 <span className="font-roboto text-lg font-normal text-[#494949] transition-all dark:text-white">
-                  {data!.data.view}
+                  {view}
                 </span>
               </div>
             </div>
@@ -76,8 +106,8 @@ const InfoBlock = ({ video_id }: IProps) => {
                   <ReactionsBlock video_id={video_id} />
 
                   {data?.data.aydym_com_url ||
-                  data?.data.horjun_content_url ||
-                  data?.data.belet_url ? (
+                    data?.data.horjun_content_url ||
+                    data?.data.belet_url ? (
                     <div className="flex flex-col gap-6">
                       <h2 className="text-2xl font-semibold">
                         Beýleki platformalarda seret:

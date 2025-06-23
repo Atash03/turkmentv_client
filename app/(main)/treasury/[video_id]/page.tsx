@@ -18,15 +18,7 @@ interface IParams {
 
 const VideoItem = async ({ params }: IParams) => {
   const queryClient = getQueryClient();
-  // queryClient.prefetchQuery({
-  //   queryKey: ['video', `video:${params.video_id}`],
-  //   queryFn: () => Queries.getVideo(params.video_id),
-  // });
 
-  // queryClient.prefetchQuery({
-  //   queryKey: ['video', 'all'],
-  //   queryFn: () => Queries.getVideos(''),
-  // });
   await queryClient.prefetchQuery({
     queryKey: ['video', `video:${params.video_id}`],
     queryFn: () => Queries.getVideo(params.video_id),
