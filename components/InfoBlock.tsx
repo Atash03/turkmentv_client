@@ -38,7 +38,7 @@ const InfoBlock = ({ video_id }: IProps) => {
         const res = await axios.post(`https://turkmentv.gov.tm/v2/api/material/${video_id}/views/increment`);
         if (res.status === 200) {
           materialsArray.push(video_id.toString());
-          setView(view + 1);
+          setView(res.data.view);
         }
       }
       localStorage.setItem('MHB_MATERIALS_ID', materialsArray.join(','));
@@ -46,7 +46,7 @@ const InfoBlock = ({ video_id }: IProps) => {
       const res = await axios.post(`https://turkmentv.gov.tm/v2/api/material/${video_id}/views/increment`);
       if (res.status === 200) {
         localStorage.setItem('MHB_MATERIALS_ID', [video_id.toString()].join(','));
-        setView(view + 1);
+        setView(res.data.view);
       }
     }
 

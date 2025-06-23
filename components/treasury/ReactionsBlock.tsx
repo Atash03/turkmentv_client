@@ -1,8 +1,6 @@
 import { Queries } from '@/api/queries';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { data } from 'autoprefixer';
 import axios from 'axios';
-import { Loader } from 'lucide-react';
 import React from 'react';
 import { BiSolidLike, BiLike, BiSolidDislike, BiDislike } from 'react-icons/bi';
 import { useLocalStorage } from 'usehooks-ts';
